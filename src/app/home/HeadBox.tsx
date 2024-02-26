@@ -2,17 +2,17 @@
 import styles from '../home.module.css';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCube } from 'swiper/modules';
-import { MdArrowBack, MdArrowBackIos, MdArrowForward, MdArrowForwardIos, MdTimer } from 'react-icons/md';
+import { MdArrowBack, MdArrowForward } from 'react-icons/md';
 import 'swiper/css/effect-cube';
 import 'swiper/css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { sampleImg } from '@/External/lists';
 import { useEffect, useRef, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { fireStoreDB } from '@/Firebase/base';
+import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestore";
+import { fireStoreDB } from "@/Firebase/base";
 import { TbBolt, TbTruckReturn } from 'react-icons/tb';
 import { GiTakeMyMoney } from 'react-icons/gi';
+import { sortByPriority } from '@/External/services';
 
 interface defType extends Record<string, any> { };
 const HeadBox = () => {
@@ -24,8 +24,13 @@ const HeadBox = () => {
   const colorList = ['whitesmoke', '#F5E987', '#ebebf3'];
 
   useEffect(() => {
-    const products: defType[] = JSON.parse(localStorage.getItem('maqProducts') || '[]').slice(0, 3);
-    setProducts(products);
+    const productsRef = collection(fireStoreDB, 'Products/');
+
+    const productStream = onSnapshot(query(productsRef, orderBy("priority", "desc"), limit(3)), (snapshot) => {
+      setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+    });
+
+    return () => productStream();
   }, [])
 
   const changeSlide = () => {
@@ -109,13 +114,12 @@ const HeadBox = () => {
               <div className={styles.con}>
                 <p>
                   <strong>{product.name}</strong>
-                  <small>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur facere alias debitis mollitia magni a placeat et pariatur, sequi blanditiis expedita adipisci iusto cupiditate tenetur maiores repellat omnis? Saepe, enim!</small>
-                  {/* <small>{product.description}</small> */}
+                  <small>{product.description}</small>
                 </p>
-                <Link href={{ pathname: 'viewProduct', query: { product: JSON.stringify(product) } }}>Buy Now <MdArrowForward /></Link>
+                <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>Buy Now <MdArrowForward /></Link>
                 <p>
-                  {product.storePrice && <h4 className='big'>GHC {product.storePrice.toLocaleString()} </h4>}
-                  <h3 className='big'>GHC {product.price.toLocaleString()}</h3>
+                  {product.storePrice && <h4 className='big'>GHS {product.storePrice.toLocaleString()} </h4>}
+                  <h3 className='big'>GHS {product.price.toLocaleString()}</h3>
                 </p>
               </div>
             </SwiperSlide>

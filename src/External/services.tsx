@@ -32,88 +32,53 @@ export const addKeyword = (word: string) => {
 }
 
 //cartService
-export const addToCart = (product: string, quantity: number) => {
+export const addToCart = (product: defType, quantity: number) => {
   onAuthStateChanged(fireAuth, (user) => {
     const customer = localStorage.getItem('maqCustomer');
-    const products: defType[] = JSON.parse(localStorage.getItem('maqProducts') || '[]');
     const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
-    const pid = JSON.parse(product).id;
+    const pid = product.id;
 
-    const finalProduct: defType = products.find((prod) => prod.id === pid) || {};
-    if (Object.keys(finalProduct).length > 0) {
-      const price = finalProduct.price;
-
-      const itemExists = cart.find((el) => el.pid === pid);
-      if (itemExists) {
-        itemExists['quantity'] += quantity;
-      } else {
-        const cartItem = {
-          pid: pid,
-          product: JSON.stringify(finalProduct),
-          price: price,
-          quantity: quantity
-        }
-        cart.push(cartItem);
+    const itemExists = cart.find((el) => el.pid === pid);
+    if (itemExists) {
+      itemExists['quantity'] += quantity;
+    } else {
+      const cartItem = {
+        pid: pid,
+        product: JSON.stringify(product),
+        price: product.price,
+        quantity: quantity
       }
+      cart.push(cartItem);
+    }
 
-      if (user && customer) {
-        updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-          cart: cart
-        })
-      } else {
-        localStorage.setItem('maqCart', JSON.stringify(cart));
-      }
+    if (user && customer) {
+      updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
+        cart: cart
+      })
+    } else {
+      localStorage.setItem('maqCart', JSON.stringify(cart));
     }
   })
 }
 
-export const removeFromCart = (product: string) => {
+export const removeFromCart = (product: defType) => {
   onAuthStateChanged(fireAuth, (user) => {
     const customer = localStorage.getItem('maqCustomer');
-    const products: defType[] = JSON.parse(localStorage.getItem('maqProducts') || '[]');
     const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
-    const pid = JSON.parse(product).id;
+    const pid = product.id;
 
-    const finalProduct: defType = products.find((prod) => prod.id === pid) || {};
-    if (Object.keys(finalProduct).length > 0) {
-      const itemExists = cart.find((el) => el.pid === pid);
-      if (itemExists) {
-        if (itemExists.quantity > 1) {
-          itemExists['quantity'] += -1;
-          if (user && customer) {
-            updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-              cart: cart
-            })
-          } else {
-            localStorage.setItem('maqCart', JSON.stringify(cart));
-          }
+    const itemExists = cart.find((el) => el.pid === pid);
+    if (itemExists) {
+      if (itemExists.quantity > 1) {
+        itemExists['quantity'] += -1;
+        if (user && customer) {
+          updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
+            cart: cart
+          })
         } else {
-          const updatedCart = cart.filter((el) => el.pid !== pid);
-          if (user && customer) {
-            updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-              cart: updatedCart
-            })
-          } else {
-            localStorage.setItem('maqCart', JSON.stringify(updatedCart));
-          }
+          localStorage.setItem('maqCart', JSON.stringify(cart));
         }
-
-      }
-    }
-  })
-}
-
-export const clearItem = (product: string) => {
-  onAuthStateChanged(fireAuth, (user) => {
-    const customer = localStorage.getItem('maqCustomer');
-    const products: defType[] = JSON.parse(localStorage.getItem('maqProducts') || '[]');
-    const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
-    const pid = JSON.parse(product).id;
-
-    const finalProduct: defType = products.find((prod) => prod.id === pid) || {};
-    if (Object.keys(finalProduct).length > 0) {
-      const itemExists = cart.find((el) => el.pid === pid);
-      if (itemExists) {
+      } else {
         const updatedCart = cart.filter((el) => el.pid !== pid);
         if (user && customer) {
           updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
@@ -122,6 +87,26 @@ export const clearItem = (product: string) => {
         } else {
           localStorage.setItem('maqCart', JSON.stringify(updatedCart));
         }
+      }
+    }
+  })
+}
+
+export const clearItem = (product: defType) => {
+  onAuthStateChanged(fireAuth, (user) => {
+    const customer = localStorage.getItem('maqCustomer');
+    const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
+    const pid = product.id;
+
+    const itemExists = cart.find((el) => el.pid === pid);
+    if (itemExists) {
+      const updatedCart = cart.filter((el) => el.pid !== pid);
+      if (user && customer) {
+        updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
+          cart: updatedCart
+        })
+      } else {
+        localStorage.setItem('maqCart', JSON.stringify(updatedCart));
       }
     }
   })
@@ -283,6 +268,11 @@ export const sortByTime = (list: defType[]) => {
 
 export const sortByCounter = (list: defType[]) => {
   const updatedList = list.sort((a: defType, b: defType) => a.counter - b.counter);
+  return updatedList;
+}
+
+export const sortByPriority = (list: defType[]) => {
+  const updatedList = list.sort((a: defType, b: defType) => b.priority - a.priority);
   return updatedList;
 }
 

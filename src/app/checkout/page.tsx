@@ -194,7 +194,7 @@ const Checkout = () => {
                       <Image alt='' fill sizes='auto' src={item.el.image.url} />
                     </div>
                     <p>
-                      <Link href={{ pathname: '/viewProduct', query: { item: JSON.stringify(item) } }}>
+                      <Link href={{ pathname: '/viewProduct', query: { pid: item.el.id } }}>
                         <small className="cut">
                           {item.el.name}
                         </small>
@@ -202,15 +202,15 @@ const Checkout = () => {
                       <small style={{ color: 'darkgray' }} className="cut">
                         {item.el.category}
                       </small>
-                      <legend onClick={() => { clearItem(JSON.stringify(item)) }}>
+                      <legend onClick={() => { clearItem(item) }}>
                         <MdDeleteOutline />
                       </legend>
                     </p>
                   </article>
                   <nav>
-                    <button onClick={() => { removeFromCart(JSON.stringify(item.el)) }}><MdRemove /></button>
+                    <button onClick={() => { removeFromCart(item.el) }}><MdRemove /></button>
                     <input className='cash' max={100} type="number" value={quantityList[i].toString()} />
-                    <button onClick={() => { addToCart(JSON.stringify(item.el), 1) }}><MdAdd /></button>
+                    <button onClick={() => { addToCart(item.el, 1) }}><MdAdd /></button>
                   </nav>
                   <p>
                     <sub>Unit Price</sub>

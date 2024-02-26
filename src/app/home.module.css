@@ -46,7 +46,7 @@
 }
 
 .headBox .left strong {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .headBox .left p {
@@ -686,6 +686,10 @@
 }
 
 @media all and (max-width:500px) {
+  .headBox {
+    gap: 0.5rem;
+  }
+
   .headBox .infoBox {
     justify-content: space-around;
     flex-wrap: wrap;

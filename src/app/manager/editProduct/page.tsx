@@ -21,7 +21,7 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
   const [description, setDescription] = useState(product.description);
   const [storePrice, setStorePrice] = useState(product.storePrice || 0);
   const [price, setPrice] = useState(product.price);
-  const [priority, setPriority] = useState(1);
+  const [priority, setPriority] = useState(product.priority);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
   const [category, setCategory] = useState(product.category);
   const [brandList, setBrandList] = useState([]);

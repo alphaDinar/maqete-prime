@@ -3,7 +3,6 @@
   display: grid;
   grid-template-columns: repeat(5,1fr);
   gap: 1.5rem 0;
-  /* gap: 1rem; */
 }
 
 .product{
@@ -28,6 +27,11 @@
 .product img{
   margin: auto;
   object-fit: contain;
+  transition: 0.5s ease;
+  cursor: pointer;
+}
+.product img:hover{
+  scale: 1.2;
 }
 .product .controlBox{
   top: 0;

@@ -39,12 +39,9 @@ const Products = ({ productList }: { productList: string }) => {
     <section className={styles.products}>
       {products.map((product: defType, i: number) => (
         <div className={styles.product} key={i} data-aos="fade-up" data-aos-delay={100 * 1}>
-          {
-            product.image.format === 'png' ?
-              <Image alt='' className='contain' width={150} height={150} src={product.image.url} />
-              :
-              <Image alt='' className='cover' width={150} height={150} src={product.image.url} />
-          }
+          <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
+            <Image alt='' className='contain' width={150} height={150} src={product.image.url} />
+          </Link>
           <div>
             <div className={styles.controlBox}>
               <MdOutlineShoppingCartCheckout className={styles.checkout} />
@@ -74,7 +71,7 @@ const Products = ({ productList }: { productList: string }) => {
               </p>
             </article>
           </div>
-          <button onClick={() => addToCart(JSON.stringify(product), 1)}>
+          <button onClick={() => addToCart(product, 1)}>
             <sup></sup>
             <span style={{ color: 'white' }}>Add To Cart</span> <MdOutlineAddShoppingCart />
           </button>

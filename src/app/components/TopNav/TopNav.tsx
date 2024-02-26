@@ -174,18 +174,18 @@ const TopNav = () => {
                       <small>{JSON.parse(item.product).name}</small>
                       <strong className='cash'>GHC {(item.quantity * item.price).toLocaleString()}</strong>
                       <nav>
-                        <MdRemove onClick={() => removeFromCart(item.product)} />
+                        <MdRemove onClick={() => removeFromCart(JSON.parse(item.product))} />
                         <span>{item.quantity}</span>
-                        <MdAdd onClick={() => addToCart(item.product, 1)} />
+                        <MdAdd onClick={() => addToCart(JSON.parse(item.product), 1)} />
                       </nav>
                     </p>
-                    <MdDeleteOutline onClick={() => clearItem(item.product)} className={styles.remove} />
+                    <MdDeleteOutline onClick={() => clearItem(JSON.parse(item.product))} className={styles.remove} />
                   </li>
                 ))}
             </ul>
 
             <footer>
-              <strong>GHC {getCartTotal().toLocaleString()}</strong>
+              <h3 className='big'>GHC {getCartTotal().toLocaleString()}</h3>
               <Link href={'/checkout'}>
                 <sub></sub>
                 <span className='caps'>Go to Checkout</span>

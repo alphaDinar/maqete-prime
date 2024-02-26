@@ -65,6 +65,16 @@
   font-size: 1.5rem;
 }
 
+.priceBox {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+.priceBox span{
+  font-size: 1.3rem;
+  color: gray;
+  text-decoration: line-through;
+}
 
 .right small{
   font-size: 0.9rem;
@@ -189,8 +199,6 @@
 
 @media all and (max-width : 850px){
   .productBox{
-    /* display: flex; */
-    /* flex-direction: column-reverse; */
     grid-template-columns: 1fr;
   }
   .extraBox{

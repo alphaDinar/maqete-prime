@@ -31,7 +31,7 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
     });
 
     updateDoc(doc(fireStoreDB, 'Products/' + pid), {
-      views: increment(0.5)
+      views: increment(1)
     })
 
     return () => getProductStream();
@@ -94,11 +94,14 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
             <section className={styles.right}>
               <h3>{product.name}</h3>
               <small>{product.description}</small>
-              <strong className="big">GHC {product.price.toLocaleString()}</strong>
+              <article className={styles.priceBox}>
+                {product.storePrice && <span className="big">GHS {product.storePrice.toLocaleString()}</span>}
+                <strong className="big">GHS {product.price.toLocaleString()}</strong>
+              </article>
 
               <div className={styles.productControl}>
                 <p>
-                  <button onClick={() => { addToCart(JSON.stringify(product), quantity), setQuantity(1) }}>Add To Cart <MdOutlineAddShoppingCart /> </button>
+                  <button onClick={() => { addToCart(product, quantity), setQuantity(1) }}>Add To Cart <MdOutlineAddShoppingCart /> </button>
                   <input className="big" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
                 </p>
 
