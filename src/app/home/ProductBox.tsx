@@ -4,19 +4,23 @@ import styles from '../home.module.css';
 import Products from "../components/Products/Products";
 import { useEffect, useState } from "react";
 import { sortArrival, sortPopular, sortViews } from "@/External/services";
+import { collection, onSnapshot } from "firebase/firestore";
+import { fireStoreDB } from "@/Firebase/base";
 
 interface defType extends Record<string, any> { };
 const ProductBox = () => {
   const [selectedChoice, setSelectedChoice] = useState('');
-  const [allProducts, setAllProducts] = useState([]);
-  const [products, setProducts] = useState('[]');
+  const [allProducts, setAllProducts] = useState<defType[]>([]);
+  const [products, setProducts] = useState<defType[]>([]);
 
   useEffect(() => {
-    setSelectedChoice('Popular Products');
-    const allProductsTemp = JSON.parse(localStorage.getItem('maqProducts') || '[]');
-    const products: defType[] | [] = sortPopular(allProductsTemp).slice(0, 5);
-    setAllProducts(allProductsTemp);
-    setProducts(JSON.stringify(products));
+    setSelectedChoice('popular');
+    const productStream = onSnapshot(collection(fireStoreDB, 'Products/'), (snapshot) => {
+      setAllProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+      setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+    });
+
+    return () => productStream();
   }, [])
 
   const choiceList = [
@@ -27,15 +31,15 @@ const ProductBox = () => {
   ]
   const handleChoice = (choice: defType) => {
     const allProductsTemp = [...allProducts];
-    setSelectedChoice(choice.name);
+    setSelectedChoice(choice.tag);
     if (choice.tag === 'popular') {
-      setProducts(JSON.stringify(sortPopular(allProductsTemp).slice(0, 5)));
+      setProducts(sortPopular(allProductsTemp).slice(0, 5));
     }
     if (choice.tag === 'arrival') {
-      setProducts(JSON.stringify(sortArrival(allProductsTemp).slice(0, 5)));
+      setProducts(sortArrival(allProductsTemp).slice(0, 5));
     }
     if (choice.tag === 'views') {
-      setProducts(JSON.stringify(sortViews(allProductsTemp).slice(0, 5)));
+      setProducts(sortViews(allProductsTemp).slice(0, 5));
     }
   }
 
@@ -49,13 +53,13 @@ const ProductBox = () => {
           {choiceList.map((choice, i) => (
             <span onClick={() => handleChoice(choice)} key={i}>
               {choice.name}
-              <sub style={choice.name == selectedChoice ? { width: '100%' } : { width: '20%' }}></sub>
+              <sub style={choice.tag == selectedChoice ? { width: '100%' } : { width: '20%' }}></sub>
             </span>
           ))}
           <span><Link href={'/allProducts'}>All Products</Link> <sub></sub></span>
         </nav>
       </header>
-      <Products productList={products} />
+      <Products productList={JSON.stringify(products)} />
     </section>
   );
 }

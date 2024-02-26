@@ -39,7 +39,7 @@ const TopNav = () => {
     getDocs(collection(fireStoreDB, 'Products/'))
       .then((res) => {
         const productsTemp: defType[] = res.docs.map((el) => ({ id: el.id, ...el.data() }))
-        localStorage.setItem('maqProducts', JSON.stringify(productsTemp));
+        // localStorage.setItem('maqProducts', JSON.stringify(productsTemp));
         setProducts(productsTemp);
       });
 

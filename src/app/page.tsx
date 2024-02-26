@@ -18,13 +18,13 @@ import CategoryProducts from './home/CategoryProducts';
 import Footer from './components/Footer/Footer';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { fireStoreDB } from '@/Firebase/base';
+import { sortByCounter } from '@/External/services';
 
 interface defType extends Record<string, any> { };
 const Home = async () => {
   const testerCount = [0, 0, 0, 0, 0, 0, 0];
   const categoriesRef = collection(fireStoreDB, 'Categories/');
-  // query(categoriesRef, orderBy('counter'))
-  const categories = await getDocs(categoriesRef).then((res) => res.docs.map((el) => ({ id: el.id, ...el.data() })));
+  const categories = sortByCounter(await getDocs(categoriesRef).then((res) => res.docs.map((el) => ({ id: el.id, ...el.data() }))));
 
   return (
     <main className='scroll'>

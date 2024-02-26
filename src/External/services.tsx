@@ -274,8 +274,15 @@ export const getTimeSince = (date: number) => {
   }
 }
 
+
+//sorting
 export const sortByTime = (list: defType[]) => {
   const updatedList = list.sort((a: defType, b: defType) => b.timestamp - a.timestamp);
+  return updatedList;
+}
+
+export const sortByCounter = (list: defType[]) => {
+  const updatedList = list.sort((a: defType, b: defType) => a.counter - b.counter);
   return updatedList;
 }
 
