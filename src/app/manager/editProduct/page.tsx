@@ -21,6 +21,7 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
   const [description, setDescription] = useState(product.description);
   const [storePrice, setStorePrice] = useState(product.storePrice || 0);
   const [price, setPrice] = useState(product.price);
+  const [priority, setPriority] = useState(1);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
   const [category, setCategory] = useState(product.category);
   const [brandList, setBrandList] = useState([]);
@@ -167,6 +168,7 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
         description: description,
         storePrice: storePrice,
         price: price,
+        priority: priority,
         category: category,
         brand: brand,
         returnPolicy: returnPolicy,
@@ -177,7 +179,6 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
         views: 0,
         wishListed: 0,
         ratings: [],
-        priority: 0,
       })
         .then(() => {
           alert("Product edited Successfully");
@@ -238,6 +239,11 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
             <div>
               <span>Price *</span>
               <input min={1} type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+            </div>
+
+            <div>
+              <span>Priority *</span>
+              <input min={1} type="number" value={priority} onChange={(e) => setPriority(parseFloat(e.target.value))} required />
             </div>
 
             <div>

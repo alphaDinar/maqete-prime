@@ -17,6 +17,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [storePrice, setStorePrice] = useState(0);
   const [price, setPrice] = useState(1);
+  const [priority, setPriority] = useState(1);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
   const [category, setCategory] = useState('');
   const [brandList, setBrandList] = useState([]);
@@ -149,8 +150,9 @@ const AddProduct = () => {
           await setDoc(doc(fireStoreDB, 'Products/' + pid), {
             name: name,
             description: description,
-            storePrice : storePrice,
+            storePrice: storePrice,
             price: price,
+            priority: priority,
             category: category,
             brand: brand,
             returnPolicy: returnPolicy,
@@ -161,7 +163,6 @@ const AddProduct = () => {
             views: 0,
             wishListed: 0,
             ratings: [],
-            priority: 0,
             timestamp: stamp
           })
             .then(() => {
@@ -212,12 +213,17 @@ const AddProduct = () => {
 
             <div>
               <span>Store Price</span>
-              <input min={0} type="number" value={storePrice} onChange={(e) => setStorePrice(parseFloat(e.target.value))}/>
+              <input min={0} type="number" value={storePrice} onChange={(e) => setStorePrice(parseFloat(e.target.value))} />
             </div>
 
             <div>
               <span>Price *</span>
               <input min={1} type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+            </div>
+
+            <div>
+              <span>Priority *</span>
+              <input min={1} type="number" value={priority} onChange={(e) => setPriority(parseFloat(e.target.value))} required />
             </div>
 
             <div>

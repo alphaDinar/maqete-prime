@@ -15,6 +15,7 @@ const EditCategory = ({ searchParams }: { searchParams: { category: string } }) 
   const router = useRouter();
   const category = JSON.parse(searchParams.category);
   const [name, setName] = useState(category.name);
+  const [counter, setCounter] = useState(category.counter);
   const [brandList, setBrandList] = useState<string[]>(category.brandList);
   const [brand, setBrand] = useState<string>('');
   const [oldImage, setOldImage] = useState(category.image.url);
@@ -76,6 +77,7 @@ const EditCategory = ({ searchParams }: { searchParams: { category: string } }) 
     const edit = async () => {
       await updateDoc(doc(fireStoreDB, 'Categories/' + name), {
         name: name,
+        counter: counter,
         brandList: brandList,
         image: image,
         priority: 0
@@ -121,6 +123,11 @@ const EditCategory = ({ searchParams }: { searchParams: { category: string } }) 
             <div>
               <span>Name *</span>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} required readOnly />
+            </div>
+
+            <div>
+              <span>Counter *</span>
+              <input type="number" min={1} value={counter} onChange={(e) => setCounter(parseInt(e.target.value))} required />
             </div>
 
             <section className={styles.specBox}>

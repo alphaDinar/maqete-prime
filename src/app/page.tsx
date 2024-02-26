@@ -23,7 +23,8 @@ interface defType extends Record<string, any> { };
 const Home = async () => {
   const testerCount = [0, 0, 0, 0, 0, 0, 0];
   const categoriesRef = collection(fireStoreDB, 'Categories/');
-  const categories = await getDocs(query(categoriesRef, orderBy('counter'))).then((res) => res.docs.map((el) => ({ id: el.id, ...el.data() })));
+  // query(categoriesRef, orderBy('counter'))
+  const categories = await getDocs(categoriesRef).then((res) => res.docs.map((el) => ({ id: el.id, ...el.data() })));
 
   return (
     <main className='scroll'>

@@ -68,7 +68,7 @@ const Products = () => {
                 </nav>
               </div>
             ))}
-            <Link href={'/manager/addCategory'} className='addItem'>
+            <Link href={'/manager/addProduct'} className='addItem'>
               <MdAdd />
             </Link>
           </section>
