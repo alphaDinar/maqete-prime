@@ -1,0 +1,55 @@
+.categoryBox header {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.categoryBox header h3 {
+  font-size: 1.5rem;
+}
+
+.categoryBox header div {
+  margin-left: auto;
+  display: flex;
+  gap: 1rem;
+}
+
+.categoryBox div input,
+.orderBox div select {
+  background: var(--input);
+  padding: 5px 10px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem 1.5rem;
+}
+
+.category {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  border: 1px solid darkgray;
+  border-radius: 10px;
+}
+.category p{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.category p small{
+  color: gray;
+}
+.category nav{
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+.category nav svg{
+  background: dodgerblue;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+}

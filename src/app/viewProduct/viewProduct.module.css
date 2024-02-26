@@ -1,0 +1,204 @@
+.productBox, .extraBox{
+  display: grid;
+  gap: 3vw;
+  grid-template-columns: 1fr 1fr;
+}
+.productBox{
+  padding-top: 3vh !important;
+  padding-bottom: 3vh !important;
+}
+.extraBox{  
+  align-items: flex-start;
+  padding-top: 0 !important;
+  /* padding-bottom: 0 !important; */
+}
+
+.left{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.imgBox{
+  width: 100%;
+  height: 430px;
+  overflow: hidden;
+  border-radius: 40px;
+  /* background: #dfdaee; */
+  position: relative;
+}
+.thumbs{
+  display: grid;
+  height: 100px;
+  gap: 1rem;
+  grid-template-columns: repeat(4,1fr);
+}
+.thumb{
+  position: relative;
+  display: flex;
+  border-radius: 10px;
+  position: relative;
+  /* background: #f5f1ff; */
+  cursor: pointer;
+}
+
+.thumb img, .thumb video{
+  height: 100px;
+  width: 100%;
+}
+.thumb img{
+  border-radius: 10px;
+}
+.thumb video{
+  object-fit: contain;
+}
+
+.right{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.right h3{
+  font-size: 1.5rem;
+}
+.right strong{
+  font-size: 1.5rem;
+}
+
+
+.right small{
+  font-size: 0.9rem;
+}
+.right legend{
+  display: flex;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.right legend svg{
+  padding: 10px;
+  font-size: 1.5rem;
+  background: dodgerblue;
+  color: wheat;
+}
+
+.right legend span{
+  padding: 5px 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.productControl{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.productControl button{
+  background: var(--theme);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  cursor: pointer;
+}
+.productControl button svg{
+  color: white;
+}
+
+.productControl p{
+  display: flex;
+  justify-content: space-between;
+}
+.productControl p input{
+  width: 40px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 1.1rem;
+  border: 1px solid darkgray;
+}
+.productControl p input::-webkit-inner-spin-button{
+  display: none;
+}
+
+.productControl p input::-webkit-outer-spin-button{
+  display: none;
+}
+
+.productControl p svg{
+  color: white;
+}
+
+.productControl .wishList{
+  font-size: 2rem;
+  color: var(--theme);
+}
+
+.stars svg{
+  color: var(--theme);
+}
+
+.ratingBox h4, .specBox h2{
+  font-size: 1.2rem;
+  border-bottom: 2px solid black;
+}
+.ratingBox{
+  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.ratingBox section{
+  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.ratingBox div{
+  border: 1px dotted darkgray;
+  padding: 5px;
+  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.ratingBox article{
+  display: flex;
+  gap: 1rem;
+}
+
+.specBox{
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+.specBox article{
+  padding: 10px;
+  border: 1px dotted darkgray;
+}
+.specBox article small{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.specBox section{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+@media all and (max-width : 850px){
+  .productBox{
+    /* display: flex; */
+    /* flex-direction: column-reverse; */
+    grid-template-columns: 1fr;
+  }
+  .extraBox{
+    grid-template-columns: 1fr;
+  }
+}
+@media all and (max-width : 850px){
+  .imgBox{
+    height: 280px;
+  }
+}

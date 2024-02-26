@@ -1,0 +1,371 @@
+.checkoutBoxHolder {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 7fr 3fr;
+  align-items: flex-start;
+}
+
+.cartBox {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.cartBox sub {
+  display: none;
+}
+
+.cartBox header,
+.checkoutBox header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid lightgray;
+}
+
+.cartBox header strong {
+  font-size: 1.5rem;
+}
+
+.cartBox header legend {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+}
+
+.topLi span {
+  color: rgb(124, 124, 124);
+  font-size: 1.1rem;
+  /* font-weight: 600; */
+  font-family: 'Alegreya Sans SC', sans-serif;
+}
+
+.topLi span:nth-child(2),
+.topLi span:nth-child(3),
+.topLi span:nth-child(4) {
+  margin: auto;
+}
+
+.items li nav,
+.items li h5 {
+  margin: auto;
+  cursor: pointer;
+}
+
+.items li h5 {
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.items li {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr;
+  align-items: center;
+}
+
+.items li article {
+  display: flex;
+  gap: 1.3rem;
+}
+
+.items li .imgBox {
+  position: relative;
+  max-width: 120px;
+  min-width: 120px;
+  height: 100px;
+}
+
+.items li img {
+  object-fit: contain;
+}
+
+.items li small {
+  -webkit-line-clamp: 2;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.items li small:hover {
+  border-bottom: 1px solid black;
+}
+
+.items li p {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.items li p i {
+  cursor: pointer;
+  color: tomato;
+}
+
+.items li nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.items li nav input {
+  width: 60px;
+  border-radius: 40px;
+  height: 30px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  border: 1px solid darkgray;
+}
+
+.items li nav input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.items li button {
+  width: 30px;
+  height: 30px;
+  background: white;
+  cursor: pointer;
+  color: black;
+  border-radius: 50%;
+  border: 1px solid darkgray;
+}
+
+.checkoutBox,
+.locationBox,
+.searchBox {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkoutBox {
+  padding: 20px;
+  gap: 1.5rem 0;
+  background: whitesmoke;
+}
+
+.checkout {
+  background: var(--theme);
+  padding: 10px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.searchBox {
+  gap: 0.5rem;
+  position: relative;
+}
+
+.searchBox p {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  position: relative;
+}
+
+@keyframes scaleAnimation {
+  0% {
+    transform: scale(1);
+    color: tomato;
+  }
+
+  50% {
+    transform: scale(1.2);
+    color: skyblue;
+  }
+
+  100% {
+    transform: scale(1);
+    color: var(--pass);
+  }
+}
+
+.searchBox p svg {
+  position: absolute;
+  right: 0;
+  font-size: 1.5rem;
+  animation: scaleAnimation 2s infinite;
+}
+
+.searchBox span {
+  display: flex;
+  align-items: center;
+}
+
+.searchBox input {
+  padding: 10px;
+  background: white;
+}
+
+.searchBox ul {
+  position: absolute;
+  width: 100%;
+  background: white;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  top: 100%;
+}
+
+.searchBox li {
+  display: grid;
+  border-bottom: 1px solid rgb(248, 248, 248);
+  grid-template-columns: 1fr 30px;
+  cursor: pointer;
+}
+
+.searchBox li span {
+  padding: 8px 10px 8px 10px;
+}
+
+.searchBox li svg {
+  background: dodgerblue;
+  transition: 0.4s ease;
+  color: wheat;
+  width: 30px;
+  height: 100%;
+}
+
+.searchBox li:hover svg {
+  background: white;
+  color: dodgerblue;
+}
+
+.locationBox select {
+  padding: 10px;
+}
+
+.locationBox small {
+  margin: 1rem 0;
+  background: salmon;
+  padding: 5px;
+  align-items: center;
+  gap: 0.3rem;
+  color: white;
+  display: flex;
+  float: left;
+}
+
+.locationBox small p {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.locationBox small strong {
+  border-bottom: 2px solid white;
+}
+
+.totalBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.totalBox p {
+  display: flex;
+  flex-direction: column;
+}
+
+.totalBox p span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.totalBox legend{
+  display: flex;
+  background: white;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.totalBox legend svg{
+  background: dodgerblue;
+  color: wheat;
+  font-size: 1.5rem;
+  padding: 8px;
+}
+
+.totalBox legend strong {
+  padding: 0 10px;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+.totalBox p{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkoutBoxHolder hr {
+  width: 100%;
+  border-top: 2px solid darkgray;
+}
+
+@media all and (max-width:1100px) {
+  .checkoutBoxHolder {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cartBox,
+  .checkoutBox {
+    width: 100%;
+  }
+
+  .checkoutBox {
+    width: calc(100% - 40px);
+  }
+}
+
+@media all and (max-width:750px) {
+  .cartBox sub {
+    display: flex;
+  }
+
+  .items .topLi {
+    display: none;
+  }
+
+  .items li p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .items li img {
+    max-width: 80px;
+    min-width: 80px;
+    height: 80px;
+  }
+
+  .items li {
+    grid-template-columns: 1fr;
+    grid-template-columns: 0.1fr 1fr;
+    border-bottom: 1px solid darkgray;
+    padding: 20px 0;
+  }
+}
+
+@media all and (max-width:500px) {
+  .items li article {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

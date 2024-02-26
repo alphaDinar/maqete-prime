@@ -1,0 +1,121 @@
+.panel {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sidebar {
+  width: 18%;
+  padding: 5vh 1%;
+  height: 90vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #D4D4D4;
+  background: white;
+  align-items: center;
+  transition: 0.3s ease;
+}
+
+.sidebar .tag {
+  background: var(--theme);
+  padding: 5px;
+  color: white;
+  position: absolute;
+  left: 100%;
+  /* border-radius: 0 5px 5px 0; */
+  cursor: pointer;
+}
+
+.sidebar article,
+.sidebar article nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar article {
+  gap: 1rem;
+}
+
+.sidebar article hr {
+  width: 100%;
+  border-top: 2px solid #D4D4D4;
+}
+
+.sidebar article nav {
+  gap: 0.5rem;
+}
+
+.sidebar article nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: black;
+  position: relative;
+  right: 0;
+}
+
+.sidebar article nav a span {
+  font-size: 0.9rem;
+}
+
+.sidebar article nav a svg {
+  font-size: 1.2rem;
+}
+
+.sidebar footer a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: tomato;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 40px;
+}
+
+.sidebar.change {
+  width: 3%;
+}
+
+.sidebar.change header strong {
+  display: none;
+}
+
+.sidebar.change a span {
+  display: none;
+}
+
+.conBox {
+  width: 80%;
+  height: 100vh;
+  transition: 0.3s ease;
+}
+
+.conBox.change {
+  width: 95%;
+}
+
+@media all and (max-width : 1300px) {
+  .sidebar, .sidebar.change{
+    width: 230px;
+    padding: 5vh 15px;
+  }
+  .sidebar{
+    left: -260px;
+  }
+  .sidebar.change{
+    left: 0;
+  }
+  .sidebar.change header strong {
+    display: flex;
+  }
+  
+  .sidebar.change a span {
+    display: flex;
+  }
+  .conBox, .conBox.change{
+    width: 100%;
+  }
+}

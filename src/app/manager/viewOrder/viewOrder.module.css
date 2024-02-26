@@ -1,0 +1,135 @@
+.viewBox header {
+  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.viewBox header svg {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.viewBox header h3 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.viewBox header h3 sub {
+  width: 100%;
+  display: block;
+  height: 3px;
+  background: black;
+}
+
+.viewBox header div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.viewBox header div p {
+  gap: 1rem;
+  display: flex;
+}
+
+.viewBox header div p legend {
+  border: 1px solid var(--theme);
+  border-radius: 40px;
+  display: flex;
+  padding: 3px 5px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.viewBox .con {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+.productBox {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+.productBox ul {
+  display: grid;
+  gap: 0.3rem;
+  grid-template-columns: 1fr;
+}
+
+.productBox ul li {
+  display: grid;
+  grid-template-columns: 50px 1fr 1fr 50px 1fr 1fr 1fr;
+}
+
+.productBox ul li>* {
+  margin: auto;
+}
+
+.productBox nav {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px 0;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+.productBox nav strong {
+  letter-spacing: 1px;
+  font-size: 1.5rem;
+}
+
+.infoBox {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.infoBox ul {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+.infoBox ul p {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.infoBox ul p span {
+  padding: 10px;
+  background: dodgerblue;
+  color: white;
+}
+
+.infoBox ul p strong {
+  height: 100%;
+  display: flex;
+  padding: 0 1rem;
+  align-items: center;
+}
+
+.statusBox {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.statusBox article{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.statusBox article span {
+  padding: 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.complete{
+  margin: 1rem 0;
+  padding: 10px;
+  cursor: pointer;
+}
