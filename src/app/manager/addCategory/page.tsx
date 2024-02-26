@@ -13,6 +13,7 @@ interface defType extends Record<string, any> { };
 const AddCategory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
+  const [counter, setCounter] = useState(0);
   const [brandList, setBrandList] = useState<string[]>([]);
   const [brand, setBrand] = useState<string>('');
   const [imagePreview, setImagePreview] = useState(place);
@@ -55,7 +56,7 @@ const AddCategory = () => {
     let set = null;
     const stamp = new Date().getTime();
     const objName = `${obj.name}${stamp}`;
-    await uploadBytes(sRef(storageDB, 'MaqeteStorage/' + objName), obj.blob)
+    await uploadBytes(sRef(storageDB, 'MaqCategories/' + objName), obj.blob)
       .then((res) =>
         getDownloadURL(res.ref)
           .then((urlRes) => {
@@ -73,6 +74,7 @@ const AddCategory = () => {
     if (imageUrl) {
       await setDoc(doc(fireStoreDB, 'Categories/' + name), {
         name: name,
+        counter: counter,
         brandList: brandList,
         image: image,
         priority: 0
@@ -108,6 +110,11 @@ const AddCategory = () => {
             <div>
               <span>Name *</span>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
+
+            <div>
+              <span>Counter *</span>
+              <input type="number" min={1} value={counter} onChange={(e) => setCounter(parseInt(e.target.value))} required />
             </div>
 
             <section className={styles.specBox}>

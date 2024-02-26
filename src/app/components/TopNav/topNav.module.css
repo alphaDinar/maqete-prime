@@ -1,6 +1,6 @@
 .topNav {
   width: 80%;
-  margin: 3vh auto;
+  margin: 2vh auto;
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 1fr 1fr;

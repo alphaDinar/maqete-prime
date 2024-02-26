@@ -90,11 +90,13 @@ const TopNav = () => {
     }
   }
 
+  const logoTemp = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708957950/maqete/maqLogo_kded29.png';
+  // const logoTemp = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708958183/maqete/maqete_blue_q8tjmc.png';
 
   return (
     <section className={styles.topNav}>
       <Link href={'/'}>
-        <strong>Logo</strong>
+        <Image alt='' className='contain' width={100} height={50} src={logoTemp} />
       </Link>
 
       <div className={searchBoxToggled ? `${styles.searchBox} ${styles.change}` : styles.searchBox}>

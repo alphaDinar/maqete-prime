@@ -94,11 +94,12 @@
   width: calc(100% - 60px);
 }
 
-.formBox button{
+.formBox button, .formBox .resetMedia{
   background: var(--pass);
   color: wheat;
   padding: 5px;
   font-size: 1.2rem;
   margin-top: 2vw;
   cursor: pointer;
+  text-align: center;
 }

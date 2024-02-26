@@ -8,35 +8,45 @@ import { place, sampleImg } from "@/External/lists";
 import { GrMultimedia } from "react-icons/gr";
 import { fireStoreDB, storageDB } from "@/Firebase/base";
 import { getDownloadURL, uploadBytes, ref as sRef } from "firebase/storage";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { emitKeypressEvents } from "readline";
 
 interface defType extends Record<string, any> { };
-const AddProduct = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState(1);
+const EditProduct = ({ searchParams }: { searchParams: { product: string } }) => {
+  const product = JSON.parse(searchParams.product);
+
+  const router = useRouter();
+  const [name, setName] = useState(product.name);
+  const [description, setDescription] = useState(product.description);
+  const [storePrice, setStorePrice] = useState(product.storePrice || 0);
+  const [price, setPrice] = useState(product.price);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(product.category);
   const [brandList, setBrandList] = useState([]);
-  const [brand, setBrand] = useState('');
-  const [returnPolicy, setReturnPolicy] = useState(0);
-  const [stockCount, setStockCount] = useState(1);
+  const [brand, setBrand] = useState(product.brand);
+  const [returnPolicy, setReturnPolicy] = useState(product.returnPolicy);
+  const [stockCount, setStockCount] = useState(product.stockCount);
   const [specTitle, setSpecTitle] = useState('');
   const [specCon, setSpecCon] = useState('');
-  const [specList, setSpecList] = useState<defType[]>([]);
-  const [imagePreview, setImagePreview] = useState(place);
-  const [image, setImage] = useState<defType>({});
+  const [specList, setSpecList] = useState<defType[]>(product.specList);
+  const [oldImage, setOldImage] = useState(product.image.url);
+  const [imagePreview, setImagePreview] = useState(product.image.url);
+  const [image, setImage] = useState<defType>(product.image);
   const [mediaSet, setMediaSet] = useState(Array(3).fill({ type: 'image', format: 'png' }));
-  const [mediaPreviewSet, setMediaPreviewSet] = useState<string[]>(Array(3).fill(place));
+  const [oldMediaSet, setOldMediaSet] = useState<string[]>(product.mediaSet.map((el: defType) => el.url));
+  const [mediaPreviewSet, setMediaPreviewSet] = useState<string[]>(product.mediaSet.map((el: defType) => el.url));
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getDocs(collection(fireStoreDB, 'Categories/'))
       .then((res) => {
         const categoryTemp: defType[] = res.docs.map((el) => ({ id: el.id, ...el.data() }))
         setCategoryList(categoryTemp);
+        setBrandList(categoryTemp!.filter((el) => el.id === category)[0].brandList || []);
+        setIsLoading(false);
       })
-  }, [])
+  }, [category])
 
   const addSpec = () => {
     if (specTitle.length > 0, specCon.length > 0) {
@@ -95,11 +105,17 @@ const AddProduct = () => {
     }
   }
 
+  const removeMedia = (i: number) => {
+    const mediaPrevTemp = [...mediaPreviewSet];
+    mediaPrevTemp[i] = place;
+    setMediaPreviewSet(mediaPrevTemp);
+  }
+
   const uploadObj = async (obj: defType) => {
     let set = null;
     const stamp = new Date().getTime();
     const objName = `${obj.name}${stamp}`;
-    await uploadBytes(sRef(storageDB, 'MaqeteStorage/' + objName), obj.blob)
+    await uploadBytes(sRef(storageDB, 'MaqProducts/' + objName), obj.blob)
       .then((res) =>
         getDownloadURL(res.ref)
           .then((urlRes) => {
@@ -112,19 +128,24 @@ const AddProduct = () => {
   }
 
   const uploadSet = (mediaSet: defType[]) => {
-    const uploadPromises = mediaSet.map((media) => {
+    const uploadPromises = mediaSet.map((media, i) => {
       if (media.blob) {
-        return uploadBytes(sRef(storageDB, 'MaqeteStorage/' + media.name), media.blob)
+        return uploadBytes(sRef(storageDB, 'MaqProducts/' + media.name), media.blob)
           .then((res) => getDownloadURL(res.ref))
           .catch((error) => console.log(error))
       } else {
-        return Promise.resolve('empty');
+        if (mediaPreviewSet[i] === place) {
+          return Promise.resolve('empty');
+        } else {
+          return Promise.resolve(mediaPreviewSet[i]);
+        }
       }
     })
 
     return Promise.all(uploadPromises)
       .then((urls) => {
         urls.forEach((urlRes, i) => {
+          console.log(urlRes);
           if (urlRes) {
             mediaSet[i] = {
               ...mediaSet[i],
@@ -137,67 +158,68 @@ const AddProduct = () => {
       });
   }
 
-  const createProduct = async () => {
+  const editProduct = async () => {
     setIsLoading(true);
-    const imageUrl = await uploadObj(image);
-    if (imageUrl) {
-      await uploadSet(mediaSet)
-        .then(async () => {
-          const stamp = new Date().getTime();
-          const pid = `pid${stamp}`;
-          await setDoc(doc(fireStoreDB, 'Products/' + pid), {
-            name: name,
-            description: description,
-            price: price,
-            category: category,
-            brand: brand,
-            returnPolicy: returnPolicy,
-            stockCount: stockCount,
-            specList: specList,
-            image: image,
-            mediaSet: mediaSet,
-            views: 0,
-            wishListed: 0,
-            ratings: [],
-            priority: 0,
-            timestamp: stamp
-          })
-            .then(() => {
-              alert("Product added Successfully")
-              resetForm();
-              setIsLoading(false);
-            })
-        });
+
+    const edit = async () => {
+      await updateDoc(doc(fireStoreDB, 'Products/' + product.id), {
+        name: name,
+        description: description,
+        storePrice: storePrice,
+        price: price,
+        category: category,
+        brand: brand,
+        returnPolicy: returnPolicy,
+        stockCount: stockCount,
+        specList: specList,
+        image: image,
+        mediaSet: mediaSet,
+        views: 0,
+        wishListed: 0,
+        ratings: [],
+        priority: 0,
+      })
+        .then(() => {
+          alert("Product edited Successfully");
+          router.back();
+        })
+    }
+
+    if (imagePreview === oldImage) {
+      uploadSet(mediaSet)
+        .then(() => edit());
+    } else {
+      const imageUrl = await uploadObj(image);
+      if (imageUrl) {
+        uploadSet(mediaSet)
+          .then(() => edit());
+      }
     }
   }
 
-  const resetForm = () => {
-    setName('')
-    setDescription('');
-    setPrice(1);
-    setReturnPolicy(0);
-    setStockCount(1);
-    setSpecTitle('');
-    setSpecCon('');
-    setSpecList([]);
-    setImagePreview(place);
-    setImage({});
-    setMediaSet(Array(3).fill({ type: 'image', format: 'png' }));
-    setMediaPreviewSet(Array(3).fill(place));
+  const deleteProduct = () => {
+    const confirmation = window.confirm(`Are you sure you want to delete ${name}`);
+    if (confirmation) {
+      setIsLoading(true);
+      deleteDoc(doc(fireStoreDB, 'Products/' + product.id))
+        .then(() => router.back());
+    }
   }
+
 
   return (
     <Panel>
       <section className={styles.formBox}>
         <header>
           <h3>
-            <strong className="big">Add Product</strong>
+            <strong className="big">Edit Product</strong>
             <sub></sub>
           </h3>
+          <legend onClick={() => deleteProduct()}>Delete</legend>
         </header>
 
         {!isLoading ?
-          <form onSubmit={(e) => { e.preventDefault(); createProduct() }}>
+          <form onSubmit={(e) => { e.preventDefault(); editProduct() }}>
             <div>
               <span>Name *</span>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -206,6 +228,11 @@ const AddProduct = () => {
             <div>
               <span>Description</span>
               <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            </div>
+
+            <div>
+              <span>Store Price</span>
+              <input min={0} type="number" value={storePrice} onChange={(e) => setStorePrice(parseFloat(e.target.value))} />
             </div>
 
             <div>
@@ -271,12 +298,7 @@ const AddProduct = () => {
               <strong>Display Image</strong>
               <Image alt='Add Image' width={180} height={180} src={imagePreview} />
               <label htmlFor="addImage">
-                {
-                  image.format === 'jpeg' ?
-                    <input className="cover" type="file" id="addImage" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImage(e.target.files![0])} required />
-                    :
-                    <input className="contain" type="file" id="addImage" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImage(e.target.files![0])} required />
-                }
+                <input className="contain" type="file" id="addImage" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImage(e.target.files![0])} />
                 <MdAddAPhoto />
               </label>
             </section>
@@ -286,12 +308,16 @@ const AddProduct = () => {
               <section className={styles.mediaSet}>
                 {mediaSet.map((el, i) => (
                   <article key={i}>
-                    {mediaSet[i].type === 'image' ?
-                      mediaSet[i].format === 'jpeg' ? <Image className="cover" alt='Add Image' width={250} height={250} src={mediaPreviewSet[i]} />
-                        : <Image alt='Add Image' className="contain" width={250} height={250} src={mediaPreviewSet[i]} />
+                    {mediaPreviewSet[i] !== 'empty' ?
+                      mediaSet[i].type === 'image' ?
+                        mediaSet[i].format === 'jpeg' ? <Image className="cover" alt='Add Image' width={250} height={250} src={mediaPreviewSet[i]} />
+                          : <Image alt='Add Image' className="contain" width={250} height={250} src={mediaPreviewSet[i]} />
+                        :
+                        <video muted autoPlay loop src={mediaPreviewSet[i]} width={250} height={250} />
                       :
-                      <video muted autoPlay loop src={mediaPreviewSet[i]} width={250} height={250} />
+                      <Image className="cover" alt='Add Image' width={250} height={250} src={place} />
                     }
+                    <legend className={styles.resetMedia} onClick={() => removeMedia(i)}>remove</legend>
                     <label htmlFor={`addMedia${i}`}>
                       <input type="file" accept="image/*,video/*" id={`addMedia${i}`} style={{ display: 'none' }} onChange={(e) => handleMediaSet(e.target.files![0], i)} />
                       <GrMultimedia />
@@ -310,4 +336,4 @@ const AddProduct = () => {
   );
 }
 
-export default AddProduct;
+export default EditProduct;

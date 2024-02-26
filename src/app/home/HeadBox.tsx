@@ -21,6 +21,7 @@ const HeadBox = () => {
   const [products, setProducts] = useState<defType[]>([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const colorList = ['whitesmoke', '#F5E987', '#ebebf3'];
 
   useEffect(() => {
     const products: defType[] = JSON.parse(localStorage.getItem('maqProducts') || '[]').slice(0, 3);
@@ -50,12 +51,14 @@ const HeadBox = () => {
   const slideNext = async () => {
     if (headSwiper.current) {
       headSwiper.current.swiper.slideNext();
-      imgSwiper.current.swiper.slideTo(headSwiper.current.swiper.activeIndex);
+      // imgSwiper.current.swiper.slideTo(headSwiper.current.swiper.activeIndex);
     }
   }
   const slidePrev = () => {
-    headSwiper.current.swiper.slidePrev();
-    imgSwiper.current.swiper.slideTo(headSwiper.current.swiper.activeIndex);
+    if (headSwiper.current) {
+      headSwiper.current.swiper.slidePrev();
+      // imgSwiper.current.swiper.slideTo(headSwiper.current.swiper.activeIndex);
+    }
   }
 
   const topItems = [
@@ -67,7 +70,7 @@ const HeadBox = () => {
   const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708791507/maqete/samp_kqdepy.png';
 
   return (
-    <section className={styles.headBox}>
+    <section className={styles.headBox} style={{ backgroundColor: colorList[currentIndex] }}>
       <div className={styles.infoBox}>
         <article>
           <TbBolt />
@@ -111,7 +114,7 @@ const HeadBox = () => {
                 </p>
                 <Link href={{ pathname: 'viewProduct', query: { product: JSON.stringify(product) } }}>Buy Now <MdArrowForward /></Link>
                 <p>
-                  <h4 className='big'>GHC 300.00</h4>
+                  {product.storePrice && <h4 className='big'>GHC {product.storePrice.toLocaleString()} </h4>}
                   <h3 className='big'>GHC {product.price.toLocaleString()}</h3>
                 </p>
               </div>
@@ -126,14 +129,14 @@ const HeadBox = () => {
           effect="cube"
           loop={true}
           ref={imgSwiper}
-          speed={1000}
+          speed={500}
           cubeEffect={{ shadow: false, slideShadows: true, shadowOffset: 20, shadowScale: 0.94 }}
           allowTouchMove={false}
           className={styles.swiper}
         >
           {products.map((product, i) => (
             <SwiperSlide className={styles.slide} key={i}>
-              <Image alt='' className='contain' width={350} height={350} src={sample} />
+              <Image alt='' className='contain' width={350} height={350} src={product.image.url} />
             </SwiperSlide>
           ))}
         </Swiper>

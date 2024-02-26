@@ -36,21 +36,21 @@ const Products = () => {
 
   return (
     <Panel>
-      {!isLoading ?
-        <section className={styles.categoryBox} id="frame">
-          <header>
-            <h3>Products</h3>
-            <div>
-              <select>
-                <option hidden>Payment</option>
-                <option value="0">Unpaid</option>
-                <option value="1">Paid</option>
-              </select>
-              <input type="text" placeholder="search Name" value={name} onChange={(e) => { setName(e.target.value); searchProducts(e.target.value, brand) }} />
-              <input type="text" placeholder="search Brand" value={brand} onChange={(e) => { setBrand(e.target.value); searchProducts(name, e.target.value) }} />
-            </div>
-          </header>
+      <section className={styles.categoryBox} id="frame">
+        <header>
+          <h3>Products</h3>
+          <div>
+            <select>
+              <option hidden>Payment</option>
+              <option value="0">Unpaid</option>
+              <option value="1">Paid</option>
+            </select>
+            <input type="text" placeholder="search Name" value={name} onChange={(e) => { setName(e.target.value); searchProducts(e.target.value, brand) }} />
+            <input type="text" placeholder="search Brand" value={brand} onChange={(e) => { setBrand(e.target.value); searchProducts(name, e.target.value) }} />
+          </div>
+        </header>
 
+        {!isLoading ?
           <section className={styles.categories}>
             {products.map((prod, i) => (
               <div className={styles.category} key={i}>
@@ -62,7 +62,7 @@ const Products = () => {
                   {/* <small className="cash">{Prod.brandList.length} brands</small> */}
                 </p>
                 <nav>
-                  <Link href={{ pathname: '/manager/editProduct', query: { category: JSON.stringify(prod) } }}>
+                  <Link href={{ pathname: '/manager/editProduct', query: { product: JSON.stringify(prod) } }}>
                     <MdEdit />
                   </Link>
                 </nav>
@@ -72,10 +72,10 @@ const Products = () => {
               <MdAdd />
             </Link>
           </section>
-        </section>
-        :
-        <span>loading...</span>
-      }
+          :
+          <span>loading...</span>
+        }
+      </section>
     </Panel>
   );
 }

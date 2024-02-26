@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   position: relative;
-  background: #F5E987;
+  transition: 0.8s ease;
 }
 
 .headBox .left,

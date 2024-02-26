@@ -59,7 +59,7 @@ const EditCategory = ({ searchParams }: { searchParams: { category: string } }) 
     let set = null;
     const stamp = new Date().getTime();
     const objName = `${obj.name}${stamp}`;
-    await uploadBytes(sRef(storageDB, 'MaqeteStorage/' + objName), obj.blob)
+    await uploadBytes(sRef(storageDB, 'MaqCategories/' + objName), obj.blob)
       .then((res) =>
         getDownloadURL(res.ref)
           .then((urlRes) => {

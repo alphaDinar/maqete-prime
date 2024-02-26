@@ -37,16 +37,15 @@ const Categories = () => {
 
   return (
     <Panel>
-      {!isLoading ?
-        <section className={styles.categoryBox} id="frame">
-          <header>
-            <h3>Categories</h3>
-            <div>
-              <input type="text" placeholder="search Name" value={name} onChange={(e) => { setName(e.target.value); searchCategories(e.target.value, brand) }} />
-              <input type="text" placeholder="search Brand" value={brand} onChange={(e) => { setBrand(e.target.value); searchCategories(name, e.target.value) }} />
-            </div>
-          </header>
-
+      <section className={styles.categoryBox} id="frame">
+        <header>
+          <h3>Categories</h3>
+          <div>
+            <input type="text" placeholder="search Name" value={name} onChange={(e) => { setName(e.target.value); searchCategories(e.target.value, brand) }} />
+            <input type="text" placeholder="search Brand" value={brand} onChange={(e) => { setBrand(e.target.value); searchCategories(name, e.target.value) }} />
+          </div>
+        </header>
+        {!isLoading ?
           <section className={styles.categories}>
             {categories.map((cat, i) => (
               <div className={styles.category} key={i}>
@@ -69,10 +68,10 @@ const Categories = () => {
               <MdAdd />
             </Link>
           </section>
-        </section>
-        :
-        <span>loading...</span>
-      }
+          :
+          <span>loading...</span>
+        }
+      </section>
     </Panel>
   );
 }

@@ -11,18 +11,19 @@ import PromoBox from './home/PromoBox';
 import cosmetics from '../../public/cosmetics.png';
 import fash from '../../public/fash.png';
 import bag from '../../public/bag.png'
-import { MdBolt, MdNorthEast } from 'react-icons/md';
+import { MdNorthEast } from 'react-icons/md';
 import { TbBolt, TbTruckReturn } from 'react-icons/tb';
 import { GiTakeMyMoney } from 'react-icons/gi';
 import CategoryProducts from './home/CategoryProducts';
 import Footer from './components/Footer/Footer';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { fireStoreDB } from '@/Firebase/base';
 
 interface defType extends Record<string, any> { };
 const Home = async () => {
   const testerCount = [0, 0, 0, 0, 0, 0, 0];
-  const categories = await getDocs(collection(fireStoreDB, 'Categories/')).then((res) => res.docs.map((el) => ({ id: el.id, ...el.data() })));
+  const categoriesRef = collection(fireStoreDB, 'Categories/');
+  const categories = await getDocs(query(categoriesRef, orderBy('counter'))).then((res) => res.docs.map((el) => ({ id: el.id, ...el.data() })));
 
   return (
     <main className='scroll'>
@@ -33,14 +34,14 @@ const Home = async () => {
       <section className={styles.categoryBox} id='box'>
         <h3>Trending Categories</h3>
         <section className={styles.categories}>
-          {categories.slice(0, 6).map((category : defType, i) => (
+          {categories.slice(0, 6).map((category: defType, i) => (
             <div className={styles.category} key={i}>
               <sub></sub>
               {
                 category.image.format === 'jpeg' ?
-                <Image alt='' className='cover' src={category.image.url} width={100} height={100} />
-                :
-                <Image alt='' className='contain' src={category.image.url}  width={100} height={100} />
+                  <Image alt='' className='cover' src={category.image.url} width={100} height={100} />
+                  :
+                  <Image alt='' className='contain' src={category.image.url} width={100} height={100} />
               }
               <span>{category.name}</span>
             </div>

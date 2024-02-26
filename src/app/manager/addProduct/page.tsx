@@ -15,6 +15,7 @@ const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [storePrice, setStorePrice] = useState(0);
   const [price, setPrice] = useState(1);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
   const [category, setCategory] = useState('');
@@ -99,7 +100,7 @@ const AddProduct = () => {
     let set = null;
     const stamp = new Date().getTime();
     const objName = `${obj.name}${stamp}`;
-    await uploadBytes(sRef(storageDB, 'MaqeteStorage/' + objName), obj.blob)
+    await uploadBytes(sRef(storageDB, 'MaqProducts/' + objName), obj.blob)
       .then((res) =>
         getDownloadURL(res.ref)
           .then((urlRes) => {
@@ -114,7 +115,7 @@ const AddProduct = () => {
   const uploadSet = (mediaSet: defType[]) => {
     const uploadPromises = mediaSet.map((media) => {
       if (media.blob) {
-        return uploadBytes(sRef(storageDB, 'MaqeteStorage/' + media.name), media.blob)
+        return uploadBytes(sRef(storageDB, 'MaqProducts/' + media.name), media.blob)
           .then((res) => getDownloadURL(res.ref))
           .catch((error) => console.log(error))
       } else {
@@ -148,6 +149,7 @@ const AddProduct = () => {
           await setDoc(doc(fireStoreDB, 'Products/' + pid), {
             name: name,
             description: description,
+            storePrice : storePrice,
             price: price,
             category: category,
             brand: brand,
@@ -206,6 +208,11 @@ const AddProduct = () => {
             <div>
               <span>Description</span>
               <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            </div>
+
+            <div>
+              <span>Store Price</span>
+              <input min={0} type="number" value={storePrice} onChange={(e) => setStorePrice(parseFloat(e.target.value))}/>
             </div>
 
             <div>
