@@ -34,9 +34,11 @@ const HeadBox = () => {
 
   const changeSlide = () => {
     if (headSwiper.current) {
-      imgSwiper.current.swiper.slideNext();
-      setCurrentIndex(headSwiper.current.swiper.activeIndex);
-      console.log(headSwiper.current.swiper.activeIndex)
+      if (imgSwiper.current.swiper) {
+        imgSwiper.current.swiper.slideNext();
+        setCurrentIndex(headSwiper.current.swiper.activeIndex);
+      }
+      // console.log(headSwiper.current.swiper.activeIndex)
     }
   }
 
@@ -52,7 +54,7 @@ const HeadBox = () => {
     }
   }
 
-  const slideNext = async () => {
+  const slideNext = () => {
     if (headSwiper.current) {
       headSwiper.current.swiper.slideNext();
       // imgSwiper.current.swiper.slideTo(headSwiper.current.swiper.activeIndex);
@@ -103,8 +105,9 @@ const HeadBox = () => {
         <Swiper
           modules={[Autoplay]}
           speed={1000}
+          // loop={true}
           ref={headSwiper}
-          autoplay={{ delay: 4000, disableOnInteraction: true }}
+          autoplay={{ delay: 4000 }}
           className={styles.swiper}
           onSlideChange={changeSlide}
         >
@@ -130,7 +133,7 @@ const HeadBox = () => {
         <Swiper
           modules={[EffectCube]}
           effect="cube"
-          // loop={false}
+          loop={true}
           ref={imgSwiper}
           speed={1000}
           cubeEffect={{ shadow: false, slideShadows: false, shadowOffset: 10, shadowScale: 0.94 }}
