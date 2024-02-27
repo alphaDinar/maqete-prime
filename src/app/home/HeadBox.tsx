@@ -130,7 +130,7 @@ const HeadBox = () => {
         <Swiper
           modules={[EffectCube]}
           effect="cube"
-          loop={true}
+          // loop={false}
           ref={imgSwiper}
           speed={1000}
           cubeEffect={{ shadow: false, slideShadows: false, shadowOffset: 10, shadowScale: 0.94 }}
