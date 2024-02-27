@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import styles from './panel.module.css';
 import { MdArrowBack, MdLinearScale, MdOutlineFavoriteBorder, MdOutlineHome, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdOutlineSmartphone, MdPowerSettingsNew, MdSelfImprovement } from "react-icons/md";
 import Link from "next/link";
@@ -18,7 +18,13 @@ type panelProps = {
 const Panel = ({ children }: panelProps) => {
   const router = useRouter();
   const pathname = usePathname();
+  const [winWidth, setWinWidth] = useState(0);
 
+  useEffect(() => {
+    if (typeof window != undefined) {
+      setWinWidth(window.innerWidth);
+    }
+  }, [])
 
   const topTagList = [
     { tag: 'Dashboard', iconEl: <MdOutlineHome />, target: '/dashboard' },
@@ -51,7 +57,7 @@ const Panel = ({ children }: panelProps) => {
         <MdArrowBack className={styles.tag} onClick={toggleSidebar} />
         <header>
           <Link href={'/'}>
-            <Image alt="" src={window.innerWidth > 1300 ? sidebarToggled ? logoFav : logo : logo} height={50} width={100} className="contain" />
+            <Image alt="" src={winWidth > 1300 ? sidebarToggled ? logoFav : logo : logo} height={50} width={100} className="contain" />
           </Link>
         </header>
 
