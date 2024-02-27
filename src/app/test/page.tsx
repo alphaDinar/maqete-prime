@@ -27,15 +27,16 @@ const Test = () => {
 
 
   const notify = () => {
-    const welcomeNotify = new Notification('Welcome To Maqete', {
-      body: 'Discover your style at Maqetee',
-      icon: 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1709062741/maqete/Favicon_light_bg_wlsqv7.png',
-      vibrate: [200, 100, 200]
-    });
+    alert('panyin')
+    // const welcomeNotify = new Notification('Welcome To Maqete', {
+    //   body: 'Discover your style at Maqetee',
+    //   icon: 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1709062741/maqete/Favicon_light_bg_wlsqv7.png',
+    //   vibrate: [200, 100, 200]
+    // });
 
-    welcomeNotify.addEventListener('click', () => {
-      window.open('https://maqete-prime.vercel.app/category?cid=Earbuds');
-    })
+    // welcomeNotify.addEventListener('click', () => {
+    //   window.open('https://maqete-prime.vercel.app/category?cid=Earbuds');
+    // })
   }
 
   return (
