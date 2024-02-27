@@ -11,6 +11,7 @@ import { getDownloadURL, uploadBytes, ref as sRef } from "firebase/storage";
 import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { emitKeypressEvents } from "readline";
+import { getDateStamp, getUnixStamp } from "@/External/services";
 
 interface defType extends Record<string, any> { };
 const EditProduct = ({ searchParams }: { searchParams: { product: string } }) => {
@@ -21,6 +22,9 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
   const [description, setDescription] = useState(product.description);
   const [storePrice, setStorePrice] = useState(product.storePrice || 0);
   const [price, setPrice] = useState(product.price);
+  const [type, setType] = useState(product.type || '');
+  const [deadline, setDeadline] = useState(product.deadline || 0);
+  const [date, setDate] = useState(getDateStamp(product.deadline));
   const [priority, setPriority] = useState(product.priority);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
   const [category, setCategory] = useState(product.category);
@@ -168,6 +172,8 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
         description: description,
         storePrice: storePrice,
         price: price,
+        type: type,
+        deadline: deadline,
         priority: priority,
         category: category,
         brand: brand,
@@ -239,6 +245,20 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
             <div>
               <span>Price *</span>
               <input min={1} type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+            </div>
+
+            <div>
+              <span>Type *</span>
+              <select value={type} onChange={(e) => setType(e.target.value)} required>
+                <option hidden>Select Type</option>
+                <option value='regular'>Regular</option>
+                <option value='promo'>Promo</option>
+              </select>
+            </div>
+
+            <div>
+              <span>Deadline *</span>
+              <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setDeadline(getUnixStamp(e.target.value)); }} required />
             </div>
 
             <div>

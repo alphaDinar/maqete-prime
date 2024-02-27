@@ -26,8 +26,8 @@ const ProductBox = () => {
   const choiceList = [
     { name: 'Popular Products', tag: 'popular' },
     { name: 'New Arrivals', tag: 'arrival' },
-    { name: 'We Think You"ll Love' },
-    { name: 'Most Viewed Products' },
+    { name: 'We Think You"ll Love', tag: 'favorite' },
+    { name: 'Most Viewed Products', tag: 'views' },
   ]
   const handleChoice = (choice: defType) => {
     const allProductsTemp = [...allProducts];

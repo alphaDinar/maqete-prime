@@ -1,93 +1,195 @@
-import { IoMdTrophy } from "react-icons/io";
+'use client';
+import { IoIosNotificationsOutline, IoMdTrophy } from "react-icons/io";
 import Panel from "./Panel/Panel";
 import styles from './dashboard.module.css';
 import Link from "next/link";
-import { MdNorthEast, MdOutlineFavoriteBorder, MdOutlineShoppingCart } from "react-icons/md";
+import { MdArrowForward, MdBolt, MdNorthEast, MdOutlineFavoriteBorder, MdOutlinePending, MdOutlineShoppingCart } from "react-icons/md";
 import { GiDiamondTrophy, GiWallet } from "react-icons/gi";
 import Image from "next/image";
+import { useEffect, useRef, useState } from 'react';
+import Products from "../components/Products/Products";
+import { collection, doc, onSnapshot, query, limit, orderBy } from 'firebase/firestore';
+import { fireAuth, fireStoreDB } from '@/Firebase/base';
+import { onAuthStateChanged } from 'firebase/auth';
 
-const Dashboard = ({ searchParams }: { searchParams: { uid: string } }) => {
-  const uid = searchParams.uid;
-  const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567175/maqete/smartwatch-screen-digital-device_53876-96809_e8rasd.jpg';
+interface defType extends Record<string, any> { };
+const Dashboard = () => {
+  const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708791507/maqete/samp_kqdepy.png';
   const sample2 = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567337/maqete/modern-stationary-collection-arrangement_23-2149309652_hkfbcn.jpg';
   const air = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567577/maqete/MPNY3-removebg-preview_o1rd8i.png'
 
+  const avatar = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708985590/maqete/save_key_mjbtko.jpg';
+
+
+  const [uid, setUid] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [products, setProducts] = useState<defType[]>([]);
+
+  const [customer, setCustomer] = useState<defType>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const productsRef = collection(fireStoreDB, 'Products/');
+
+    const productStream = onSnapshot(query(productsRef, orderBy("priority", "desc"), limit(6)), (snapshot) => {
+      setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+    });
+
+    const authStream = onAuthStateChanged(fireAuth, (user) => {
+      if (user) {
+        setUid(user.uid);
+        setDisplayName(user.displayName || user.email || 'Dashboard');
+
+        const customerStream = onSnapshot(doc(fireStoreDB, 'Customers/' + user.uid), (snapshot) => {
+          const customerTemp: defType = ({ id: snapshot.id, ...snapshot.data() });
+          localStorage.setItem('maqCustomer', '1');
+          // localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart));
+          // localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList));
+          // localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
+          setIsLoading(false);
+          setIsLoggedIn(true);
+          setCustomer(customerTemp);
+        });
+        return () => customerStream();
+      } else {
+        localStorage.removeItem('maqCustomer');
+        setIsLoading(false);
+        console.log('logged Out');
+      }
+    });
+
+    return () => {
+      authStream()
+      productStream();
+    }
+  }, [])
+
+
   return (
     <Panel>
-      <section className={styles.conBox}>
-        <section className={styles.top}>
-          <section className={styles.statusBox}>
-            <Link href={'/orders'}>
-              <strong className="big">300</strong>
-              <span>Orders</span>
-            </Link>
-            <Link href={'/orders'} style={{ background: '#bdf2d2' }}>
-              <strong className="big">300,000</strong>
-              <span>Points</span>
-            </Link>
-            <Link href={'/orders'} style={{ background: '#f2f6f7' }}>
-              <strong className="big">1st</strong>
-              <GiDiamondTrophy />
-            </Link>
-            <Link href={'/topUp'} style={{ background: '#ffeb9d' }}>
-              <strong className="big">GHC 5,000</strong>
-              <GiWallet />
-            </Link>
+      {!isLoading ?
+        <section className={styles.conBox}>
+          <section className={styles.header}>
+            <section className={styles.statusBox}>
+              <Link href={'/orders'}>
+                <strong className="big">300</strong>
+                <span>Orders</span>
+              </Link>
+              <Link href={'/orders'} style={{ background: '#bdf2d2' }}>
+                <strong className="big">300,000</strong>
+                <span>Points</span>
+              </Link>
+              <Link href={'/orders'} style={{ background: '#f2f6f7' }}>
+                <strong className="big">1st</strong>
+                <GiDiamondTrophy />
+              </Link>
+              <Link href={'/topUp'} style={{ background: '#ffeb9d' }}>
+                <strong className="big">GHC 5,000</strong>
+                <GiWallet />
+              </Link>
+            </section>
+
+            <nav className={styles.controlBox}>
+              <article>
+                <Link href={'/wishList'}>
+                  <MdOutlineFavoriteBorder />
+                  <legend>{customer.wishList.length}</legend>
+                </Link>
+                <Link href={'/cart'}>
+                  <MdOutlineShoppingCart />
+                  <legend>{customer.cart.length}</legend>
+                </Link>
+                <Link href={'/wishList'}>
+                  <IoIosNotificationsOutline />
+                  <legend>{customer.cart.length}</legend>
+                </Link>
+              </article>
+
+              <span>|</span>
+
+              <div>
+                <Link href={'/profile'}>
+                  <Image alt="" className="cover" src={avatar} width={35} height={35} />
+                  <span>Hi Omar</span>
+                </Link>
+              </div>
+            </nav>
           </section>
 
-          <nav className={styles.controlBox}>
-            <Link href={'/wishList'}>
-              <MdOutlineFavoriteBorder />
-              <legend>5</legend>
-            </Link>
-            <Link href={'/cart'}>
-              <MdOutlineShoppingCart />
-              <legend>6</legend>
-            </Link>
-          </nav>
-        </section>
+          <section className={styles.con}>
+            <section className={styles.top}>
+              <section className={styles.recentBox}>
+                <header>
+                  <h3>Recent Orders</h3>
+                  <Link href={'/allPromos'}>More Orders <MdArrowForward /></Link>
+                </header>
+                <ul>
+                  {Array(3).fill('a').map((order, i) => (
+                    <Link href={''} key={i}>
+                      <MdBolt className={styles.tag} />
+                      <Image className="contain" alt="" src={air} width={150} height={150} />
+                      <article>
+                        <strong className="cash">GHS 4,000</strong>
+                        <legend>30 mins ago</legend>
+                      </article>
+                      <button>
+                        <MdArrowForward />
+                      </button>
+                    </Link>
+                  ))}
+                </ul>
+              </section>
+              <section className={styles.right}>
+                <header><span></span> <Link href={'/allPromos'}>More Promos <MdArrowForward /></Link></header>
+                <section>
+                  {Array(2).fill('').map((promo, i) => (
+                    <Link href={''} className={styles.promo} key={i}>
+                      <Image className="contain" alt="" height={120} width={120} src={sample} />
+                      <article>
+                        <h2>Samsung A24</h2>
+                        <div className={styles.price}>
+                          <strong className="big cancel">GHS 4,000</strong> <strong className="big" style={{ color: 'black' }}>GHS 4,000</strong>
+                        </div>
 
-        <section className={styles.low}>
-          <section className={styles.left}>
-            <div className={styles.card}>
-              <Image alt="" fill sizes="auto" src={sample} />
-            </div>
-            <div className={styles.card}>
-              <Image alt="" fill sizes="auto" src={sample2} />
-            </div>
-          </section>
-          <section className={styles.right}>
-            <section>
-              <Link href={'/viewOrder'} className={styles.order}>
-                <legend>1 month ago</legend>
-                <sub></sub>
-                <Image alt="" height={200} width={200} src={air} />
-                <article>
-                  <small>Air pods + Iphone 3 + 3 ...</small>
-                  <span>Delivers in 3 days</span>
-                  <strong className="big">GHC 4,500</strong>
-                </article>
-                <p>
-                  <MdNorthEast />
-                </p>
-              </Link>
-              <Link href={'/viewOrder'} className={styles.order}>
-                <legend>1 month ago</legend>
-                <sub></sub>
-                <Image alt="" height={200} width={200} src={air} />
-                <article>
-                  <small>Air pods + Iphone 3 + 3 ...</small>
-                  <span>Delivers in 3 days</span>
-                  <strong className="big">GHC 4,500</strong>
-                </article>
-                <p>
-                  <MdNorthEast />
-                </p>
-              </Link>
+                        <legend className="timeBox">
+                          <p>
+                            <span>15</span>
+                            <small>Days</small>
+                          </p>
+                          <p>
+                            <span>10</span>
+                            <small>Hours</small>
+                          </p>
+                          <p>
+                            <span>30</span>
+                            <small>Mins</small>
+                          </p>
+                          <p>
+                            <span>25</span>
+                            <small>Secs</small>
+                          </p>
+                        </legend>
+                      </article>
+                      <MdArrowForward />
+                    </Link>
+                  ))}
+
+                </section>
+              </section>
+            </section>
+
+            <section className={styles.trending}>
+              <header>
+                <h3>Trending Offers</h3>
+                <Link href={'/allProducts'}>More Offers <MdArrowForward /></Link>
+              </header>
+              <Products productList={JSON.stringify(products)} />
             </section>
           </section>
         </section>
-      </section>
+        : <span>Loading</span>
+      }
     </Panel>
   );
 }

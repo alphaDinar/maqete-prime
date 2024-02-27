@@ -12,6 +12,7 @@ import { GiTakeMyMoney } from "react-icons/gi";
 import { addToCart } from "@/External/services";
 import { doc, increment, onSnapshot, updateDoc } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
+import WishListTag from "../components/WishListTag/WishListTag";
 
 interface defType extends Record<string, any> { };
 const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
@@ -105,7 +106,9 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
                   <input className="big" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
                 </p>
 
-                <MdOutlineFavoriteBorder className={styles.wishList} />
+                <sup className={styles.wishList}>
+                  <WishListTag pid={product.id} />
+                </sup>
               </div>
 
               <p className={styles.stars}>

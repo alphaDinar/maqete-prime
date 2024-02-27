@@ -1,11 +1,11 @@
-.products{
+.products {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(5,1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem 0;
 }
 
-.product{
+.product {
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -14,33 +14,39 @@
   border-left: 1px solid lightgray;
   position: relative;
 }
-.product div{
+
+.product div {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
 }
-.product small{
+
+.product small {
   color: rgb(92, 92, 92);
   font-size: 0.75rem;
 }
-.product img{
+
+.product img {
   margin: auto;
   object-fit: contain;
   transition: 0.5s ease;
   cursor: pointer;
 }
-.product img:hover{
+
+.product img:hover {
   scale: 1.2;
 }
-.product .controlBox{
+
+.product .controlBox {
   top: 0;
   right: 5px;
   position: absolute;
   display: flex;
   gap: 1px;
 }
-.checkout,.wishList{
+
+.checkout {
   cursor: pointer;
   color: white;
   font-size: 1.3rem;
@@ -48,8 +54,21 @@
   padding: 3px;
 }
 
+.product a {
+  margin: auto;
+}
 
-.product span{
+.wishList svg {
+  cursor: pointer;
+  color: palevioletred;
+  top: 0;
+  position: absolute;
+  left: 5px;
+  font-size: 1.2rem;
+}
+
+
+.product span {
   max-height: 35px;
   -webkit-line-clamp: 1;
   font-size: 0.8rem;
@@ -57,16 +76,19 @@
   color: var(--theme);
   cursor: pointer;
 }
-.product sub{
+
+.product sub {
   font-weight: 600;
   font-size: 0.9rem;
 }
-.product p{
+
+.product p {
   display: flex;
   align-items: center;
   gap: 0.3rem;
 }
-.product button{
+
+.product button {
   padding: 7px 5px;
   display: flex;
   align-items: center;
@@ -77,7 +99,8 @@
   cursor: pointer;
   position: relative;
 }
-.product button sup{
+
+.product button sup {
   width: 10px;
   height: 10px;
   display: block;
@@ -88,21 +111,23 @@
   transition: 0.4s ease;
 }
 
-.product button:hover sup{
+.product button:hover sup {
   background: black;
   width: 100%;
 }
-.product button span, .product button svg{
-  /* color: white; */
+
+.product button span,
+.product button svg {
   z-index: 10;
 }
 
-.product nav{
+.product nav {
   display: flex;
   justify-content: center;
   gap: 0 2rem;
 }
-.product nav legend{
+
+.product nav legend {
   cursor: pointer;
   width: 25px;
   height: 25px;
@@ -112,67 +137,79 @@
   align-items: center;
   justify-content: center;
 }
-.product nav legend:nth-child(1){
+
+.product nav legend:nth-child(1) {
   background: dodgerblue;
 }
-.product nav legend:nth-child(2){
+
+.product nav legend:nth-child(2) {
   background: salmon;
 }
 
-.product.add{
+.product.add {
   border: 2px solid darkgray;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
-.product.add i{
+
+.product.add i {
   font-size: 3rem;
 }
 
-@media all and (max-width:1100px){
-  .products{
-    grid-template-columns: repeat(4,1fr);
+@media all and (max-width:1100px) {
+  .products {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
-@media all and (max-width:950px){
-  .products{
-    grid-template-columns: repeat(3,1fr);
+
+@media all and (max-width:950px) {
+  .products {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
-@media all and (max-width:800px){
-  .products{
-    grid-template-columns: repeat(2,1fr);
+
+@media all and (max-width:800px) {
+  .products {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .product div{
+
+  .product div {
     gap: 0.2rem;
   }
 }
 
-@media all and (max-width:500px){
-  .product img{
+@media all and (max-width:500px) {
+  .product img {
     width: 100%;
   }
-  .products:nth-child(8){
+
+  .products:nth-child(8) {
     display: none;
   }
 }
-@media all and (max-width:400px){
-  .product{
+
+@media all and (max-width:400px) {
+  .product {
     gap: 0.2rem;
   }
-  .product img{
+
+  .product img {
     height: 100px;
   }
-  .product button{
+
+  .product button {
     flex-direction: column;
     gap: 0.1rem;
     padding: 5px;
   }
-  .product button span{
+
+  .product button span {
     display: none;
   }
-  .product button i{
+
+  .product button i {
     font-size: 1.2rem;
   }
 }

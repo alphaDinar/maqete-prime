@@ -1,56 +1,43 @@
 'use client'
 import styles from './products.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { MdFavorite, MdOutlineAddShoppingCart, MdOutlineFavoriteBorder, MdOutlineShoppingCartCheckout, MdStar } from 'react-icons/md';
+import { MdOutlineAddShoppingCart, MdOutlineShoppingCartCheckout, MdStar } from 'react-icons/md';
 import Image from 'next/image';
 import { sampleImg } from '@/External/lists';
-import { addToCart, addToWishList } from '@/External/services';
+import { addToCart } from '@/External/services';
+import { useRouter } from 'next/navigation';
+import WishListTag from '../WishListTag/WishListTag';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 interface defType extends Record<string, any> { };
 const Products = ({ productList }: { productList: string }) => {
+  const router = useRouter();
   const products = JSON.parse(productList);
-  const [wishList, setWishList] = useState<string[]>([]);
+
 
   useEffect(() => {
-    setWishList(JSON.parse(localStorage.getItem('maqWishList') || '[]'));
-    // AOS.init({
-    //   duration: "1000",
-    // })
+    AOS.init({
+      duration: 1000,
+    });
+
   }, [])
 
-  const updateWishList = (pid: string) => {
-    const itemExists = wishList.find((el) => el === pid);
-    if (itemExists) {
-      const updatedWishList = wishList.filter((el) => el !== pid);
-      setWishList(updatedWishList);
-    } else {
-      const updatedWishList = [...wishList, pid];
-      setWishList(updatedWishList);
-    }
-  }
-
-  const checkWishList = (pid: string) => {
-    const itemExists = wishList.find((el) => el === pid);
-    return itemExists;
-  }
 
   return (
     <section className={styles.products}>
       {products.map((product: defType, i: number) => (
-        <div className={styles.product} key={i} data-aos="fade-up" data-aos-delay={100 * 1}>
+        <div className={styles.product} key={i} data-aos="fade-up" data-aos-delay={100 * (i + 1)}>
           <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
             <Image alt='' className='contain' width={150} height={150} src={product.image.url} />
           </Link>
           <div>
+            <sup className={styles.wishList}>
+              <WishListTag pid={product.id} />
+            </sup>
             <div className={styles.controlBox}>
-              <MdOutlineShoppingCartCheckout className={styles.checkout} />
-              {
-                checkWishList(product.id) ?
-                  <MdFavorite id='wished' className={styles.wishList} onClick={() => { addToWishList(product.id), updateWishList(product.id) }} />
-                  :
-                  <MdOutlineFavoriteBorder className={styles.wishList} onClick={() => { addToWishList(product.id), updateWishList(product.id) }} />
-              }
+              <MdOutlineShoppingCartCheckout className={styles.checkout} onClick={() => { addToCart(product, 1); router.push('/checkout') }} />
             </div>
 
             <Link href={``} style={{ height: 'auto' }}>

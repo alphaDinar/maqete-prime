@@ -3,6 +3,7 @@
   gap: 2rem;
   grid-template-columns: 7fr 3fr;
   align-items: flex-start;
+  padding-top: 1vh !important;
 }
 
 .cartBox {
@@ -47,7 +48,6 @@
 .topLi span {
   color: rgb(124, 124, 124);
   font-size: 1.1rem;
-  /* font-weight: 600; */
   font-family: 'Alegreya Sans SC', sans-serif;
 }
 
@@ -77,6 +77,7 @@
 
 .items li article {
   display: flex;
+  align-items: center;
   gap: 1.3rem;
 }
 
@@ -97,9 +98,6 @@
   cursor: pointer;
 }
 
-.items li small:hover {
-  border-bottom: 1px solid black;
-}
 
 .items li p {
   display: flex;
@@ -133,6 +131,12 @@
 
 .items li nav input::-webkit-inner-spin-button {
   display: none;
+}
+
+.items li legend{
+  color: tomato;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .items li button {
@@ -220,6 +224,7 @@
   background: white;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   top: 100%;
+  z-index: 100;
 }
 
 .searchBox li {
@@ -367,5 +372,8 @@
   .items li article {
     display: flex;
     gap: 0.5rem;
+  }
+  .checkoutBoxHolder {
+    padding-top: 0vh !important;
   }
 }

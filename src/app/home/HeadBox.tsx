@@ -12,7 +12,6 @@ import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestor
 import { fireStoreDB } from "@/Firebase/base";
 import { TbBolt, TbTruckReturn } from 'react-icons/tb';
 import { GiTakeMyMoney } from 'react-icons/gi';
-import { sortByPriority } from '@/External/services';
 
 interface defType extends Record<string, any> { };
 const HeadBox = () => {
@@ -118,8 +117,8 @@ const HeadBox = () => {
                 </p>
                 <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>Buy Now <MdArrowForward /></Link>
                 <p>
-                  {product.storePrice && <h4 className='big'>GHS {product.storePrice.toLocaleString()} </h4>}
-                  <h3 className='big'>GHS {product.price.toLocaleString()}</h3>
+                  {product.storePrice && <h4 className='big cancel'>GHS {product.storePrice.toLocaleString()} </h4>}
+                  <h3 className='big price'>GHS {product.price.toLocaleString()}</h3>
                 </p>
               </div>
             </SwiperSlide>
@@ -134,7 +133,7 @@ const HeadBox = () => {
           loop={true}
           ref={imgSwiper}
           speed={500}
-          cubeEffect={{ shadow: false, slideShadows: true, shadowOffset: 20, shadowScale: 0.94 }}
+          cubeEffect={{ shadow: false, slideShadows: false, shadowOffset: 10, shadowScale: 0.94 }}
           allowTouchMove={false}
           className={styles.swiper}
         >

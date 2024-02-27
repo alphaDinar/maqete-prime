@@ -9,6 +9,7 @@ import { GrMultimedia } from "react-icons/gr";
 import { fireStoreDB, storageDB } from "@/Firebase/base";
 import { getDownloadURL, uploadBytes, ref as sRef } from "firebase/storage";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { getUnixStamp } from "@/External/services";
 
 interface defType extends Record<string, any> { };
 const AddProduct = () => {
@@ -17,6 +18,9 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [storePrice, setStorePrice] = useState(0);
   const [price, setPrice] = useState(1);
+  const [type, setType] = useState('');
+  const [deadline, setDeadline] = useState(0);
+  const [date, setDate] = useState('');
   const [priority, setPriority] = useState(1);
   const [categoryList, setCategoryList] = useState<defType[]>([]);
   const [category, setCategory] = useState('');
@@ -152,6 +156,8 @@ const AddProduct = () => {
             description: description,
             storePrice: storePrice,
             price: price,
+            type: type,
+            deadline: deadline,
             priority: priority,
             category: category,
             brand: brand,
@@ -219,6 +225,20 @@ const AddProduct = () => {
             <div>
               <span>Price *</span>
               <input min={1} type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+            </div>
+
+            <div>
+              <span>Type *</span>
+              <select value={type} onChange={(e) => setType(e.target.value)} required>
+                <option hidden>Select Type</option>
+                <option value='regular'>Regular</option>
+                <option value='promo'>Promo</option>
+              </select>
+            </div>
+
+            <div>
+              <span>Deadline *</span>
+              <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setDeadline(getUnixStamp(e.target.value)); }} required />
             </div>
 
             <div>

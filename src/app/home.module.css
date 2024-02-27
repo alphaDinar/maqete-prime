@@ -53,15 +53,6 @@
   gap: 0.2rem;
 }
 
-.headBox .left h3 {
-  font-size: 1.9rem;
-  color: gray;
-}
-
-.headBox .left h4 {
-  font-size: 1.3rem;
-  text-decoration: line-through;
-}
 
 .headBox .left a {
   background: var(--theme);
@@ -250,19 +241,30 @@
 .promoBox {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 1rem;
   background: ghostwhite;
 }
 
 .promo {
   padding: 20px;
-  border-radius: 5px;
   display: grid;
   grid-template-columns: 1.5fr 1fr;
+  background: #ffeb9d;
   align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.promo a {
+  color: black;
 }
 
 .promo img {
   object-fit: contain;
+  transition: 0.5s ease;
+}
+
+.promo img:hover {
+  scale: 1.2;
 }
 
 .promo article {
@@ -271,13 +273,13 @@
   gap: 1rem;
 }
 
+.promo strong {
+  font-size: 1.4rem;
+}
+
 .promo article p {
   display: flex;
   flex-direction: column;
-}
-
-.promo article span {
-  text-decoration: line-through;
 }
 
 .promo article hr {
@@ -285,15 +287,11 @@
   border-top: 2px solid black;
 }
 
-.promo .timeBox {
+.promo .timeBoxHolder {
   width: max-content;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-}
-
-.promo h3 {
-  color: gray;
 }
 
 .promo legend {
@@ -304,7 +302,7 @@
   margin-top: 10px;
   background: var(--theme);
   color: white;
-  padding: 5px 10px;
+  padding: 8px 10px;
   display: flex;
   cursor: pointer;
   align-items: center;
@@ -668,10 +666,8 @@
   }
 
   .promo {
-    border: 1px solid darkgray;
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
     gap: 0.5rem;
   }
 

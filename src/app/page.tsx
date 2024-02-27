@@ -36,16 +36,11 @@ const Home = async () => {
         <h3>Trending Categories</h3>
         <section className={styles.categories}>
           {categories.slice(0, 6).map((category: defType, i) => (
-            <div className={styles.category} key={i}>
+            <Link href={{ pathname: '/category', query: { cid: category.id } }} className={styles.category} style={{ color: 'black' }} key={i}>
               <sub></sub>
-              {
-                category.image.format === 'jpeg' ?
-                  <Image alt='' className='cover' src={category.image.url} width={100} height={100} />
-                  :
-                  <Image alt='' className='contain' src={category.image.url} width={100} height={100} />
-              }
+              <Image alt='' className='contain' src={category.image.url} width={100} height={100} />
               <span>{category.name}</span>
-            </div>
+            </Link>
           ))}
         </section>
       </section>

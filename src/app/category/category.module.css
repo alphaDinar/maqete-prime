@@ -1,0 +1,97 @@
+.categoryBox {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.categoryBox hr {
+  border-top: 4px solid black;
+  background: darkgray;
+}
+
+.back {
+  font-size: 2rem;
+  color: gray;
+  cursor: pointer;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.categoryList {
+  display: flex;
+  gap: 1rem;
+}
+
+.category {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  color: black;
+  padding: 10px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid whitesmoke;
+  min-width: 100px;
+}
+
+.category sub {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 10px;
+  height: 10px;
+  display: block;
+  background: whitesmoke;
+}
+
+.category:hover sub {
+  scale: 50;
+}
+
+.category:hover span {
+  left: 10px;
+}
+
+.category sub,
+.category span {
+  transition: 0.3s ease;
+}
+
+.category span {
+  position: relative;
+  font-size: 0.8rem;
+  left: 0;
+}
+
+.category img,
+.category span {
+  z-index: 100;
+}
+
+.categoryBox header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: max-content;
+}
+
+.top article {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.top article span {
+  padding: 5px 12px;
+  background: #ffefe3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

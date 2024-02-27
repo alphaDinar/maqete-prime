@@ -10,11 +10,13 @@ import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loader from '../Loader/Loader';
 import { addKeyword, addToCart, clearItem, getCartTotal, removeFromCart } from '@/External/services';
+import { useWishList } from '@/app/contexts/wishListContext';
 
 interface defType extends Record<string, any> { };
 const TopNav = () => {
   const [displayName, setDisplayName] = useState('');
   const [uid, setUid] = useState('');
+  const { wishList, setWishList } = useWishList();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [products, setProducts] = useState<defType[]>([]);
@@ -39,7 +41,6 @@ const TopNav = () => {
     getDocs(collection(fireStoreDB, 'Products/'))
       .then((res) => {
         const productsTemp: defType[] = res.docs.map((el) => ({ id: el.id, ...el.data() }))
-        // localStorage.setItem('maqProducts', JSON.stringify(productsTemp));
         setProducts(productsTemp);
       });
 
@@ -54,6 +55,7 @@ const TopNav = () => {
           localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart));
           localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList));
           localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
+          setWishList(customerTemp.wishList);
           setIsLoading(false);
           setIsLoggedIn(true);
           setCustomer(customerTemp);
@@ -67,7 +69,7 @@ const TopNav = () => {
     });
 
     return () => authStream();
-  }, [])
+  }, [setWishList])
 
   const prodTest = [
     { name: 'Samsung A24' },
@@ -117,7 +119,7 @@ const TopNav = () => {
       {!isLoading ?
         isLoggedIn ?
           <nav className={styles.controlBox}>
-            <Link href={{ pathname: 'dashboard', query: { uid: uid } }} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
+            <Link href={'/dashboard'} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
               <MdSelfImprovement />
               <legend>{customer.username}</legend>
             </Link>
@@ -172,7 +174,7 @@ const TopNav = () => {
                     }
                     <p>
                       <small>{JSON.parse(item.product).name}</small>
-                      <strong className='cash'>GHC {(item.quantity * item.price).toLocaleString()}</strong>
+                      <strong className='cash'>GH₵ {(item.quantity * item.price).toLocaleString()}</strong>
                       <nav>
                         <MdRemove onClick={() => removeFromCart(JSON.parse(item.product))} />
                         <span>{item.quantity}</span>
@@ -185,7 +187,7 @@ const TopNav = () => {
             </ul>
 
             <footer>
-              <h3 className='big'>GHC {getCartTotal().toLocaleString()}</h3>
+              <h3 className='big'>GHS {getCartTotal().toLocaleString()}</h3>
               <Link href={'/checkout'}>
                 <sub></sub>
                 <span className='caps'>Go to Checkout</span>

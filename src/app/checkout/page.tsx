@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import TopNav from '../components/TopNav/TopNav';
 import styles from './checkout.module.css';
-import { addToCart, clearItem, fixContact, genToken, getUpdatedCartTotal, removeFromCart } from '@/External/services';
+import { addToCart, clearItem, fixContact, genToken, getUpdatedCartTotal, removeFromCart, setToCart } from '@/External/services';
 import { MdAdd, MdArrowForward, MdBolt, MdCall, MdDelete, MdDeleteOutline, MdLocalShipping, MdLocationPin, MdOutlineDeliveryDining, MdOutlineReceiptLong, MdOutlineSmartphone, MdPayments, MdReceiptLong, MdRemove, MdSchedule } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -56,6 +56,7 @@ const Checkout = () => {
           localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
           setCustomer(customerTemp);
           sortCart(customerTemp.cart);
+          setQuantityList(customerTemp.cart.map((el: defType) => el.quantity))
         });
         return () => customerStream();
       } else {
@@ -93,7 +94,7 @@ const Checkout = () => {
 
   const handleLocText = async (val: string) => {
     setLocText(val);
-    if (val.length > 2) {
+    if (val.length > 0) {
       setPredLoading(true);
       const res = await predictPlaces(val);
       console.log(res.data.predictions);
@@ -149,22 +150,7 @@ const Checkout = () => {
     // }
   }
 
-  // const handleQuantity = (pid, val, i) => {
-  //   if (val < 101) {
-  //     console.log(val, 101)
-  //     const updatedQuantityList = [...quantityList];
-  //     updatedQuantityList[i] = val;
-  //     setQuantityList(updatedQuantityList)
-  //   }
 
-  //   if (val > 0) {
-  //     const updatedVal = parseInt(val);
-  //     const item = cart.find((el) => el.pid === pid);
-  //     item.quantity = updatedVal;
-  //     item.total = val * item.price;
-  //     updateCartInfo(cart);
-  //   }
-  // }
 
 
   const [tes, setTes] = useState('');
@@ -194,7 +180,7 @@ const Checkout = () => {
                       <Image alt='' fill sizes='auto' src={item.el.image.url} />
                     </div>
                     <p>
-                      <Link href={{ pathname: '/viewProduct', query: { pid: item.el.id } }}>
+                      <Link style={{ color: 'black' }} href={{ pathname: '/viewProduct', query: { pid: item.el.id } }}>
                         <small className="cut">
                           {item.el.name}
                         </small>
@@ -202,25 +188,25 @@ const Checkout = () => {
                       <small style={{ color: 'darkgray' }} className="cut">
                         {item.el.category}
                       </small>
-                      <legend onClick={() => { clearItem(item) }}>
+                      <legend onClick={() => { clearItem(item.el) }}>
                         <MdDeleteOutline />
                       </legend>
                     </p>
                   </article>
                   <nav>
                     <button onClick={() => { removeFromCart(item.el) }}><MdRemove /></button>
-                    <input className='cash' max={100} type="number" value={quantityList[i].toString()} />
+                    <input className='cash' type="number" value={quantityList[i]} onChange={(e) => setToCart(item.el, parseInt(e.target.value))} />
                     <button onClick={() => { addToCart(item.el, 1) }}><MdAdd /></button>
                   </nav>
-                  <p>
+                  <article>
                     <sub>Unit Price</sub>
                     <h5 className='cash'>GH₵ {item.price.toLocaleString()}</h5>
-                  </p>
+                  </article>
 
-                  <p>
+                  <article>
                     <sub>Total</sub>
                     <h5 style={{ fontWeight: '600' }} className='cash'>GH₵ {(item.quantity * item.price).toLocaleString()}</h5>
-                  </p>
+                  </article>
                 </li>
               ))}
           </section>

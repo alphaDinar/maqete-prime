@@ -1,3 +1,4 @@
+// 'use client';
 import { fireAuth, fireStoreDB } from "@/Firebase/base";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
@@ -60,6 +61,27 @@ export const addToCart = (product: defType, quantity: number) => {
     }
   })
 }
+
+export const setToCart = (product: defType, quantity: number) => {
+  onAuthStateChanged(fireAuth, (user) => {
+    const customer = localStorage.getItem('maqCustomer');
+    const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
+    const pid = product.id;
+
+    const itemExists = cart.find((el) => el.pid === pid);
+    if (itemExists) {
+      itemExists['quantity'] = quantity || 1;
+    }
+    if (user && customer) {
+      updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
+        cart: cart
+      })
+    } else {
+      localStorage.setItem('maqCart', JSON.stringify(cart));
+    }
+  })
+}
+
 
 export const removeFromCart = (product: defType) => {
   onAuthStateChanged(fireAuth, (user) => {
@@ -194,9 +216,10 @@ export const getOrderQuantity = (cart: defType[]) => {
 
 
 // timeServices
-export const getTimeLeft = (unixTimestamp: number) => {
+export const getTimeLeft = (stamp: number) => {
   const now = new Date().getTime();
-  const difference = unixTimestamp - now;
+  const difference = stamp - now;
+
 
   if (difference <= 0) {
     return 'Timer expired';
@@ -206,11 +229,13 @@ export const getTimeLeft = (unixTimestamp: number) => {
   const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-  if (days < 0) {
-    return `${hours} : ${minutes} : ${seconds}`;
-  } else {
-    return `${days} days : ${hours} : ${minutes} : ${seconds}`;
-  }
+
+  const formattedDays = days < 10 ? '0' + days : days;
+  const formattedHours = hours < 10 ? '0' + hours : hours;
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+  const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+  return `${formattedDays},${formattedHours},${formattedMinutes},${formattedSeconds}`;
 }
 
 export const getTimeSince = (date: number) => {
@@ -259,6 +284,21 @@ export const getTimeSince = (date: number) => {
   }
 }
 
+export const getUnixStamp = (date: string) => {
+  const [year, month, day] = date.split('-').map(Number);
+  const dateObj = new Date(year, month - 1, day);
+  const unixTimestamp = dateObj.getTime();
+
+  return unixTimestamp;
+}
+
+export const getDateStamp = (stamp: number) => {
+  const date = new Date(stamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
 //sorting
 export const sortByTime = (list: defType[]) => {
