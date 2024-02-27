@@ -132,7 +132,7 @@ const HeadBox = () => {
           effect="cube"
           loop={true}
           ref={imgSwiper}
-          speed={500}
+          speed={1000}
           cubeEffect={{ shadow: false, slideShadows: false, shadowOffset: 10, shadowScale: 0.94 }}
           allowTouchMove={false}
           className={styles.swiper}
