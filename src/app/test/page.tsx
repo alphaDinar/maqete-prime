@@ -3,32 +3,44 @@ import { getTimeLeft } from "@/External/services";
 import { useEffect, useState } from "react";
 
 const Test = () => {
-  const [timeLeft, setTimeLeft] = useState('');
-  const [deadlines, setDeadlines] = useState([1709424000000, 1719424000000]);
-  const [timerList, setTimerList] = useState<string[]>([]);
-  const [periodList, setPeriodList] = useState(['Days', 'Hours', 'Mins', 'Secs']);
 
   useEffect(() => {
-    setInterval(() => {
-      const updatedTimerList = [...deadlines].map((el) => getTimeLeft(el));
-      setTimerList(updatedTimerList);
-      setTimeLeft(getTimeLeft(1709424000000));
-    }, 1000);
+    if (typeof window !== undefined) {
+      if ("Notification" in window) {
+        if (Notification.permission === 'granted') {
+          notify()
+        } else {
+          Notification.requestPermission()
+            .then((res) => {
+              if (res === 'granted') {
+                notify()
+              } else if (res === 'denied') {
+                alert('access denied');
+              } else if (res === 'default') {
+                alert('not given');
+              }
+            })
+        }
+      }
+    }
+  }, [])
 
-  }, [deadlines])
+
+  const notify = () => {
+    const welcomeNotify = new Notification('Welcome To Maqete', {
+      body: 'Discover your style at Maqetee',
+      icon: 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1709062741/maqete/Favicon_light_bg_wlsqv7.png',
+      vibrate: [200, 100, 200]
+    });
+
+    welcomeNotify.addEventListener('click', () => {
+      window.open('https://maqete-prime.vercel.app/category?cid=Earbuds');
+    })
+  }
 
   return (
     <section>
-      {timerList.map((timer, i) => (
-        <legend className="timeBox" key={i}>
-          {timer.split(',').map((el, ii) => (
-            <p key={ii}>
-              <span>{el}</span>
-              <small>{periodList[i]}</small>
-            </p>
-          ))}
-        </legend>
-      ))}
+      notify
     </section>
   );
 }
