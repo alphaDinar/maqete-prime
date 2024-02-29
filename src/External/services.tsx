@@ -392,3 +392,13 @@ export const genToken = (): string => {
 
   return `#${result}`;
 };
+
+
+export const checkJSONParsable = (data: string) => {
+  try {
+    JSON.parse(data);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

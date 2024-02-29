@@ -97,7 +97,7 @@ const HeadBox = () => {
                   <div className={styles.con}>
                     <article>
                       <strong>{product.name}</strong>
-                      <small>{product.description}</small>
+                      <small className='cut2'>{product.description}</small>
                     </article>
                     <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>Buy Now <MdArrowForward /></Link>
                     <article>

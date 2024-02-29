@@ -9,7 +9,7 @@ import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loader from '../Loader/Loader';
-import { addKeyword, addToCart, clearItem, getCartTotal, removeFromCart } from '@/External/services';
+import { addKeyword, addToCart, checkJSONParsable, clearItem, getCartTotal, removeFromCart } from '@/External/services';
 import { useWishList } from '@/app/contexts/wishListContext';
 
 interface defType extends Record<string, any> { };
@@ -27,6 +27,7 @@ const TopNav = () => {
   const [cartBoxToggled, setCartBoxToggled] = useState(false);
   const [customer, setCustomer] = useState<defType>({});
   const [winSize, setWinSize] = useState(1200);
+  const [cart, setCart] = useState<defType[]>([]);
   const [cartLoaded, setCartLoaded] = useState(false);
 
   const toggleSearchBox = () => {
@@ -69,9 +70,9 @@ const TopNav = () => {
         const customerStream = onSnapshot(doc(fireStoreDB, 'Customers/' + user.uid), (snapshot) => {
           const customerTemp: defType = ({ id: snapshot.id, ...snapshot.data() });
           localStorage.setItem('maqCustomer', '1');
-          localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart));
-          localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList));
-          localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
+          localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart) || '[]');
+          localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList) || '[]');
+          localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords) || '[]');
           setWishList(customerTemp.wishList);
           setIsLoading(false);
           setIsLoggedIn(true);
@@ -165,7 +166,7 @@ const TopNav = () => {
             </Link>
             <a onClick={toggleCartBox}>
               <MdOutlineShoppingCart />
-              <legend>6</legend>
+              <legend>{cart.length}</legend>
             </a>
             <MdMenu className={styles.tag} onClick={toggleMenu} />
           </nav>
@@ -188,8 +189,7 @@ const TopNav = () => {
 
             <ul>
               {
-                localStorage.getItem('maqCart') &&
-                JSON.parse(localStorage.getItem('maqCart') || '[]').map((item: defType, i: number) => (
+                cart.map((item: defType, i: number) => (
                   <li key={i}>
                     {
                       <Image alt='' src={JSON.parse(item.product).image.url} height={70} width={70} />

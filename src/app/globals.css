@@ -54,12 +54,32 @@ li {
   width: 100%;
 }
 
-.cut {
+
+
+.cut,
+.cut2,
+.cut3,
+.cut6 {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.cut {
   -webkit-line-clamp: 1;
+}
+
+.cut2 {
+  -webkit-line-clamp: 2;
+}
+
+.cut3 {
+  -webkit-line-clamp: 3;
+}
+
+.cut4 {
+  -webkit-line-clamp: 4;
 }
 
 #scrollable {
