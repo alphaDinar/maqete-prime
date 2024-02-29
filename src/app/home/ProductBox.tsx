@@ -6,18 +6,25 @@ import { useEffect, useState } from "react";
 import { sortArrival, sortPopular, sortViews } from "@/External/services";
 import { collection, onSnapshot } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
+import AOS from "aos";
 
 interface defType extends Record<string, any> { };
 const ProductBox = () => {
   const [selectedChoice, setSelectedChoice] = useState('');
   const [allProducts, setAllProducts] = useState<defType[]>([]);
   const [products, setProducts] = useState<defType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    AOS.init({
+      duration: 1000,
+    });
+
     setSelectedChoice('popular');
     const productStream = onSnapshot(collection(fireStoreDB, 'Products/'), (snapshot) => {
       setAllProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
       setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+      setIsLoading(false)
     });
 
     return () => productStream();
@@ -45,21 +52,24 @@ const ProductBox = () => {
 
 
   return (
-    <section className={styles.productBox} id="box">
+    <section className={styles.productBox} id="boxFull">
       <header>
         <strong>Featured Products</strong>
         <small>Discover Our Exclusive Collection: Unveiling the Finest Picks Just for You!.</small>
         <nav>
           {choiceList.map((choice, i) => (
-            <span onClick={() => handleChoice(choice)} key={i}>
-              {choice.name}
-              <sub style={choice.tag == selectedChoice ? { width: '100%' } : { width: '20%' }}></sub>
-            </span>
+            <legend key={i} data-aos="fade-right" data-aos-delay={100 * (i + 1)}>
+              <span className={choice.tag === selectedChoice ? 'myTab' : 'tab'} onClick={() => handleChoice(choice)}>
+                {choice.name}
+              </span>
+            </legend>
           ))}
-          <span><Link href={'/allProducts'}>All Products</Link> <sub></sub></span>
+          <legend data-aos="fade-right" data-aos-delay={100 * (4 + 1)}>
+            <Link className="tab" style={{ color: 'black' }} href={'/allProducts'}>All Products</Link>
+          </legend>
         </nav>
       </header>
-      <Products productList={JSON.stringify(products)} />
+      <Products productList={JSON.stringify(products)} isLoading={isLoading} />
     </section>
   );
 }

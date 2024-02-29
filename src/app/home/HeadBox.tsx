@@ -77,7 +77,7 @@ const HeadBox = () => {
 
   return (
     <section className={styles.headBox} style={{ backgroundColor: colorList[currentIndex] }}>
-      <div className={styles.infoBox}>
+      {/* <div className={styles.infoBox}>
         <article>
           <TbBolt />
           <legend>
@@ -99,7 +99,7 @@ const HeadBox = () => {
             <span className='cash'>all Purchase methods</span>
           </legend>
         </article>
-      </div>
+      </div> */}
 
       <section className={styles.left} onMouseEnter={stopSwiper} onMouseLeave={startSwiper}>
         <Swiper

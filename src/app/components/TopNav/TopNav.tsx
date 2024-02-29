@@ -1,31 +1,33 @@
 'use client'
 import Link from 'next/link';
 import styles from './topNav.module.css';
-import { MdAdd, MdArrowForward, MdClose, MdDelete, MdDeleteOutline, MdOutlineFavoriteBorder, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdRemoveCircle, MdRemoveCircleOutline, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
+import { MdAdd, MdArrowForward, MdClose, MdDelete, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdRemoveCircle, MdRemoveCircleOutline, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { sampleImg } from '@/External/lists';
+import { sampleImg, userList } from '@/External/lists';
 import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loader from '../Loader/Loader';
 import { addKeyword, addToCart, clearItem, getCartTotal, removeFromCart } from '@/External/services';
 import { useWishList } from '@/app/contexts/wishListContext';
+import { SiPanasonic } from 'react-icons/si';
 
 interface defType extends Record<string, any> { };
 const TopNav = () => {
   const [displayName, setDisplayName] = useState('');
-  const [uid, setUid] = useState('');
   const { wishList, setWishList } = useWishList();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [products, setProducts] = useState<defType[]>([]);
   const [searchBoxToggled, setSearchBoxToggled] = useState(false);
+  const [menuToggled, setMenuToggled] = useState(false);
   const [searchResults, setSearchResults] = useState<defType[]>([]);
 
   const [userBoxToggled, setUserBoxToggled] = useState(false);
   const [cartBoxToggled, setCartBoxToggled] = useState(false);
   const [customer, setCustomer] = useState<defType>({});
+  const [winSize, setWinSize] = useState(1200);
 
   const toggleSearchBox = () => {
     searchBoxToggled ? setSearchBoxToggled(false) : setSearchBoxToggled(true);
@@ -36,8 +38,23 @@ const TopNav = () => {
   const toggleCartBox = () => {
     cartBoxToggled ? setCartBoxToggled(false) : setCartBoxToggled(true);
   }
+  const toggleMenu = () => {
+    menuToggled ? setMenuToggled(false) : setMenuToggled(true);
+  }
 
   useEffect(() => {
+    if (typeof window != 'undefined') {
+      setWinSize(window.innerWidth);
+      window.onresize = () => {
+        setWinSize(window.innerWidth);
+      }
+    }
+
+    const productsRef = collection(fireStoreDB, 'Products/');
+    const productStream = onSnapshot(productsRef, (snapshot) => {
+      setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+    });
+
     getDocs(collection(fireStoreDB, 'Products/'))
       .then((res) => {
         const productsTemp: defType[] = res.docs.map((el) => ({ id: el.id, ...el.data() }))
@@ -46,7 +63,6 @@ const TopNav = () => {
 
     const authStream = onAuthStateChanged(fireAuth, (user) => {
       if (user) {
-        setUid(user.uid);
         setDisplayName(user.displayName || user.email || 'Dashboard');
 
         const customerStream = onSnapshot(doc(fireStoreDB, 'Customers/' + user.uid), (snapshot) => {
@@ -68,7 +84,11 @@ const TopNav = () => {
       }
     });
 
-    return () => authStream();
+    return () => {
+      productStream();
+      authStream();
+
+    }
   }, [setWishList])
 
   const prodTest = [
@@ -98,7 +118,7 @@ const TopNav = () => {
   return (
     <section className={styles.topNav}>
       <Link href={'/'}>
-        <Image alt='' className='contain' width={100} height={50} src={logoTemp} />
+        <Image alt='' className='contain' width={100} height={40} src={logoTemp} />
       </Link>
 
       <div className={searchBoxToggled ? `${styles.searchBox} ${styles.change}` : styles.searchBox}>
@@ -118,11 +138,11 @@ const TopNav = () => {
 
       {!isLoading ?
         isLoggedIn ?
-          <nav className={styles.controlBox}>
-            <Link href={'/dashboard'} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
+          <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
+            <a onClick={toggleUserBox} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
               <MdSelfImprovement />
               <legend>{customer.username}</legend>
-            </Link>
+            </a>
             <Link href={''}>
               <MdOutlineFavoriteBorder />
               <legend>{customer.wishList.length}</legend>
@@ -131,9 +151,10 @@ const TopNav = () => {
               <MdOutlineShoppingCart />
               <legend>{customer.cart.length}</legend>
             </a>
+            <MdMenu className={styles.tag} onClick={toggleMenu} />
           </nav>
           :
-          <nav className={styles.controlBox}>
+          <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
             <Link href={''}>
               <MdArrowForward />
               <legend>Login</legend>
@@ -146,6 +167,7 @@ const TopNav = () => {
               <MdOutlineShoppingCart />
               <legend>6</legend>
             </a>
+            <MdMenu className={styles.tag} onClick={toggleMenu} />
           </nav>
         :
         <Loader />
@@ -190,9 +212,39 @@ const TopNav = () => {
               <h3 className='big'>GHS {getCartTotal().toLocaleString()}</h3>
               <Link href={'/checkout'}>
                 <sub></sub>
-                <span className='caps'>Go to Checkout</span>
+                <span>Go to Checkout</span>
                 <MdOutlineShoppingCartCheckout />
               </Link>
+            </footer>
+          </section>
+        </section>
+      }
+
+      {typeof window != 'undefined' &&
+        <section className={userBoxToggled ? `${styles.userBoxHolder} ${styles.change}` : styles.userBoxHolder}>
+          <section className={styles.sheet} onClick={toggleUserBox}></section>
+          <section className={styles.userBox}>
+            <header>
+              <MdOutlineSelfImprovement />
+              <strong>Hi {customer.username}</strong>
+
+              <legend>
+                <MdClose onClick={toggleUserBox} />
+              </legend>
+            </header>
+
+            <ul>
+              {userList.slice(0, 6).map((item, i) => (
+                <Link href={''}>{item.iconEl} <span>{item.tag}</span></Link>
+              ))}
+            </ul>
+
+            <footer>
+              <ul>
+                {userList.slice(6, 8).map((item, i) => (
+                  <Link href={''}>{item.iconEl} <span>{item.tag}</span></Link>
+                ))}
+              </ul>
             </footer>
           </section>
         </section>

@@ -60,12 +60,12 @@ const Category = ({ searchParams }: { searchParams: { cid: string } }) => {
 
       {!isLoading
         ?
-        <section className={styles.categoryBox} id='boxMin'>
-          <section className={styles.top}>
+        <section className={styles.categoryBox} >
+          <section className={styles.top} id='boxNoTop'>
             <Link href={'/'}>
               <MdArrowBack className={styles.back} />
             </Link>
-            <div className={styles.categoryList}>
+            <div className={styles.categoryList} id='scrollable'>
               {categories.map((cat, i) => (
                 <Link className={styles.category} href={{ pathname: '/category', query: { cid: cat.id } }} key={i}>
                   <sub></sub>
@@ -78,14 +78,16 @@ const Category = ({ searchParams }: { searchParams: { cid: string } }) => {
             <header>
               <h3><Image alt='' className='contain' src={category.image.url} height={20} width={20} />  {cid}</h3>
             </header>
-            <article className={styles.brands}>
-              <span style={selectedBrand === 'All' ? { background: 'skyblue', color: 'white' } : { background: '#ffefe3', color: 'black' }} onClick={() => selectBrand('All')}>All</span>
+            <article className={styles.brands} id='scrollable'>
+              <span className={selectedBrand === 'All' ? 'myChoice' : 'choice'} onClick={() => selectBrand('All')}>All</span>
               {category.brandList.map((brand: string, i: number) => (
-                <span onClick={() => selectBrand(brand)} style={selectedBrand === brand ? { background: 'skyblue', color: 'white' } : { background: '#ffefe3', color: 'black' }} key={i}>{brand}</span>
+                <span onClick={() => selectBrand(brand)} className={selectedBrand === brand ? 'myChoice' : 'choice'} key={i}>{brand}</span>
               ))}
             </article>
           </section>
-          <Products productList={JSON.stringify(products)} />
+          <section id='boxNo'>
+            <Products productList={JSON.stringify(products)} isLoading={isLoading} />
+          </section>
         </section>
         : <span>loading...</span>
       }

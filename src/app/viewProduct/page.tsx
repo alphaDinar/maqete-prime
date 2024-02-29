@@ -2,17 +2,19 @@
 import Image from "next/image";
 import TopNav from "../components/TopNav/TopNav";
 import styles from './viewProduct.module.css';
-import { MdOutlineAddShoppingCart, MdOutlineFavoriteBorder } from "react-icons/md";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { VscDebugBreakpointDataUnverified } from "react-icons/vsc";
-import { FaStar } from "react-icons/fa6";
+import { FaFacebookF, FaInstagram, FaStar, FaXTwitter } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { TbTruckReturn } from "react-icons/tb";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { addToCart } from "@/External/services";
-import { doc, increment, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query, where, increment, doc, updateDoc } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import WishListTag from "../components/WishListTag/WishListTag";
+import Link from "next/link";
+import Products from "../components/Products/Products";
 
 interface defType extends Record<string, any> { };
 const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
@@ -20,22 +22,35 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
   const [product, setProduct] = useState<defType>({});
   const [displayMedia, setDisplayMedia] = useState<defType>({});
   const [quantity, setQuantity] = useState(1);
+  const [products, setProducts] = useState<defType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const productsRef = collection(fireStoreDB, 'Products/');
+    const productStream = (category: string) => {
+      return onSnapshot(query(productsRef, where("category", "==", `${category}`), orderBy("priority", "desc")), (snapshot) => {
+        setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+      });
+    }
+
     const getProductStream = onSnapshot(doc(fireStoreDB, 'Products/' + pid), (prod) => {
       if (prod.exists()) {
         setProduct({ id: prod.id, ...prod.data() });
+        productStream(prod.data().category);
         setDisplayMedia(prod.data().image);
       }
       setIsLoading(false);
     });
 
+
+
     updateDoc(doc(fireStoreDB, 'Products/' + pid), {
       views: increment(1)
     })
 
-    return () => getProductStream();
+    return () => {
+      getProductStream();
+    }
   }, [pid]);
 
   const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708791507/maqete/samp_kqdepy.png';
@@ -93,50 +108,71 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
             </section>
 
             <section className={styles.right}>
-              <h3>{product.name}</h3>
-              <small>{product.description}</small>
-              <article className={styles.priceBox}>
-                {product.storePrice && <span className="big">GHS {product.storePrice.toLocaleString()}</span>}
-                <strong className="big">GHS {product.price.toLocaleString()}</strong>
-              </article>
+              <section className={styles.part}>
+                <h3>{product.name}</h3>
+                <small>{product.description}</small>
+                <article className={styles.priceBox}>
+                  {product.storePrice && <span className="big">GHS {product.storePrice.toLocaleString()}</span>}
+                  <strong className="big">GHS {product.price.toLocaleString()}</strong>
+                </article>
 
-              <div className={styles.productControl}>
-                <p>
-                  <button onClick={() => { addToCart(product, quantity), setQuantity(1) }}>Add To Cart <MdOutlineAddShoppingCart /> </button>
-                  <input className="big" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
+                <div className={styles.productControl}>
+                  <p>
+                    <button onClick={() => { addToCart(product, quantity), setQuantity(1) }}>Add To Cart <MdOutlineAddShoppingCart /> </button>
+                    <input className="big" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
+                  </p>
+
+                  <sup className={styles.wishList}>
+                    <WishListTag pid={product.id} />
+                  </sup>
+                </div>
+
+                <p className={styles.stars}>
+                  <FaStar />
+                  <FaStar />
+                  <FaStar />
+                  <FaStar />
+                  (60)
                 </p>
 
-                <sup className={styles.wishList}>
-                  <WishListTag pid={product.id} />
-                </sup>
-              </div>
+                <legend>
+                  <CiDeliveryTruck />
+                  <span>Product Will arrive in 2 days.</span>
+                </legend>
 
-              <p className={styles.stars}>
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                (60)
-              </p>
+                <legend>
+                  <TbTruckReturn />
+                  {product.returnPolicy > 0 ?
+                    <span>This product can be returned after {product.returnPolicy} days under the right conditions.</span>
+                    :
+                    <span>This product has no return policy</span>
+                  }
+                </legend>
 
-              <legend>
-                <CiDeliveryTruck />
-                <span>Product Will arrive in 2 days.</span>
-              </legend>
+                <legend>
+                  <GiTakeMyMoney />
+                  <span>Free Delivery</span>
+                </legend>
+              </section>
 
-              <legend>
-                <TbTruckReturn />
-                {product.returnPolicy > 0 ?
-                  <span>This product can be returned after {product.returnPolicy} days under right conditions.</span>
-                  :
-                  <span>This product has no return policy</span>
-                }
-              </legend>
+              <section className={styles.part}>
 
-              <legend>
-                <GiTakeMyMoney />
-                <span>Free Delivery</span>
-              </legend>
+                <Link href={'tel:+233597838142'} className={`cash ${styles.callBox}`}>
+                  Call +233 59 783 8142 for any product or delivery enquiry.
+                </Link>
+
+                <p className={styles.shareBox}>
+                  <Link href={'/facebook'}>
+                    <FaFacebookF />
+                  </Link>
+                  <Link href={'/facebook'}>
+                    <FaInstagram />
+                  </Link>
+                  <Link href={'/facebook'}>
+                    <FaXTwitter />
+                  </Link>
+                </p>
+              </section>
             </section>
           </section>
 
@@ -204,10 +240,14 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
             </div>
           </section>
 
-          <section>Related Box</section>
+          <section id="boxFull">
+            <Products productList={JSON.stringify(products)} isLoading={isLoading} />
+          </section>
         </> :
         <span>loading...</span>
       }
+
+
 
     </main>
   );

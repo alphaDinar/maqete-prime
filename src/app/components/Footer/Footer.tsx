@@ -24,11 +24,11 @@ const Footer = () => {
         </section>
         <section className={styles.right}>
           <article>
-          <strong>Get Exclusive Offers & Updates</strong>
-          <div className={styles.sendBox}>
-            <input type="text" placeholder='email' />
-            <MdSend/>
-          </div>
+            <strong>Get Exclusive Offers & Updates</strong>
+            <div className={styles.sendBox}>
+              <input type="text" placeholder='email' />
+              <MdSend />
+            </div>
           </article>
         </section>
       </section>

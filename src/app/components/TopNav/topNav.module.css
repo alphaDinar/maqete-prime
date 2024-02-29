@@ -126,6 +126,10 @@
   cursor: pointer;
 }
 
+.controlBox .tag {
+  display: none;
+}
+
 .sheet {
   background: rgba(0, 0, 0, 0.466);
   position: fixed;
@@ -135,25 +139,25 @@
   transition: 0.5s ease;
 }
 
-.userBoxHolder .sheet {
-  left: 0;
-}
-
-.cartBoxHolder {
+.cartBoxHolder,
+.userBoxHolder {
   z-index: 200;
 }
 
-.cartBoxHolder .sheet {
+.cartBoxHolder .sheet,
+.userBoxHolder .sheet {
   right: -100%;
 }
 
-.cartBoxHolder.change .sheet {
+.cartBoxHolder.change .sheet,
+.userBoxHolder.change .sheet {
   right: 0;
 }
 
 
 
-.cartBox {
+.cartBox,
+.userBox {
   transition: 0.3s ease;
   position: fixed;
   top: 0;
@@ -169,22 +173,35 @@
   overflow: auto;
 }
 
-.cartBox::-webkit-scrollbar {
+.cartBox {
+  background: white;
+}
+
+.userBox {
+  background: var(--input);
+  background: #ebebf3;
+}
+
+.cartBox::-webkit-scrollbar,
+.userBox::-webkit-scrollbar {
   width: 8px;
   background: gray;
   border-radius: 40px;
 }
 
-.cartBox::-webkit-scrollbar-thumb {
+.cartBox::-webkit-scrollbar-thumb,
+.userBox::-webkit-scrollbar-thumb {
   background: wheat;
   border-radius: 40px;
 }
 
-.cartBoxHolder.change .cartBox {
+.cartBoxHolder.change .cartBox,
+.userBoxHolder.change .userBox {
   right: 0;
 }
 
-.cartBox header {
+.cartBox header,
+.userBox header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -193,30 +210,47 @@
   position: relative;
 }
 
-.cartBox header legend {
+.cartBox header legend,
+.userBox header legend {
   cursor: pointer;
   position: absolute;
   right: 0;
 }
 
-.cartBox header svg {
+.cartBox header svg,
+.userBox header svg {
   font-size: 1.5rem;
 }
 
-.cartBox ul {
+.cartBox ul,
+.userBox ul {
   display: flex;
   flex: 1;
   flex-direction: column;
+}
+
+.cartBox ul {
   gap: 1.5rem;
 }
 
-.cartBox ul li {
+.userBox ul {
+  gap: 0.8rem;
+}
+
+.cartBox ul li,
+.userBox ul a {
   display: flex;
   align-items: center;
   gap: 1rem;
   display: grid;
   grid-template-columns: 60px 1fr 50px;
-  /* border: 1px solid darkgray; */
+}
+
+.userBox ul a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: black;
 }
 
 .cartBox ul li p {
@@ -255,6 +289,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-left: auto;
   align-items: flex-start;
 }
 
@@ -287,10 +322,12 @@
   z-index: 10;
   transition: 0.5s ease;
 }
-.cartBox footer h3{
+
+.cartBox footer h3 {
   font-weight: 400;
   font-size: 1.7rem;
 }
+
 .cartBox footer a sub {
   width: 10px;
   height: 10px;
@@ -318,7 +355,7 @@
     gap: 1rem;
     flex-direction: column;
     align-items: center;
-    margin: 1.5vh auto;
+    margin: 1.5vh auto 0.5vh auto;
   }
 
   .topNav>* {
@@ -335,8 +372,44 @@
   }
 }
 
+
+@media all and (max-width:500px) {
+  .controlBox {
+    position: fixed;
+    top: 0;
+    right: 0;
+    flex-direction: column;
+    z-index: 100;
+    padding: 40px 20px;
+    background: whitesmoke;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 160px;
+    transition: 0.3s ease;
+    right: -200px;
+  }
+
+  .controlBox.change {
+    right: 0;
+  }
+
+  .controlBox .tag {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 30px;
+    height: 30px;
+    background: var(--theme);
+    color: white;
+    padding: 5px;
+  }
+
+}
+
 @media all and (max-width:400px) {
-  .cartBox {
+
+  .cartBox,
+  .userBox {
     right: -90%;
     width: 80%;
     padding: 2.5vh 5%;

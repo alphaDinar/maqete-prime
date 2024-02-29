@@ -93,7 +93,7 @@ const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {
               <h3>Status</h3>
               <ul>
                 <p> <span>Delivery Deadline</span>  <strong>{getOrderDeadline(order.timestamp)}</strong></p>
-                <p> <span>Delivered On</span>  <strong>{getRealDate(order.deliveredOn) || '--'}</strong></p>
+                <p> <span>Delivered On</span>  <strong>{order.deliveredOn ? getRealDate(order.deliveredOn) : '--'}</strong></p>
                 <p> <span>Order Status</span>  <strong style={order.status ? { background: 'var(--pass)', color: 'white' } : { background: 'tomato', color: 'white' }}>{order.status ? 'Completed' : 'Pending'}</strong></p>
               </ul>
             </section>

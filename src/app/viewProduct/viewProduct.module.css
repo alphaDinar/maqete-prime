@@ -13,7 +13,6 @@
 .extraBox {
   align-items: flex-start;
   padding-top: 0 !important;
-  /* padding-bottom: 0 !important; */
 }
 
 .left {
@@ -27,7 +26,6 @@
   height: 430px;
   overflow: hidden;
   border-radius: 40px;
-  /* background: #dfdaee; */
   position: relative;
 }
 
@@ -43,7 +41,6 @@
   display: flex;
   border-radius: 10px;
   position: relative;
-  /* background: #f5f1ff; */
   cursor: pointer;
 }
 
@@ -62,10 +59,17 @@
 }
 
 .right {
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
+}
+.right .part{
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
 }
 
 .right h3 {
@@ -95,6 +99,7 @@
 .right legend {
   display: flex;
   align-items: center;
+  width: max-content;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
@@ -166,6 +171,23 @@
 
 .stars svg {
   color: var(--theme);
+}
+
+.callBox{
+  background: var(--pass);
+  color: white;
+  padding: 5px;
+  font-size: 0.9rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.shareBox{
+  display: flex;
+  gap: 1rem;
+}
+.shareBox svg{
+  font-size: 1.25em;
+  color: palevioletred;
 }
 
 .ratingBox h4,

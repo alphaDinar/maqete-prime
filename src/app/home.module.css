@@ -180,12 +180,36 @@
   gap: 1.5rem;
 }
 
+@keyframes slideCategories {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translate(-100%);
+  }
+}
+
+
 .categories {
   display: grid;
   gap: 2rem;
   width: 100%;
   grid-template-columns: repeat(6, 1fr);
+  overflow: hidden;
 }
+
+.categories article {
+  display: flex;
+  white-space: nowrap;
+  gap: 2rem;
+  animation: 10s slideCategories linear infinite;
+}
+
+.categories:hover article {
+  animation-play-state: paused;
+}
+
 
 .category {
   display: flex;
@@ -228,6 +252,7 @@
 }
 
 .category span {
+  text-align: center;
   position: relative;
   font-weight: 600;
   left: 0;
@@ -252,6 +277,13 @@
   background: #ffeb9d;
   align-items: center;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.promoLoader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffeb9d;
 }
 
 .promo a {
@@ -363,8 +395,9 @@
 
 .productBox header nav {
   display: flex;
-  gap: 5rem;
+  padding: 5px 0;
   width: 100%;
+  justify-content: space-between;
   overflow: scroll;
 }
 
@@ -373,9 +406,6 @@
 }
 
 .productBox header span {
-  font-size: 1.2rem;
-  min-width: max-content;
-  color: rgb(70, 70, 70);
   cursor: pointer;
 }
 
@@ -549,17 +579,6 @@
   object-fit: contain;
 }
 
-
-@media all and (max-width:1300px) {
-  .categories {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  .category:nth-child(6) {
-    display: none;
-  }
-}
-
 @media all and (max-width:1250px) {
   .promoBox {
     display: flex;
@@ -567,15 +586,6 @@
   }
 }
 
-@media all and (max-width:1000px) {
-  .categories {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .category:nth-child(5) {
-    display: none;
-  }
-}
 
 @media all and (max-width:1100px) {
   .featuredBox {
@@ -630,21 +640,9 @@
   .categoryBox {
     align-items: center;
   }
-
-  .categories {
-    gap: 1rem;
-  }
 }
 
 @media all and (max-width:750px) {
-  .categories {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .category:nth-child(4) {
-    display: none;
-  }
-
   .skillBox {
     display: flex;
     gap: 1rem;
@@ -671,8 +669,13 @@
     gap: 0.5rem;
   }
 
-  .promo article {
+  .promo article,
+  .promo article p {
     text-align: center;
+    align-items: center;
+  }
+
+  .promo .timeBoxHolder {
     align-items: center;
   }
 
@@ -691,14 +694,6 @@
     flex-wrap: wrap;
   }
 
-  .categories {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .category:nth-child(3) {
-    display: none;
-  }
-
   .featuredBox .right div article {
     align-items: center;
     text-align: center;
@@ -707,6 +702,11 @@
   .featuredBox .right div article strong {
     font-size: 1rem;
     -webkit-line-clamp: 1;
+  }
+
+  .productBox header {
+    width: 90%;
+    padding: 0 5%;
   }
 }
 

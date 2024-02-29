@@ -58,6 +58,7 @@
   color: darkgray;
 }
 
+
 @media all and (max-width : 750px){
   .top{
     display: flex;

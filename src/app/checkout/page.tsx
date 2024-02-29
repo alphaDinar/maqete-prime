@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import TopNav from '../components/TopNav/TopNav';
 import styles from './checkout.module.css';
-import { addToCart, clearItem, fixContact, genToken, getUpdatedCartTotal, removeFromCart, setToCart } from '@/External/services';
+import { addToCart, checkContact, clearCart, clearItem, fixContact, genToken, getUpdatedCartTotal, joinContact, removeFromCart, setToCart } from '@/External/services';
 import { MdAdd, MdArrowForward, MdBolt, MdCall, MdDelete, MdDeleteOutline, MdLocalShipping, MdLocationPin, MdOutlineDeliveryDining, MdOutlineReceiptLong, MdOutlineSmartphone, MdPayments, MdReceiptLong, MdRemove, MdSchedule } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -12,10 +12,12 @@ import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { getUserAddress, predictPlaces } from '@/External/map';
 import { LiaMoneyBillWaveAltSolid } from 'react-icons/lia';
 import { GiTakeMyMoney } from 'react-icons/gi';
+import { useRouter } from 'next/navigation';
 
 
 interface defType extends Record<string, any> { };
 const Checkout = () => {
+  const router = useRouter();
   const [customer, setCustomer] = useState<defType>({});
   const [cart, setCart] = useState<defType[]>([]);
   const [quantityList, setQuantityList] = useState<number[]>([0]);
@@ -25,6 +27,7 @@ const Checkout = () => {
   const [predictions, setPredictions] = useState<defType[]>([]);
   const [predLoading, setPredLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [orderLoading, setOrderLoading] = useState(false);
 
 
   useEffect(() => {
@@ -132,7 +135,7 @@ const Checkout = () => {
       status: 0,
       timestamp: stamp
     })
-      .then(() => alert('complete'));
+      .then(() => { clearCart(); router.push('/'); });
   }
 
 
@@ -141,13 +144,16 @@ const Checkout = () => {
   // https://www.pinterest.com/pin/1077134435865011509/
 
   const checkOrder = () => {
-    createOrder(0);
-    // if (location && contact) {
-    //   if (paymentMethod === 'cash') {
-    //   } else {
-    //     //run paystack and on 200 fixUpdatedCart(1); add paystack trans ID to make sure.
-    //   }
-    // }
+    if (checkContact(joinContact(fixContact(contact))) && location) {
+      setOrderLoading(true);
+      if (paymentMethod === 'cash') {
+        createOrder(0);
+      } else {
+        //run paystack and on 200 fixUpdatedCart(1); add paystack trans ID to make sure.
+      }
+    } else {
+      alert('fix form prompt');
+    }
   }
 
 
@@ -222,7 +228,7 @@ const Checkout = () => {
 
           <section className={styles.locationBox}>
             <div className={styles.searchBox}>
-              <span><MdLocationPin /> Enter Your Location</span>
+              <span><MdLocationPin /> Change Your Location</span>
               <p>
                 <input type="text" value={locText} onChange={(e) => handleLocText(e.target.value)} />
                 {predLoading && <MdBolt />}
@@ -237,21 +243,23 @@ const Checkout = () => {
               </ul>
             </div>
 
-            <div className={styles.searchBox}>
-              <span><MdLocationPin /> Contact</span>
+            <div className={styles.contactBox}>
+              <span><MdCall /> Contact</span>
               <p>
-                <span>+233</span>
+                <span className='cash'>+233</span>
                 <input className='cash' type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
               </p>
             </div>
 
 
-            <small>
+            <small className={styles.promptBox}>
               <p className='cash'>
-                {/* <strong className='cash'>Doorstep Delivery</strong> */}
                 Delivery would be delivered to your doorstep in 48hrs.
                 Payment on delivery.
               </p>
+              <Link href={'tel:+233597838142'} className='cash'>
+                Call +233 59 783 8142 for any product or delivery enquiry.
+              </Link>
             </small>
 
             <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
@@ -265,10 +273,12 @@ const Checkout = () => {
             <legend>
               <MdCall />
               <strong className='cash'>{fixContact(contact)}</strong>
+              <sub id={checkContact(joinContact(fixContact(contact))) ? 'right' : 'wrong'} ></sub>
             </legend>
             <legend>
               <MdLocationPin />
               <strong>{location}</strong>
+              <sub id={location ? 'right' : 'wrong'}></sub>
             </legend>
             <hr />
             <legend>
@@ -278,10 +288,12 @@ const Checkout = () => {
             <legend>
               <MdOutlineDeliveryDining />
               <strong>Free Delivery</strong>
+              <sub></sub>
             </legend>
             <legend>
               <LiaMoneyBillWaveAltSolid />
               <strong className='cash'>GH₵ 5,000</strong>
+              <sub></sub>
             </legend>
           </article>
 
@@ -295,9 +307,10 @@ const Checkout = () => {
               </legend>
             </p>
           </article>
-          <button className={styles.checkout} onClick={checkOrder}>Complete order</button>
+          <button className={styles.checkout} onClick={checkOrder}>Place order</button>
         </section>
       </section>
+      {orderLoading && <span>order Loading</span>}
     </main>
   );
 }

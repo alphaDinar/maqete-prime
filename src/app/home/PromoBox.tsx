@@ -1,5 +1,5 @@
 'use client';
-import { sampleImg } from "@/External/lists";
+import { itemLoader, sampleImg } from "@/External/lists";
 import Image from "next/image";
 import styles from '../home.module.css';
 import { addToCart, getTimeLeft } from "@/External/services";
@@ -15,6 +15,8 @@ const PromoBox = () => {
   const periodList = ['Days', 'Hours', 'Mins', 'Secs'];
   const [timerList, setTimerList] = useState<string[]>([]);
   const [promos, setPromos] = useState<defType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     AOS.init({
@@ -27,6 +29,7 @@ const PromoBox = () => {
     const promoStream = onSnapshot(query(productsRef, where("type", "==", "promo"), orderBy("priority", "desc"), limit(2)), (snapshot) => {
       const promosTemp: defType[] = snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }));
       setPromos(promosTemp);
+      setIsLoading(false)
       setInterval(() => {
         const deadlines = promosTemp.map((el) => el.deadline);
         const updatedTimerList = deadlines.map((el) => getTimeLeft(el));
@@ -43,40 +46,47 @@ const PromoBox = () => {
 
   return (
     <section className={styles.promoBox} id='box'>
-      {promos.map((product, i) => (
-        <div className={styles.promo} key={i} data-aos="fade-right" data-aos-delay={100 * (i + 1)}>
-          <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
-            <Image alt='' className="contain" width={250} height={250} src={product.image.url} />
-          </Link>
-          <article>
-            <p>
-              <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
-                <strong>{product.name}</strong>
-              </Link>
-            </p>
-            <p>
-              {product.storePrice && <span className='big cancel'>GHS {product.storePrice.toLocaleString()}</span>}
-              <h3 className='big price'>GHS {product.price.toLocaleString()}</h3>
-            </p>
-            <p className={styles.timeBoxHolder}>
-              <legend className="timeBox" key={i}>
-                {timerList.length > 0 &&
-                  timerList[i].split(',').map((el, ii) => (
-                    <p key={ii}>
-                      <span>{el}</span>
-                      <small>{periodList[ii]}</small>
-                    </p>
-                  ))}
-              </legend>
-              <button onClick={() => addToCart(product, 1)}>
-                <sup></sup>
-                <h4>Add To Cart</h4>
-                <MdAddShoppingCart />
-              </button>
-            </p>
-          </article>
-        </div>
-      ))}
+      {!isLoading ?
+        promos.map((product, i) => (
+          <div className={styles.promo} key={i} data-aos="fade-right" data-aos-delay={100 * (i + 1)}>
+            <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
+              <Image alt='' className="contain" width={250} height={250} src={product.image.url} />
+            </Link>
+            <article>
+              <p>
+                <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
+                  <strong>{product.name}</strong>
+                </Link>
+              </p>
+              <p>
+                {product.storePrice && <span className='big cancel'>GHS {product.storePrice.toLocaleString()}</span>}
+                <h3 className='big price'>GHS {product.price.toLocaleString()}</h3>
+              </p>
+              <p className={styles.timeBoxHolder}>
+                <legend className="timeBox" key={i}>
+                  {timerList.length > 0 &&
+                    timerList[i].split(',').map((el, ii) => (
+                      <p key={ii}>
+                        <span>{el}</span>
+                        <small>{periodList[ii]}</small>
+                      </p>
+                    ))}
+                </legend>
+                <button onClick={() => addToCart(product, 1)}>
+                  <sup></sup>
+                  <h4>Add To Cart</h4>
+                  <MdAddShoppingCart />
+                </button>
+              </p>
+            </article>
+          </div>
+        ))
+        :
+        Array(2).fill('box').map((box, i) => (
+          <div className={styles.promoLoader} style={{ height: 290 }} key={i}>
+            {itemLoader}
+          </div>
+        ))}
     </section>
   );
 }

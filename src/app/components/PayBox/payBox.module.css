@@ -1,0 +1,42 @@
+@keyframes slidePayBox {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translate(-100%);
+  }
+}
+
+
+.payBox {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+}
+
+.payBox div {
+  overflow: hidden;
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+}
+
+.payBox article {
+  display: flex;
+  white-space: nowrap;
+  gap: 2rem;
+  animation: 10s slidePayBox linear infinite;
+}
+
+.payBox img {
+  object-fit: contain;
+}
+
+
+@media all and (max-width:850px) {
+  .payBox {
+    overflow: hidden;
+  }
+}

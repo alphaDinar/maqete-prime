@@ -134,6 +134,19 @@ export const clearItem = (product: defType) => {
   })
 }
 
+export const clearCart = () => {
+  onAuthStateChanged(fireAuth, (user) => {
+    const customer = localStorage.getItem('maqCustomer');
+    if (user && customer) {
+      updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
+        cart: []
+      })
+    } else {
+      localStorage.setItem('maqCart', JSON.stringify('[]'));
+    }
+  })
+}
+
 export const getCartTotal = () => {
   const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
   const total = cart.reduce((acc, item) => {
@@ -222,7 +235,7 @@ export const getTimeLeft = (stamp: number) => {
 
 
   if (difference <= 0) {
-    return 'Timer expired';
+    return `00,00,00,00`;
   }
 
   const days = Math.floor(difference / (1000 * 60 * 60 * 24));
@@ -350,11 +363,19 @@ export const getOrderDeadline = (timestamp: number): string => {
 
 //phone
 export const fixContact = (contact: string) => {
-  // const digitsOnly = contact.replace(/\D/g, '');
-  const formattedNumber = `+${contact.slice(0, 3)} ${contact.slice(3, 5)} ${contact.slice(5, 8)} ${contact.slice(8)}`;
+  const formattedNumber = `+233 ${contact.slice(0, 2)} ${contact.slice(2, 5)} ${contact.slice(5)}`;
   return formattedNumber;
 }
 
+export const checkContact = (contact: string) => {
+  const regex = /^\+233\d{9}$/;
+  return regex.test(contact);
+}
+
+export const joinContact = (contact: string) => {
+  const joinedContact = contact.replace(/\s/g, '');
+  return joinedContact;
+}
 
 //tokens 
 export const genToken = (): string => {

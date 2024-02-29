@@ -19,6 +19,7 @@ import Footer from './components/Footer/Footer';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { fireStoreDB } from '@/Firebase/base';
 import { sortByCounter } from '@/External/services';
+import PayBox from './components/PayBox/PayBox';
 
 interface defType extends Record<string, any> { };
 const Home = async () => {
@@ -35,13 +36,24 @@ const Home = async () => {
       <section className={styles.categoryBox} id='box'>
         <h3>Trending Categories</h3>
         <section className={styles.categories}>
-          {categories.slice(0, 6).map((category: defType, i) => (
-            <Link href={{ pathname: '/category', query: { cid: category.id } }} className={styles.category} style={{ color: 'black' }} key={i}>
-              <sub></sub>
-              <Image alt='' className='contain' src={category.image.url} width={100} height={100} />
-              <span>{category.name}</span>
-            </Link>
-          ))}
+          <article>
+            {categories.slice(0, 6).map((category: defType, i) => (
+              <Link href={{ pathname: '/category', query: { cid: category.id } }} className={styles.category} style={{ color: 'black' }} key={i}>
+                <sub></sub>
+                <Image alt='' className='contain' src={category.image.url} width={100} height={100} />
+                <span>{category.name}</span>
+              </Link>
+            ))}
+          </article>
+          <article>
+            {categories.slice(0, 6).map((category: defType, i) => (
+              <Link href={{ pathname: '/category', query: { cid: category.id } }} className={styles.category} style={{ color: 'black' }} key={i}>
+                <sub></sub>
+                <Image alt='' className='contain' src={category.image.url} width={100} height={100} />
+                <span>{category.name}</span>
+              </Link>
+            ))}
+          </article>
         </section>
       </section>
 
@@ -128,6 +140,8 @@ const Home = async () => {
       </section>
 
       <CategoryProducts />
+
+      <PayBox />
 
       <Footer />
     </main>
