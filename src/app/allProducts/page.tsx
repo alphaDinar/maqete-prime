@@ -77,7 +77,7 @@ const Category = ({ searchParams }: { searchParams: { cid: string } }) => {
               ))}
             </article>
           </section>
-          <Products productList={JSON.stringify(products)} />
+          <Products productList={JSON.stringify(products)} isLoading={isLoading} />
         </section>
         : <span>loading...</span>
       }

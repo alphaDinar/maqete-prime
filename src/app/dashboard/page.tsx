@@ -184,7 +184,7 @@ const Dashboard = () => {
                 <h3>Trending Offers</h3>
                 <Link href={'/allProducts'}>More Offers <MdArrowForward /></Link>
               </header>
-              <Products productList={JSON.stringify(products)} />
+              <Products productList={JSON.stringify(products)} isLoading={isLoading} />
             </section>
           </section>
         </section>

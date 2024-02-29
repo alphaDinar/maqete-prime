@@ -235,14 +235,14 @@ const TopNav = () => {
 
             <ul>
               {userList.slice(0, 6).map((item, i) => (
-                <Link href={''}>{item.iconEl} <span>{item.tag}</span></Link>
+                <Link href={''} key={i}>{item.iconEl} <span>{item.tag}</span></Link>
               ))}
             </ul>
 
             <footer>
               <ul>
                 {userList.slice(6, 8).map((item, i) => (
-                  <Link href={''}>{item.iconEl} <span>{item.tag}</span></Link>
+                  <Link href={''} key={i}>{item.iconEl} <span>{item.tag}</span></Link>
                 ))}
               </ul>
             </footer>
