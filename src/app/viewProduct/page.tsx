@@ -15,6 +15,8 @@ import { fireStoreDB } from "@/Firebase/base";
 import WishListTag from "../components/WishListTag/WishListTag";
 import Link from "next/link";
 import Products from "../components/Products/Products";
+import { itemLoader } from "@/External/lists";
+import Footer from "../components/Footer/Footer";
 
 interface defType extends Record<string, any> { };
 const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
@@ -29,7 +31,7 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
     const productsRef = collection(fireStoreDB, 'Products/');
     const productStream = (category: string) => {
       return onSnapshot(query(productsRef, where("category", "==", `${category}`), orderBy("priority", "desc")), (snapshot) => {
-        setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+        setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })).filter((el) => el.id !== pid));
       });
     }
 
@@ -41,7 +43,6 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
       }
       setIsLoading(false);
     });
-
 
 
     updateDoc(doc(fireStoreDB, 'Products/' + pid), {
@@ -240,14 +241,16 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
             </div>
           </section>
 
-          <section id="boxFull">
+          <section id="boxFullNoTop">
             <Products productList={JSON.stringify(products)} isLoading={isLoading} />
           </section>
+
+          <Footer />
         </> :
-        <span>loading...</span>
+        <section className="loaderFrame">
+
+        </section>
       }
-
-
 
     </main>
   );

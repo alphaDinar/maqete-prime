@@ -1,6 +1,7 @@
 import styles from './home.module.css';
 import sampleA from '../../public/pixel.png';
 import sampleB from '../../public/sample.webp';
+import shoe from '../../public/shoe.png';
 import TopNav from './components/TopNav/TopNav';
 import Image from 'next/image';
 import { sampleImg } from '@/External/lists';
@@ -103,7 +104,7 @@ const Home = async () => {
           <Link href={''} style={{ background: '#bdf2d2' }}>
             <Image alt='' sizes='auto' src={fash} />
             <p>
-              <strong>Fashion</strong>
+              <strong>Outfits</strong>
               <small>Unveil Your Perfect Look</small>
             </p>
             <legend>
@@ -117,7 +118,7 @@ const Home = async () => {
               <Image alt='' src={bag} fill sizes='auto' />
             </div>
             <p>
-              <strong>Fashion</strong>
+              <strong>Bags</strong>
               <small>Unveil Your Perfect Look</small>
             </p>
             <legend>
@@ -126,10 +127,10 @@ const Home = async () => {
           </Link>
           <Link href={''}>
             <div className={styles.imgBox}>
-              <Image alt='' src={sampleB} fill sizes='auto' />
+              <Image alt='' src={shoe} fill sizes='auto' />
             </div>
             <p>
-              <strong>Fashion</strong>
+              <strong>Shoes</strong>
               <small>Unveil Your Perfect Look</small>
             </p>
             <legend>

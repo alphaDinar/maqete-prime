@@ -353,7 +353,7 @@
   font-size: 0.9rem;
 }
 
-.totalBox p {
+.totalBox div {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

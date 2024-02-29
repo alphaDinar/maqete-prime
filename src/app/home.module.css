@@ -31,7 +31,7 @@
   justify-content: center;
 }
 
-.headBox .left p {
+.headBox .left article {
   display: flex;
   flex-direction: column;
 }
@@ -49,7 +49,7 @@
   font-size: 1.5rem;
 }
 
-.headBox .left p {
+.headBox .left article {
   gap: 0.2rem;
 }
 
@@ -599,12 +599,17 @@
 
 @media all and (max-width:850px) {
   .headBox {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
     height: auto;
     align-items: center;
     gap: 1rem;
     width: 90%;
     padding: 3.5vh 5%;
+  }
+
+  .headBox .controlBox {
+    display: none;
   }
 
   .headBox .left,
@@ -622,13 +627,7 @@
   .headBox .infoBox,
   .headBox .controlBox {
     left: 0;
-    position: relative;
-  }
-
-  .headBox .infoBox {
-    margin-bottom: 10px;
-    top: 0;
-    justify-content: center;
+    /* position: relative; */
   }
 
   .headBox .controlBox {

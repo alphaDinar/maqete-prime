@@ -13,12 +13,25 @@ const ProductBox = () => {
   const [selectedChoice, setSelectedChoice] = useState('');
   const [allProducts, setAllProducts] = useState<defType[]>([]);
   const [products, setProducts] = useState<defType[]>([]);
+  const [itemCount, setItemCount] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     AOS.init({
       duration: 1000,
     });
+
+    const fixItemCounter =()=>{
+      if (typeof window !== undefined) {
+        if (window.innerWidth > 1100) {
+          setItemCount(5);
+        } else {
+          setItemCount(4);
+        }
+      }
+    }
+
+    fixItemCounter();
 
     setSelectedChoice('popular');
     const productStream = onSnapshot(collection(fireStoreDB, 'Products/'), (snapshot) => {
@@ -40,13 +53,13 @@ const ProductBox = () => {
     const allProductsTemp = [...allProducts];
     setSelectedChoice(choice.tag);
     if (choice.tag === 'popular') {
-      setProducts(sortPopular(allProductsTemp).slice(0, 5));
+      setProducts(sortPopular(allProductsTemp).slice(0, itemCount));
     }
     if (choice.tag === 'arrival') {
-      setProducts(sortArrival(allProductsTemp).slice(0, 5));
+      setProducts(sortArrival(allProductsTemp).slice(0, itemCount));
     }
     if (choice.tag === 'views') {
-      setProducts(sortViews(allProductsTemp).slice(0, 5));
+      setProducts(sortViews(allProductsTemp).slice(0, itemCount));
     }
   }
 
@@ -69,7 +82,7 @@ const ProductBox = () => {
           </legend>
         </nav>
       </header>
-      <Products productList={JSON.stringify(products)} isLoading={isLoading} />
+      <Products productList={JSON.stringify(products.slice(0, itemCount))} isLoading={isLoading} />
     </section>
   );
 }

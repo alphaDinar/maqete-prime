@@ -13,6 +13,8 @@ const CategoryProducts = () => {
   const [allProducts, setAllProducts] = useState<defType[]>([]);
   const [products, setProducts] = useState<defType[]>([]);
   const [categories, setCategories] = useState<defType[]>([]);
+  const [itemCount, setItemCount] = useState(5);
+  // const [winSize, setWinSize] = useState(1300);
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -21,9 +23,23 @@ const CategoryProducts = () => {
       duration: 1000
     });
 
+    const fixItemCounter = () => {
+      if (typeof window !== undefined) {
+        if (window.innerWidth > 1100) {
+          setItemCount(5);
+        } else {
+          setItemCount(4);
+        }
+      }
+    }
+
+    fixItemCounter();
+
+
     const productStream = onSnapshot(collection(fireStoreDB, 'Products/'), (snapshot) => {
       setAllProducts(sortByPriority(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }))));
       setProducts(sortByPriority(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }))).filter((el) => el.category === selectedCategory));
+      setIsLoading(false);
     });
 
     const categoryStream = onSnapshot(collection(fireStoreDB, 'Categories/'), (snapshot) => {
@@ -33,7 +49,6 @@ const CategoryProducts = () => {
     return () => {
       productStream();
       categoryStream();
-      setIsLoading(false);
     }
   }, [selectedCategory])
 
@@ -57,7 +72,7 @@ const CategoryProducts = () => {
           ))}
         </nav>
       </header>
-      <Products productList={JSON.stringify(products)} isLoading={isLoading} />
+      <Products productList={JSON.stringify(products.slice(0, itemCount))} isLoading={isLoading} />
     </section>
   );
 }

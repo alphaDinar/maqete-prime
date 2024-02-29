@@ -1,17 +1,16 @@
 'use client'
 import Link from 'next/link';
 import styles from './topNav.module.css';
-import { MdAdd, MdArrowForward, MdClose, MdDelete, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdRemoveCircle, MdRemoveCircleOutline, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
+import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdRemoveCircle, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { sampleImg, userList } from '@/External/lists';
-import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { userList } from '@/External/lists';
+import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loader from '../Loader/Loader';
 import { addKeyword, addToCart, clearItem, getCartTotal, removeFromCart } from '@/External/services';
 import { useWishList } from '@/app/contexts/wishListContext';
-import { SiPanasonic } from 'react-icons/si';
 
 interface defType extends Record<string, any> { };
 const TopNav = () => {
@@ -28,6 +27,7 @@ const TopNav = () => {
   const [cartBoxToggled, setCartBoxToggled] = useState(false);
   const [customer, setCustomer] = useState<defType>({});
   const [winSize, setWinSize] = useState(1200);
+  const [cartLoaded, setCartLoaded] = useState(false);
 
   const toggleSearchBox = () => {
     searchBoxToggled ? setSearchBoxToggled(false) : setSearchBoxToggled(true);
@@ -48,6 +48,7 @@ const TopNav = () => {
       window.onresize = () => {
         setWinSize(window.innerWidth);
       }
+      setCartLoaded(true);
     }
 
     const productsRef = collection(fireStoreDB, 'Products/');
@@ -113,7 +114,6 @@ const TopNav = () => {
   }
 
   const logoTemp = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708957950/maqete/maqLogo_kded29.png';
-  // const logoTemp = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708958183/maqete/maqete_blue_q8tjmc.png';
 
   return (
     <section className={styles.topNav}>
@@ -173,7 +173,7 @@ const TopNav = () => {
         <Loader />
       }
 
-      {typeof window != 'undefined' &&
+      {cartLoaded &&
         <section className={cartBoxToggled ? `${styles.cartBoxHolder} ${styles.change}` : styles.cartBoxHolder}>
           <section className={styles.sheet} onClick={toggleCartBox}></section>
           <section className={styles.cartBox}>
@@ -194,7 +194,7 @@ const TopNav = () => {
                     {
                       <Image alt='' src={JSON.parse(item.product).image.url} height={70} width={70} />
                     }
-                    <p>
+                    <article>
                       <small>{JSON.parse(item.product).name}</small>
                       <strong className='cash'>GH₵ {(item.quantity * item.price).toLocaleString()}</strong>
                       <nav>
@@ -202,7 +202,7 @@ const TopNav = () => {
                         <span>{item.quantity}</span>
                         <MdAdd onClick={() => addToCart(JSON.parse(item.product), 1)} />
                       </nav>
-                    </p>
+                    </article>
                     <MdDeleteOutline onClick={() => clearItem(JSON.parse(item.product))} className={styles.remove} />
                   </li>
                 ))}
@@ -220,7 +220,7 @@ const TopNav = () => {
         </section>
       }
 
-      {typeof window != 'undefined' &&
+      {isLoggedIn &&
         <section className={userBoxToggled ? `${styles.userBoxHolder} ${styles.change}` : styles.userBoxHolder}>
           <section className={styles.sheet} onClick={toggleUserBox}></section>
           <section className={styles.userBox}>

@@ -5,7 +5,7 @@ import styles from '../home.module.css';
 import { addToCart, getTimeLeft } from "@/External/services";
 import { useEffect, useState } from "react";
 import { MdAddShoppingCart } from "react-icons/md";
-import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import Link from "next/link";
 import AOS from 'aos';
@@ -26,20 +26,37 @@ const PromoBox = () => {
 
     const productsRef = collection(fireStoreDB, 'Products/');
 
-    const promoStream = onSnapshot(query(productsRef, where("type", "==", "promo"), orderBy("priority", "desc"), limit(2)), (snapshot) => {
+    const getPromos = async () => {
+      const snapshot = await getDocs(query(productsRef, where("type", "==", "promo"), orderBy("priority", "desc"), limit(2)));
       const promosTemp: defType[] = snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }));
       setPromos(promosTemp);
-      setIsLoading(false)
-      setInterval(() => {
+      setIsLoading(false);
+      const interval = setInterval(() => {
         const deadlines = promosTemp.map((el) => el.deadline);
+        // console.log(deadlines);
         const updatedTimerList = deadlines.map((el) => getTimeLeft(el));
         setTimerList(updatedTimerList);
       }, 1000);
-    });
+      return () => clearInterval(interval);
+    }
 
+    getPromos();
 
+    // const promoStream = onSnapshot(query(productsRef, where("type", "==", "promo"), orderBy("priority", "desc"), limit(2)), (snapshot) => {
+    //   const promosTemp: defType[] = snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }));
+    //   setPromos(promosTemp);
+    //   setIsLoading(false);
+    //   console.log(promosTemp);
+    //   const interval = setInterval(() => {
+    //     const deadlines = promosTemp.map((el) => el.deadline);
+    //     // console.log(deadlines);
+    //     const updatedTimerList = deadlines.map((el) => getTimeLeft(el));
+    //     setTimerList(updatedTimerList);
+    //   }, 1000);
+    //   return () => clearInterval(interval);
+    // });
 
-    return () => promoStream();
+    // return () => promoStream();
   }, [])
 
 
@@ -53,19 +70,19 @@ const PromoBox = () => {
               <Image alt='' className="contain" width={250} height={250} src={product.image.url} />
             </Link>
             <article>
-              <p>
+              <ul>
                 <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
                   <strong>{product.name}</strong>
                 </Link>
-              </p>
-              <p>
+              </ul>
+              <ul>
                 {product.storePrice && <span className='big cancel'>GHS {product.storePrice.toLocaleString()}</span>}
                 <h3 className='big price'>GHS {product.price.toLocaleString()}</h3>
-              </p>
-              <p className={styles.timeBoxHolder}>
+              </ul>
+              <article className={styles.timeBoxHolder}>
                 <legend className="timeBox" key={i}>
                   {timerList.length > 0 &&
-                    timerList[i].split(',').map((el, ii) => (
+                    typeof timerList[i] !== undefined && timerList[i].split(',').map((el, ii) => (
                       <p key={ii}>
                         <span>{el}</span>
                         <small>{periodList[ii]}</small>
@@ -77,7 +94,7 @@ const PromoBox = () => {
                   <h4>Add To Cart</h4>
                   <MdAddShoppingCart />
                 </button>
-              </p>
+              </article>
             </article>
           </div>
         ))

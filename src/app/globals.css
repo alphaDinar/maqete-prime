@@ -50,6 +50,9 @@ li {
   list-style: none;
 }
 
+.loaderFrame {
+  width: 100%;
+}
 
 .cut {
   display: -webkit-box;
@@ -98,6 +101,14 @@ li {
   padding-bottom: 5vh;
 }
 
+#boxFullNoTop {
+  width: 80%;
+  padding-right: 10%;
+  padding-left: 10%;
+  padding-top: 0;
+  padding-bottom: 5vh;
+}
+
 #boxMin {
   width: 80%;
   padding-right: 10%;
@@ -136,7 +147,13 @@ li {
     padding-bottom: 5vh;
   }
 
-
+  #boxFullNoTop {
+    width: 90%;
+    padding-right: 5%;
+    padding-left: 5%;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 
   #boxMin {
     width: 90%;
@@ -176,6 +193,14 @@ li {
     width: 100%;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  #boxFullNoTop {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 2.5vh;
   }
 }
 

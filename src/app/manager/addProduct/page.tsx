@@ -304,12 +304,7 @@ const AddProduct = () => {
               <strong>Display Image</strong>
               <Image alt='Add Image' width={180} height={180} src={imagePreview} />
               <label htmlFor="addImage">
-                {
-                  image.format === 'jpeg' ?
-                    <input className="cover" type="file" id="addImage" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImage(e.target.files![0])} required />
-                    :
-                    <input className="contain" type="file" id="addImage" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImage(e.target.files![0])} required />
-                }
+                <input className="contain" type="file" id="addImage" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImage(e.target.files![0])} required />
                 <MdAddAPhoto />
               </label>
             </section>

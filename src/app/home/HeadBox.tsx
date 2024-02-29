@@ -21,12 +21,14 @@ const HeadBox = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const colorList = ['whitesmoke', '#F5E987', '#ebebf3'];
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const productsRef = collection(fireStoreDB, 'Products/');
 
     const productStream = onSnapshot(query(productsRef, orderBy("priority", "desc"), limit(3)), (snapshot) => {
       setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+      setIsLoading(false);
     });
 
     return () => productStream();
@@ -77,94 +79,74 @@ const HeadBox = () => {
 
   return (
     <section className={styles.headBox} style={{ backgroundColor: colorList[currentIndex] }}>
-      {/* <div className={styles.infoBox}>
-        <article>
-          <TbBolt />
-          <legend>
-            <span className='cash'>48 hr Delivery</span>
-            <span className='cash'>+ For Free</span>
-          </legend>
-        </article>
-        <article>
-          <GiTakeMyMoney />
-          <legend>
-            <span className='cash'>Pay on delivery</span>
-            <span className='cash'>+ more methods</span>
-          </legend>
-        </article>
-        <article>
-          <TbTruckReturn />
-          <legend>
-            <span className='cash'>Return Policies</span>
-            <span className='cash'>all Purchase methods</span>
-          </legend>
-        </article>
-      </div> */}
+      {!isLoading ?
+        <>
 
-      <section className={styles.left} onMouseEnter={stopSwiper} onMouseLeave={startSwiper}>
-        <Swiper
-          modules={[Autoplay]}
-          speed={1000}
-          // loop={true}
-          ref={headSwiper}
-          autoplay={{ delay: 4000 }}
-          className={styles.swiper}
-          onSlideChange={changeSlide}
-        >
-          {products.map((product, i) => (
-            <SwiperSlide className={styles.slide} key={i}>
-              <div className={styles.con}>
-                <p>
-                  <strong>{product.name}</strong>
-                  <small>{product.description}</small>
-                </p>
-                <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>Buy Now <MdArrowForward /></Link>
-                <p>
-                  {product.storePrice && <h4 className='big cancel'>GHS {product.storePrice.toLocaleString()} </h4>}
-                  <h3 className='big price'>GHS {product.price.toLocaleString()}</h3>
-                </p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+          <section className={styles.left} onMouseEnter={stopSwiper} onMouseLeave={startSwiper}>
+            <Swiper
+              modules={[Autoplay]}
+              speed={1000}
+              // loop={true}
+              ref={headSwiper}
+              autoplay={{ delay: 4000 }}
+              className={styles.swiper}
+              onSlideChange={changeSlide}
+            >
+              {products.length > 2 && products.map((product, i) => (
+                <SwiperSlide className={styles.slide} key={i}>
+                  <div className={styles.con}>
+                    <article>
+                      <strong>{product.name}</strong>
+                      <small>{product.description}</small>
+                    </article>
+                    <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>Buy Now <MdArrowForward /></Link>
+                    <article>
+                      {product.storePrice && <h4 className='big cancel'>GHS {product.storePrice.toLocaleString()} </h4>}
+                      <h3 className='big price'>GHS {product.price.toLocaleString()}</h3>
+                    </article>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
 
-      </section>
-      <section className={styles.right}>
-        <Swiper
-          modules={[EffectCube]}
-          effect="cube"
-          loop={true}
-          ref={imgSwiper}
-          speed={1000}
-          cubeEffect={{ shadow: false, slideShadows: false, shadowOffset: 10, shadowScale: 0.94 }}
-          allowTouchMove={false}
-          className={styles.swiper}
-        >
-          {products.map((product, i) => (
-            <SwiperSlide className={styles.slide} key={i}>
-              <Image alt='' className='contain' width={350} height={350} src={product.image.url} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
+          </section>
+          <section className={styles.right}>
+            <Swiper
+              modules={[EffectCube]}
+              effect="cube"
+              loop={true}
+              ref={imgSwiper}
+              speed={1000}
+              cubeEffect={{ shadow: false, slideShadows: false, shadowOffset: 10, shadowScale: 0.94 }}
+              allowTouchMove={false}
+              className={styles.swiper}
+            >
+              {products.length > 2 && products.map((product, i) => (
+                <SwiperSlide className={styles.slide} key={i}>
+                  <Image alt='' className='contain' width={350} height={350} src={product.image.url} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
 
-
-      <div className={styles.controlBox}>
-        <p>
-          <MdArrowBack onClick={slidePrev} />
-          <MdArrowForward onClick={slideNext} />
-        </p>
-        <nav>
-          {topItems.map((item, i) => (
-            i === currentIndex
-              ?
-              <sub className={styles.change} key={i}></sub>
-              :
-              <sub key={i}></sub>
-          ))}
-        </nav>
-      </div>
-
+          <div className={styles.controlBox}>
+            <p>
+              <MdArrowBack onClick={slidePrev} />
+              <MdArrowForward onClick={slideNext} />
+            </p>
+            <nav>
+              {topItems.map((item, i) => (
+                i === currentIndex
+                  ?
+                  <sub className={styles.change} key={i}></sub>
+                  :
+                  <sub key={i}></sub>
+              ))}
+            </nav>
+          </div>
+        </>
+        : <span>loading...</span>
+      }
 
     </section>
   );

@@ -13,6 +13,7 @@ import { getUserAddress, predictPlaces } from '@/External/map';
 import { LiaMoneyBillWaveAltSolid } from 'react-icons/lia';
 import { GiTakeMyMoney } from 'react-icons/gi';
 import { useRouter } from 'next/navigation';
+import PromptBox from '../components/PromptBox/PromptBox';
 
 
 interface defType extends Record<string, any> { };
@@ -28,9 +29,15 @@ const Checkout = () => {
   const [predLoading, setPredLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [orderLoading, setOrderLoading] = useState(false);
+  const [cartLoaded, setCartLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
 
   useEffect(() => {
+    if (typeof window != 'undefined') {
+      setCartLoaded(true);
+    }
+
     const getUserLocation = () => {
       if (!navigator.geolocation) {
         new Error('Geolocation is not supported by this browser.');
@@ -143,6 +150,13 @@ const Checkout = () => {
   //no orderCount on customer side filter all from Orders collection
   // https://www.pinterest.com/pin/1077134435865011509/
 
+  const fixPrompt = () => {
+    setIsPlaying(true);
+    setTimeout(() => {
+      setIsPlaying(false);
+    }, 6000)
+  }
+
   const checkOrder = () => {
     if (checkContact(joinContact(fixContact(contact))) && location) {
       setOrderLoading(true);
@@ -152,14 +166,10 @@ const Checkout = () => {
         //run paystack and on 200 fixUpdatedCart(1); add paystack trans ID to make sure.
       }
     } else {
-      alert('fix form prompt');
+      fixPrompt();
     }
   }
 
-
-
-
-  const [tes, setTes] = useState('');
 
   return (
     <main className='scroll'>
@@ -178,7 +188,7 @@ const Checkout = () => {
               <span>Total</span>
             </li>
 
-            {typeof window != 'undefined' &&
+            {cartLoaded &&
               cart.map((item: defType, i: number) => (
                 <li key={i}>
                   <article>
@@ -298,18 +308,21 @@ const Checkout = () => {
           </article>
 
           <article className={styles.totalBox}>
-            <p>
+            <div>
               <hr />
               <strong>Total</strong>
               <legend>
                 <MdOutlineReceiptLong />
                 <strong className='cash' style={{ fontWeight: 600, fontSize: '1.3rem' }}>GH₵ 5,000</strong>
               </legend>
-            </p>
+            </div>
           </article>
           <button className={styles.checkout} onClick={checkOrder}>Place order</button>
         </section>
       </section>
+
+      <PromptBox type='fail' info='Contact is required' isPlaying={isPlaying} />
+
       {orderLoading && <span>order Loading</span>}
     </main>
   );

@@ -29,6 +29,10 @@
   position: relative;
 }
 
+.imgBox img {
+  transition: 0.5s ease;
+}
+
 .thumbs {
   display: grid;
   height: 100px;
@@ -66,7 +70,8 @@
   justify-content: space-between;
   gap: 1rem;
 }
-.right .part{
+
+.right .part {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
@@ -98,9 +103,9 @@
 
 .right legend {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   width: max-content;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .right legend svg {
@@ -173,7 +178,7 @@
   color: var(--theme);
 }
 
-.callBox{
+.callBox {
   background: var(--pass);
   color: white;
   padding: 5px;
@@ -181,11 +186,12 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
-.shareBox{
+.shareBox {
   display: flex;
   gap: 1rem;
 }
-.shareBox svg{
+
+.shareBox svg {
   font-size: 1.25em;
   color: palevioletred;
 }
@@ -258,5 +264,9 @@
 @media all and (max-width : 850px) {
   .imgBox {
     height: 280px;
+  }
+
+  .right legend {
+    width: revert;
   }
 }
