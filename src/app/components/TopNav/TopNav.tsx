@@ -73,6 +73,7 @@ const TopNav = () => {
           localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart) || '[]');
           localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList) || '[]');
           localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords) || '[]');
+          setCart(customerTemp.cart || []);
           setWishList(customerTemp.wishList);
           setIsLoading(false);
           setIsLoggedIn(true);
