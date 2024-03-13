@@ -2,13 +2,14 @@
 import { itemLoader, sampleImg } from "@/External/lists";
 import Image from "next/image";
 import styles from '../home.module.css';
-import { addToCart, getTimeLeft } from "@/External/services";
+import { getTimeLeft } from "@/External/services";
 import { useEffect, useState } from "react";
 import { MdAddShoppingCart } from "react-icons/md";
-import { collection, getDocs, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import Link from "next/link";
 import AOS from 'aos';
+import AddToCart from "../components/Cart/AddToCart/AddToCart";
 
 interface defType extends Record<string, any> { };
 const PromoBox = () => {
@@ -41,22 +42,6 @@ const PromoBox = () => {
     }
 
     getPromos();
-
-    // const promoStream = onSnapshot(query(productsRef, where("type", "==", "promo"), orderBy("priority", "desc"), limit(2)), (snapshot) => {
-    //   const promosTemp: defType[] = snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }));
-    //   setPromos(promosTemp);
-    //   setIsLoading(false);
-    //   console.log(promosTemp);
-    //   const interval = setInterval(() => {
-    //     const deadlines = promosTemp.map((el) => el.deadline);
-    //     // console.log(deadlines);
-    //     const updatedTimerList = deadlines.map((el) => getTimeLeft(el));
-    //     setTimerList(updatedTimerList);
-    //   }, 1000);
-    //   return () => clearInterval(interval);
-    // });
-
-    // return () => promoStream();
   }, [])
 
 
@@ -89,11 +74,13 @@ const PromoBox = () => {
                       </p>
                     ))}
                 </legend>
-                <button onClick={() => addToCart(product, 1)}>
-                  <sup></sup>
-                  <h4>Add To Cart</h4>
-                  <MdAddShoppingCart />
-                </button>
+                <AddToCart product={product} quantity={1} type="normal">
+                  <button>
+                    <sup></sup>
+                    <h4>Add To Cart</h4>
+                    <MdAddShoppingCart />
+                  </button>
+                </AddToCart>
               </article>
             </article>
           </div>

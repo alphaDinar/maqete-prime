@@ -62,9 +62,12 @@ const Category = ({ searchParams }: { searchParams: { cid: string } }) => {
         ?
         <section className={styles.categoryBox} >
           <section className={styles.top} id='boxNoTop'>
-            <Link href={'/'}>
-              <MdArrowBack className={styles.back} />
-            </Link>
+            <section className='pageHeader'>
+              <Link href={'/'} className='back'>
+                <MdArrowBack />
+                <strong>Categories</strong>
+              </Link>
+            </section>
             <div className={styles.categoryList} id='scrollable'>
               {categories.map((cat, i) => (
                 <Link className={styles.category} href={{ pathname: '/category', query: { cid: cat.id } }} key={i}>

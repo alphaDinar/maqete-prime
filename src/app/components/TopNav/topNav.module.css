@@ -140,24 +140,26 @@
 }
 
 .cartBoxHolder,
-.userBoxHolder {
+.userBoxHolder, .wishListHolder {
   z-index: 200;
 }
 
 .cartBoxHolder .sheet,
-.userBoxHolder .sheet {
+.userBoxHolder .sheet,
+.wishListHolder .sheet {
   right: -100%;
 }
 
 .cartBoxHolder.change .sheet,
-.userBoxHolder.change .sheet {
+.userBoxHolder.change .sheet,
+.wishListHolder.change .sheet {
   right: 0;
 }
 
 
 
 .cartBox,
-.userBox {
+.userBox, .wishList {
   transition: 0.3s ease;
   position: fixed;
   top: 0;
@@ -173,7 +175,7 @@
   overflow: auto;
 }
 
-.cartBox {
+.cartBox, .wishList {
   background: white;
 }
 
@@ -183,25 +185,29 @@
 }
 
 .cartBox::-webkit-scrollbar,
-.userBox::-webkit-scrollbar {
+.userBox::-webkit-scrollbar,
+.wishList::-webkit-scrollbar {
   width: 8px;
   background: gray;
   border-radius: 40px;
 }
 
 .cartBox::-webkit-scrollbar-thumb,
-.userBox::-webkit-scrollbar-thumb {
+.userBox::-webkit-scrollbar-thumb,
+.wishList::-webkit-scrollbar-thumb {
   background: wheat;
   border-radius: 40px;
 }
 
 .cartBoxHolder.change .cartBox,
-.userBoxHolder.change .userBox {
+.userBoxHolder.change .userBox,
+.wishListHolder.change .wishList{
   right: 0;
 }
 
 .cartBox header,
-.userBox header {
+.userBox header,
+.wishList header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -211,25 +217,28 @@
 }
 
 .cartBox header legend,
-.userBox header legend {
+.userBox header legend,
+.wishList header legend {
   cursor: pointer;
   position: absolute;
   right: 0;
 }
 
 .cartBox header svg,
-.userBox header svg {
+.userBox header svg,
+.wishList header svg {
   font-size: 1.5rem;
 }
 
 .cartBox ul,
-.userBox ul {
+.userBox ul,
+.wishList ul {
   display: flex;
   flex: 1;
   flex-direction: column;
 }
 
-.cartBox ul {
+.cartBox ul, .wishList ul {
   gap: 1.5rem;
 }
 
@@ -238,11 +247,11 @@
 }
 
 .cartBox ul li,
-.userBox ul a {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.userBox ul a,
+.wishList ul a{
   display: grid;
+  gap: 1rem;
+  align-items: center;
   grid-template-columns: 60px 1fr 50px;
 }
 
@@ -253,7 +262,17 @@
   color: black;
 }
 
-.cartBox ul li article {
+.wishList ul a{
+  gap: 1rem;
+  color: black;
+}
+.wishList ul a article{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cartBox ul li article{
   display: flex;
   height: 100%;
   justify-content: space-between;
@@ -279,7 +298,7 @@
   object-fit: contain;
 }
 
-.cartBox ul li .remove {
+.cartBox ul li .remove svg {
   color: tomato;
   font-size: 1.5rem;
   cursor: pointer;

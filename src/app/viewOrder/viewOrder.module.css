@@ -1,0 +1,88 @@
+.orderBox {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+
+.con {
+  display: grid;
+  gap: 2rem;
+}
+
+.con header strong {
+  font-size: 1.5rem;
+}
+
+
+.cart {
+  display: grid;
+  gap: 1rem;
+}
+
+.cart ul {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.cart ul li {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr 1fr 1fr;
+  align-items: center;
+}
+
+.cart ul li span:nth-child(4) {
+  margin: auto;
+}
+
+.cart ul li strong {
+  margin-left: auto;
+}
+
+.cart .total {
+  margin-left: auto;
+  border-top: 2px solid darkgray;
+  padding: 5px 0;
+  border-bottom: 2px solid darkgray;
+  font-size: 1.7rem;
+}
+
+.promptBox,
+.contactBox {
+  display: flex;
+  align-items: center;
+  border: 1px solid lightgray;
+  margin-right: auto;
+  color: black;
+}
+
+.promptBox svg,
+.contactBox svg {
+  color: white;
+  font-size: 1.3rem;
+  padding: 10px;
+}
+
+.promptBox span,
+.contactBox span {
+  padding: 0 10px;
+}
+
+@media all and (max-width:500px){
+  .cart ul li {
+    display: grid;
+    border: 1px solid darkgray;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 10px;
+    gap: 0.5rem 0;
+  }
+  
+  .cart ul li span:nth-child(4) {
+    margin: revert;
+  }
+  
+  .cart ul li strong {
+    margin-left: revert;
+  }
+}

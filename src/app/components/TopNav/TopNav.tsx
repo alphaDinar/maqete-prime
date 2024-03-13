@@ -1,21 +1,27 @@
 'use client'
 import Link from 'next/link';
 import styles from './topNav.module.css';
-import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdRemoveCircle, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
+import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { userList } from '@/External/lists';
-import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loader from '../Loader/Loader';
-import { addKeyword, addToCart, checkJSONParsable, clearItem, getCartTotal, removeFromCart } from '@/External/services';
+import { addKeyword, getCartTotal } from '@/External/services';
 import { useWishList } from '@/app/contexts/wishListContext';
+import { useCart } from '@/app/contexts/cartContext';
+import ClearItem from '../Cart/ClearItem/ClearItem';
+import AddToCart from '../Cart/AddToCart/AddToCart';
+import RemFromCart from '../Cart/RemFromCart/RemFromCart';
 
 interface defType extends Record<string, any> { };
 const TopNav = () => {
   const [displayName, setDisplayName] = useState('');
+  const { cart } = useCart();
   const { wishList, setWishList } = useWishList();
+  const [wishListItems, setWishListItems] = useState<defType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [products, setProducts] = useState<defType[]>([]);
@@ -25,10 +31,9 @@ const TopNav = () => {
 
   const [userBoxToggled, setUserBoxToggled] = useState(false);
   const [cartBoxToggled, setCartBoxToggled] = useState(false);
+  const [wishListToggled, setWishListToggled] = useState(false);
   const [customer, setCustomer] = useState<defType>({});
   const [winSize, setWinSize] = useState(1200);
-  const [cart, setCart] = useState<defType[]>([]);
-  const [cartLoaded, setCartLoaded] = useState(false);
 
   const toggleSearchBox = () => {
     searchBoxToggled ? setSearchBoxToggled(false) : setSearchBoxToggled(true);
@@ -39,6 +44,10 @@ const TopNav = () => {
   const toggleCartBox = () => {
     cartBoxToggled ? setCartBoxToggled(false) : setCartBoxToggled(true);
   }
+  const toggleWishList = () => {
+    wishListToggled ? setWishListToggled(false) : setWishListToggled(true);
+  }
+
   const toggleMenu = () => {
     menuToggled ? setMenuToggled(false) : setMenuToggled(true);
   }
@@ -49,19 +58,7 @@ const TopNav = () => {
       window.onresize = () => {
         setWinSize(window.innerWidth);
       }
-      setCartLoaded(true);
     }
-
-    const productsRef = collection(fireStoreDB, 'Products/');
-    const productStream = onSnapshot(productsRef, (snapshot) => {
-      setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
-    });
-
-    getDocs(collection(fireStoreDB, 'Products/'))
-      .then((res) => {
-        const productsTemp: defType[] = res.docs.map((el) => ({ id: el.id, ...el.data() }))
-        setProducts(productsTemp);
-      });
 
     const authStream = onAuthStateChanged(fireAuth, (user) => {
       if (user) {
@@ -69,30 +66,43 @@ const TopNav = () => {
 
         const customerStream = onSnapshot(doc(fireStoreDB, 'Customers/' + user.uid), (snapshot) => {
           const customerTemp: defType = ({ id: snapshot.id, ...snapshot.data() });
-          localStorage.setItem('maqCustomer', '1');
-          localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart) || '[]');
-          localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList) || '[]');
-          localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords) || '[]');
-          setCart(customerTemp.cart || []);
-          setWishList(customerTemp.wishList);
-          setIsLoading(false);
           setIsLoggedIn(true);
           setCustomer(customerTemp);
+          localStorage.setItem('maqCustomer', '1');
+          const productsRef = collection(fireStoreDB, 'Products/');
+          const productStream = onSnapshot(productsRef, (snapshot) => {
+            const wishListTemp: defType[] = [];
+            const productsTemp: defType[] = snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() }));
+            customerTemp.wishList.map((el: string) => {
+              const prod = productsTemp.find((prod) => prod.id === el);
+              if (prod) {
+                wishListTemp.push(prod)
+                setWishListItems(wishListTemp);
+              }
+            })
+            setProducts(productsTemp);
+            if (typeof window !== undefined) {
+              setIsLoading(false);
+            }
+          });
+          return () => productStream();
         });
         return () => customerStream();
       } else {
         localStorage.removeItem('maqCustomer');
-        setIsLoading(false);
-        console.log('logged Out');
+        const productsRef = collection(fireStoreDB, 'Products/');
+        const productStream = onSnapshot(productsRef, (snapshot) => {
+          setProducts(snapshot.docs.map((prod) => ({ id: prod.id, ...prod.data() })));
+          if (typeof window !== undefined) {
+            setIsLoading(false);
+          }
+        });
+        return () => productStream();
       }
     });
 
-    return () => {
-      productStream();
-      authStream();
-
-    }
-  }, [setWishList])
+    return () => authStream();
+  }, [])
 
   const prodTest = [
     { name: 'Samsung A24' },
@@ -145,13 +155,13 @@ const TopNav = () => {
               <MdSelfImprovement />
               <legend>{customer.username}</legend>
             </a>
-            <Link href={''}>
+            <a onClick={toggleWishList}>
               <MdOutlineFavoriteBorder />
-              <legend>{customer.wishList.length}</legend>
-            </Link>
+              <legend>{wishList.length}</legend>
+            </a>
             <a onClick={toggleCartBox}>
               <MdOutlineShoppingCart />
-              <legend>{customer.cart.length}</legend>
+              <legend>{cart.length}</legend>
             </a>
             <MdMenu className={styles.tag} onClick={toggleMenu} />
           </nav>
@@ -175,7 +185,7 @@ const TopNav = () => {
         <Loader />
       }
 
-      {cartLoaded &&
+      {!isLoading &&
         <section className={cartBoxToggled ? `${styles.cartBoxHolder} ${styles.change}` : styles.cartBoxHolder}>
           <section className={styles.sheet} onClick={toggleCartBox}></section>
           <section className={styles.cartBox}>
@@ -193,30 +203,71 @@ const TopNav = () => {
                 cart.map((item: defType, i: number) => (
                   <li key={i}>
                     {
-                      <Image alt='' src={JSON.parse(item.product).image.url} height={70} width={70} />
+                      <Image alt='' className='contain' src={JSON.parse(item.product).image.url} height={70} width={70} />
                     }
                     <article>
                       <small>{JSON.parse(item.product).name}</small>
                       <strong className='cash'>GH₵ {(item.quantity * item.price).toLocaleString()}</strong>
                       <nav>
-                        <MdRemove onClick={() => removeFromCart(JSON.parse(item.product))} />
-                        <span>{item.quantity}</span>
-                        <MdAdd onClick={() => addToCart(JSON.parse(item.product), 1)} />
+                        <RemFromCart product={JSON.parse(item.product)}>
+                          <MdRemove />
+                        </RemFromCart>
+                        <span className='cash'>{item.quantity}</span>
+                        <AddToCart product={JSON.parse(item.product)} quantity={1} type='normal'>
+                          <MdAdd />
+                        </AddToCart>
                       </nav>
                     </article>
-                    <MdDeleteOutline onClick={() => clearItem(JSON.parse(item.product))} className={styles.remove} />
+                    <legend className={styles.remove}>
+                      <ClearItem product={JSON.parse(item.product)}>
+                        <MdDeleteOutline />
+                      </ClearItem>
+                    </legend>
                   </li>
                 ))}
             </ul>
 
             <footer>
-              <h3 className='big'>GHS {getCartTotal().toLocaleString()}</h3>
+              <h3 className='big'>GHS {getCartTotal(cart).toLocaleString()}</h3>
               <Link href={'/checkout'}>
                 <sub></sub>
                 <span>Go to Checkout</span>
                 <MdOutlineShoppingCartCheckout />
               </Link>
             </footer>
+          </section>
+        </section>
+      }
+
+      {!isLoading &&
+        <section className={wishListToggled ? `${styles.wishListHolder} ${styles.change}` : styles.wishListHolder}>
+          <section className={styles.sheet} onClick={toggleWishList}></section>
+          <section className={styles.wishList}>
+            <header>
+              <MdOutlineFavoriteBorder />
+              <strong>My WishList</strong>
+
+              <legend>
+                <MdClose onClick={toggleWishList} />
+              </legend>
+            </header>
+
+            <ul>
+              {
+                wishListItems.map((prod, i) => (
+                  <Link href={{ pathname: '/viewProduct', query: { pid: prod.id } }} key={i}>
+                    <Image alt='' className='contain' src={prod.image.url} height={70} width={70} />
+                    <article>
+                      <span>{prod.name}</span>
+                      <small style={{ color: 'gray' }}>{prod.category}</small>
+                      <strong className='cash'>GH₵ {prod.price.toLocaleString()}</strong>
+                    </article>
+                    <legend>
+                      <MdArrowForward />
+                    </legend>
+                  </Link>
+                ))}
+            </ul>
           </section>
         </section>
       }
@@ -236,7 +287,7 @@ const TopNav = () => {
 
             <ul>
               {userList.slice(0, 6).map((item, i) => (
-                <Link href={''} key={i}>{item.iconEl} <span>{item.tag}</span></Link>
+                <Link href={item.target} key={i}>{item.iconEl} <span>{item.tag}</span></Link>
               ))}
             </ul>
 
@@ -250,8 +301,6 @@ const TopNav = () => {
           </section>
         </section>
       }
-
-
     </section>
   );
 }

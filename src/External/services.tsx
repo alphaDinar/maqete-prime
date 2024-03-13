@@ -33,34 +33,7 @@ export const addKeyword = (word: string) => {
 }
 
 //cartService
-export const addToCart = (product: defType, quantity: number) => {
-  onAuthStateChanged(fireAuth, (user) => {
-    const customer = localStorage.getItem('maqCustomer');
-    const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
-    const pid = product.id;
 
-    const itemExists = cart.find((el) => el.pid === pid);
-    if (itemExists) {
-      itemExists['quantity'] += quantity;
-    } else {
-      const cartItem = {
-        pid: pid,
-        product: JSON.stringify(product),
-        price: product.price,
-        quantity: quantity
-      }
-      cart.push(cartItem);
-    }
-
-    if (user && customer) {
-      updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-        cart: cart
-      })
-    } else {
-      localStorage.setItem('maqCart', JSON.stringify(cart));
-    }
-  })
-}
 
 export const setToCart = (product: defType, quantity: number) => {
   onAuthStateChanged(fireAuth, (user) => {
@@ -114,26 +87,6 @@ export const removeFromCart = (product: defType) => {
   })
 }
 
-export const clearItem = (product: defType) => {
-  onAuthStateChanged(fireAuth, (user) => {
-    const customer = localStorage.getItem('maqCustomer');
-    const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
-    const pid = product.id;
-
-    const itemExists = cart.find((el) => el.pid === pid);
-    if (itemExists) {
-      const updatedCart = cart.filter((el) => el.pid !== pid);
-      if (user && customer) {
-        updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-          cart: updatedCart
-        })
-      } else {
-        localStorage.setItem('maqCart', JSON.stringify(updatedCart));
-      }
-    }
-  })
-}
-
 export const clearCart = () => {
   onAuthStateChanged(fireAuth, (user) => {
     const customer = localStorage.getItem('maqCustomer');
@@ -147,8 +100,7 @@ export const clearCart = () => {
   })
 }
 
-export const getCartTotal = () => {
-  const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
+export const getCartTotal = (cart : defType[]) => {
   const total = cart.reduce((acc, item) => {
     const itemTotal = item.price * item.quantity;
     return acc + itemTotal;
@@ -164,35 +116,6 @@ export const getUpdatedCartTotal = (updatedCart: defType[]) => {
   return total;
 }
 
-
-//wishListService
-export const addToWishList = (pid: string) => {
-  onAuthStateChanged(fireAuth, (user) => {
-    const customer = localStorage.getItem('maqCustomer');
-    const wishList: string[] = JSON.parse(localStorage.getItem('maqWishList') || '[]');
-
-    const itemExists = wishList.find((el) => el === pid);
-    if (itemExists) {
-      const updatedWishList = wishList.filter((el) => el !== pid);
-      if (user && customer) {
-        updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-          wishList: updatedWishList
-        })
-      } else {
-        localStorage.setItem('maqWishList', JSON.stringify(updatedWishList));
-      }
-    } else {
-      wishList.push(pid);
-      if (user && customer) {
-        updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {
-          wishList: wishList
-        })
-      } else {
-        localStorage.setItem('maqWishList', JSON.stringify(wishList));
-      }
-    }
-  })
-}
 
 //sortProducts
 export const sortPopular = (products: defType[]) => {
@@ -311,6 +234,12 @@ export const getDateStamp = (stamp: number) => {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+export const getHourGap = (stamp: number) => {
+  const date2 = new Date().getTime();
+  const hourDifference = (date2 - stamp) / 36e5;
+  return Math.floor(hourDifference);
 }
 
 //sorting

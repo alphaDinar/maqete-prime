@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { TbTruckReturn } from "react-icons/tb";
 import { GiTakeMyMoney } from "react-icons/gi";
-import { addToCart } from "@/External/services";
 import { collection, onSnapshot, orderBy, query, where, increment, doc, updateDoc } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import WishListTag from "../components/WishListTag/WishListTag";
@@ -17,6 +16,7 @@ import Link from "next/link";
 import Products from "../components/Products/Products";
 import { itemLoader } from "@/External/lists";
 import Footer from "../components/Footer/Footer";
+import AddToCart from "../components/Cart/AddToCart/AddToCart";
 
 interface defType extends Record<string, any> { };
 const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
@@ -119,7 +119,9 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
 
                 <div className={styles.productControl}>
                   <p>
-                    <button onClick={() => { addToCart(product, quantity), setQuantity(1) }}>Add To Cart <MdOutlineAddShoppingCart /> </button>
+                    <AddToCart product={product} quantity={quantity} type="normal">
+                      <button>Add To Cart <MdOutlineAddShoppingCart /> </button>
+                    </AddToCart>
                     <input className="big" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
                   </p>
 

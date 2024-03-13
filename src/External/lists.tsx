@@ -1,10 +1,12 @@
 import Lottie from 'lottie-react';
 import itemLoaderRef from '../../public/itemLoader.json';
-import { MdOutlineAssignment, MdOutlineNotifications, MdOutlinePayment, MdOutlineSupportAgent } from 'react-icons/md';
+import { MdArrowBack, MdOutlineAssignment, MdOutlineNotifications, MdOutlinePayment, MdOutlineSupportAgent } from 'react-icons/md';
 import { CiWallet } from 'react-icons/ci';
 import { RiCoupon3Line } from 'react-icons/ri';
 import { GoReport } from 'react-icons/go';
 import { RxDashboard } from 'react-icons/rx';
+import Link from 'next/link';
+import { CgProfile } from 'react-icons/cg';
 
 export const sampleImg = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1707928017/pixel_oweiao.png';
 
@@ -13,14 +15,15 @@ export const place = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708045
 export const itemLoader = <Lottie animationData={itemLoaderRef} />;
 
 export const userList = [
-  { tag: 'My Dashboard', iconEl: <RxDashboard /> },
-  { tag: 'My Orders', iconEl: <MdOutlineAssignment /> },
-  { tag: 'Notifications', iconEl: <MdOutlineNotifications /> },
-  { tag: 'My Wallet', iconEl: <CiWallet /> },
-  { tag: 'Payment', iconEl: <MdOutlinePayment /> },
-  { tag: 'My Coupons', iconEl: <RiCoupon3Line /> },
-  { tag: 'Help Center', iconEl: <MdOutlineSupportAgent /> },
-  { tag: 'Disputes & Reports', iconEl: <GoReport /> }
+  // { tag: 'My Dashboard', iconEl: <RxDashboard />, target : '' },
+  { tag: 'My Orders', iconEl: <MdOutlineAssignment />, target: '/orders' },
+  { tag: 'My Profile', iconEl: <CgProfile />, target: '/profile' },
+  { tag: 'Notifications', iconEl: <MdOutlineNotifications />, target: '' },
+  { tag: 'My Wallet', iconEl: <CiWallet />, target: '' },
+  { tag: 'Payment', iconEl: <MdOutlinePayment />, target: '' },
+  { tag: 'My Coupons', iconEl: <RiCoupon3Line />, target: '' },
+  { tag: 'Help Center', iconEl: <MdOutlineSupportAgent />, target: '' },
+  { tag: 'Disputes & Reports', iconEl: <GoReport />, target: '' }
 ]
 
 export const paymentMethodList = [
@@ -31,3 +34,13 @@ export const paymentMethodList = [
   { tag: 'Visa', img: 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1707773591/Agrivestafrica/visa-removebg-preview_1_gvzm2h.png' },
   { tag: 'Master', img: 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1707773592/Agrivestafrica/master_mhgszl.webp' }
 ]
+
+
+export const pageHeader = (title: string, target: string) => {
+  return <section className='pageHeader'>
+    <Link href={target} className='back'>
+      <MdArrowBack />
+      <strong>{title}</strong>
+    </Link>
+  </section>
+}

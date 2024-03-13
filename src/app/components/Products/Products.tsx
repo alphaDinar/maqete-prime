@@ -4,12 +4,11 @@ import { FC, useEffect } from 'react';
 import Link from 'next/link';
 import { MdOutlineAddShoppingCart, MdOutlineShoppingCartCheckout, MdStar } from 'react-icons/md';
 import Image from 'next/image';
-import { addToCart } from '@/External/services';
-import { useRouter } from 'next/navigation';
 import WishListTag from '../WishListTag/WishListTag';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { itemLoader } from '@/External/lists';
+import AddToCart from '../Cart/AddToCart/AddToCart';
 
 interface defType extends Record<string, any> { };
 
@@ -19,7 +18,6 @@ type ProductsProps = {
 }
 
 const Products: FC<ProductsProps> = ({ productList, isLoading }) => {
-  const router = useRouter();
   const products = JSON.parse(productList);
 
   useEffect(() => {
@@ -43,7 +41,9 @@ const Products: FC<ProductsProps> = ({ productList, isLoading }) => {
                 <WishListTag pid={product.id} />
               </sup>
               <div className={styles.controlBox}>
-                <MdOutlineShoppingCartCheckout className={styles.checkout} onClick={() => { addToCart(product, 1); router.push('/checkout') }} />
+                <AddToCart product={product} quantity={1} type='checkout'>
+                  <MdOutlineShoppingCartCheckout className={styles.checkout} />
+                </AddToCart>
               </div>
 
               <Link href={{ pathname: '/category', query: { cid: product.category } }} style={{ height: 'auto' }}>
@@ -64,12 +64,13 @@ const Products: FC<ProductsProps> = ({ productList, isLoading }) => {
                 </p>
               </article>
             </div>
-            <button onClick={() => addToCart(product, 1)}>
-              <sup></sup>
-              <span style={{ color: 'white' }}>Add To Cart</span> <MdOutlineAddShoppingCart />
-            </button>
+            <AddToCart product={product} quantity={1} type='add' >
+              <button>
+                <sup></sup>
+                <span style={{ color: 'white' }}>Add To Cart</span> <MdOutlineAddShoppingCart />
+              </button>
+            </AddToCart>
           </div>
-
         ))
         :
         Array(5).fill('box').map((box, i) => (

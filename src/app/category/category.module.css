@@ -9,12 +9,6 @@
   background: darkgray;
 }
 
-.back {
-  font-size: 2rem;
-  color: gray;
-  cursor: pointer;
-}
-
 .top {
   display: grid;
   grid-template-columns: 1fr;

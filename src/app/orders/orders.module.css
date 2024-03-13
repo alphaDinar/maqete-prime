@@ -1,0 +1,125 @@
+.orderBox {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding-bottom: 3vh !important;
+}
+.tabBox{
+  display: flex;
+  padding: 5px 0;
+  width: 100%;
+  gap: 1.5rem;
+  overflow: scroll;
+}
+.tabBox::-webkit-scrollbar {
+  display: none;
+}
+
+.orders {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem 0;
+}
+
+.order {
+  position: relative;
+  border-bottom: 1px solid lightgray;
+  border-left: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 10px 10px 10px;
+  gap: 0.5rem;
+  color: black;
+}
+
+.order .tag {
+  top: 0;
+  left: 0;
+  position: absolute;
+  font-size: 1.5rem;
+  background: var(--pass);
+  color: white;
+}
+
+.order .imgBox {
+  display: flex;
+  align-items: center;
+}
+
+.order .item {
+  position: relative;
+}
+
+.order .item sub {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--royal);
+  border-radius: 50%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  font-size: 0.8rem;
+}
+
+.order article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.order article p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.order article strong {
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+
+.order article svg {
+  position: relative;
+  right: 0;
+  font-size: 1.5rem;
+  transition: 0.4s ease;
+}
+
+.order article:hover svg {
+  right: -20px;
+}
+
+
+@media all and (max-width:1100px) {
+  .orders {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media all and (max-width:950px) {
+  .orders {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media all and (max-width:800px) {
+  .orders {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media all and (max-width:500px) {
+  .orders {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .order {
+    border-right: 1px solid lightgray;
+  }
+}

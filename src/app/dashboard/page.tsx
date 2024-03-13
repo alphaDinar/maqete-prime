@@ -71,25 +71,6 @@ const Dashboard = () => {
       {!isLoading ?
         <section className={styles.conBox}>
           <section className={styles.header}>
-            <section className={styles.statusBox}>
-              <Link href={'/orders'}>
-                <strong className="big">300</strong>
-                <span>Orders</span>
-              </Link>
-              <Link href={'/orders'} style={{ background: '#bdf2d2' }}>
-                <strong className="big">300,000</strong>
-                <span>Points</span>
-              </Link>
-              <Link href={'/orders'} style={{ background: '#f2f6f7' }}>
-                <strong className="big">1st</strong>
-                <GiDiamondTrophy />
-              </Link>
-              <Link href={'/topUp'} style={{ background: '#ffeb9d' }}>
-                <strong className="big">GHC 5,000</strong>
-                <GiWallet />
-              </Link>
-            </section>
-
             <nav className={styles.controlBox}>
               <article>
                 <Link href={'/wishList'}>
@@ -121,8 +102,7 @@ const Dashboard = () => {
             <section className={styles.top}>
               <section className={styles.recentBox}>
                 <header>
-                  <h3>Recent Orders</h3>
-                  <Link href={'/allPromos'}>More Orders <MdArrowForward /></Link>
+                  <Link href={'/allPromos'}>Recent Orders <MdArrowForward /></Link>
                 </header>
                 <ul>
                   {Array(3).fill('a').map((order, i) => (
@@ -141,7 +121,7 @@ const Dashboard = () => {
                 </ul>
               </section>
               <section className={styles.right}>
-                <header><span></span> <Link href={'/allPromos'}>More Promos <MdArrowForward /></Link></header>
+                <header><Link href={'/allPromos'}>More Promos <MdArrowForward /></Link></header>
                 <section>
                   {Array(2).fill('').map((promo, i) => (
                     <Link href={''} className={styles.promo} key={i}>
@@ -180,10 +160,6 @@ const Dashboard = () => {
             </section>
 
             <section className={styles.trending}>
-              <header>
-                <h3>Trending Offers</h3>
-                <Link href={'/allProducts'}>More Offers <MdArrowForward /></Link>
-              </header>
               <Products productList={JSON.stringify(products)} isLoading={isLoading} />
             </section>
           </section>

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import TopNav from '../components/TopNav/TopNav';
 import styles from './checkout.module.css';
-import { addToCart, checkContact, clearCart, clearItem, fixContact, genToken, getUpdatedCartTotal, joinContact, removeFromCart, setToCart } from '@/External/services';
+import { checkContact, clearCart, fixContact, genToken, getUpdatedCartTotal, joinContact, setToCart } from '@/External/services';
 import { MdAdd, MdArrowForward, MdBolt, MdCall, MdDelete, MdDeleteOutline, MdLocalShipping, MdLocationPin, MdOutlineDeliveryDining, MdOutlineReceiptLong, MdOutlineSmartphone, MdPayments, MdReceiptLong, MdRemove, MdSchedule } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -14,6 +14,10 @@ import { LiaMoneyBillWaveAltSolid } from 'react-icons/lia';
 import { GiTakeMyMoney } from 'react-icons/gi';
 import { useRouter } from 'next/navigation';
 import PromptBox from '../components/PromptBox/PromptBox';
+import ClearItem from '../components/Cart/ClearItem/ClearItem';
+import AddToCart from '../components/Cart/AddToCart/AddToCart';
+import RemFromCart from '../components/Cart/RemFromCart/RemFromCart';
+import { createPayLink } from '@/External/paystack';
 
 
 interface defType extends Record<string, any> { };
@@ -38,6 +42,7 @@ const Checkout = () => {
       setCartLoaded(true);
     }
 
+
     const getUserLocation = () => {
       if (!navigator.geolocation) {
         new Error('Geolocation is not supported by this browser.');
@@ -60,13 +65,16 @@ const Checkout = () => {
       if (user) {
         const customerStream = onSnapshot(doc(fireStoreDB, 'Customers/' + user.uid), (snapshot) => {
           const customerTemp: defType = ({ id: snapshot.id, ...snapshot.data() });
-          localStorage.setItem('maqCustomer', '1');
-          localStorage.setItem('maqCart', JSON.stringify(customerTemp.cart));
-          localStorage.setItem('maqWishList', JSON.stringify(customerTemp.wishList));
-          localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
-          setCustomer(customerTemp);
-          sortCart(customerTemp.cart);
-          setQuantityList(customerTemp.cart.map((el: defType) => el.quantity))
+          if (customerTemp.cart.length < 1) {
+            router.push('/');
+          } else {
+            localStorage.setItem('maqCustomer', '1');
+            localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
+            setCustomer(customerTemp);
+            sortCart(customerTemp.cart);
+            setContact(customerTemp.contact);
+            setQuantityList(customerTemp.cart.map((el: defType) => el.quantity))
+          }
         });
         return () => customerStream();
       } else {
@@ -75,7 +83,7 @@ const Checkout = () => {
       }
     });
     return () => authStream();
-  }, [])
+  }, [router])
 
   const sortCart = (cartTemp: defType[]) => {
     const updatedCart: defType[] = [];
@@ -157,12 +165,14 @@ const Checkout = () => {
     }, 6000)
   }
 
-  const checkOrder = () => {
+  const checkOrder = async () => {
     if (checkContact(joinContact(fixContact(contact))) && location) {
       setOrderLoading(true);
       if (paymentMethod === 'cash') {
         createOrder(0);
       } else {
+        const payObj = await createPayLink();
+        router.push(payObj.link);
         //run paystack and on 200 fixUpdatedCart(1); add paystack trans ID to make sure.
       }
     } else {
@@ -204,15 +214,21 @@ const Checkout = () => {
                       <small style={{ color: 'darkgray' }} className="cut">
                         {item.el.category}
                       </small>
-                      <legend onClick={() => { clearItem(item.el) }}>
-                        <MdDeleteOutline />
-                      </legend>
+                      <ClearItem product={item.el}>
+                        <legend>
+                          <MdDeleteOutline />
+                        </legend>
+                      </ClearItem>
                     </p>
                   </article>
                   <nav>
-                    <button onClick={() => { removeFromCart(item.el) }}><MdRemove /></button>
+                    <RemFromCart product={item.el}>
+                      <button><MdRemove /></button>
+                    </RemFromCart>
                     <input className='cash' type="number" value={quantityList[i]} onChange={(e) => setToCart(item.el, parseInt(e.target.value))} />
-                    <button onClick={() => { addToCart(item.el, 1) }}><MdAdd /></button>
+                    <AddToCart product={item.el} quantity={1} type='normal'>
+                      <button><MdAdd /></button>
+                    </AddToCart>
                   </nav>
                   <article>
                     <sub>Unit Price</sub>
@@ -302,7 +318,7 @@ const Checkout = () => {
             </legend>
             <legend>
               <LiaMoneyBillWaveAltSolid />
-              <strong className='cash'>GH₵ 5,000</strong>
+              <strong className='cash'>GH₵ {getUpdatedCartTotal(cart).toLocaleString()}</strong>
               <sub></sub>
             </legend>
           </article>
@@ -313,7 +329,7 @@ const Checkout = () => {
               <strong>Total</strong>
               <legend>
                 <MdOutlineReceiptLong />
-                <strong className='cash' style={{ fontWeight: 600, fontSize: '1.3rem' }}>GH₵ 5,000</strong>
+                <strong className='cash' style={{ fontWeight: 600, fontSize: '1.3rem' }}>GH₵ {getUpdatedCartTotal(cart).toLocaleString()}</strong>
               </legend>
             </div>
           </article>

@@ -1,0 +1,49 @@
+.profileBox{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.infoBox{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+.infoBox legend{
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 0 5px;
+  gap: 1rem;
+  background: whitesmoke;
+}
+.infoBox legend svg{
+  background: tomato;
+  color: white;
+  padding: 8px;
+}
+
+.infoBox div{
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr;
+}
+
+.infoBox div span{
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.infoBox input{
+  padding: 10px;
+  background: var(--input);
+  font-family: 'Poppins', sans-serif;
+}
+
+.infoBox button{
+  padding: 10px;
+  background: var(--theme);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}

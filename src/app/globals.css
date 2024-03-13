@@ -4,7 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Wix+Madefor+Display:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 * {
   margin: 0;
@@ -12,14 +13,16 @@
   border: none;
   outline: none;
   text-decoration: none;
-  font-family: 'Poppins', sans-serif;
-  scroll-behavior: smooth;
   font-family: 'Raleway', sans-serif;
+  /* font-family: 'Poppins', sans-serif; */
+  /* font-family: "Quicksand", sans-serif; */
+  /* font-family: "Wix Madefor Display", sans-serif; */
+  /* font-family: "Outfit", sans-serif; */
+  scroll-behavior: smooth;
 }
 
 :root {
   --theme: #FF6000;
-  /* --theme : #E26C01; */
   --secondary: #EFB51C;
   --secondary: #dba612;
   --input: #E9E9ED;
@@ -335,6 +338,27 @@ body::-webkit-scrollbar-thumb,
   border: 1px solid transparent;
   color: white;
 }
+
+/* .pageHeader {
+  border: 2px solid black;
+} */
+
+.pageHeader .back {
+  color: gray;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pageHeader .back svg{
+  font-size: 1.4rem;
+}
+.pageHeader .back strong{
+  font-size: 1.2rem;
+}
+
+
 
 @media all and (max-width:500px) {
 

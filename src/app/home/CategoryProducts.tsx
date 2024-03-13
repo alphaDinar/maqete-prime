@@ -60,7 +60,7 @@ const CategoryProducts = () => {
   }
 
   return (
-    <section className={styles.productBox} id='boxFull'>
+    <section className={styles.productBox} id='boxNo'>
       <header>
         <strong>Shop By Category</strong>
         <small>Discover Our Exclusive Collection: Unveiling the Finest Picks Just for You!.</small>

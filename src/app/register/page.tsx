@@ -1,7 +1,6 @@
 'use client'
 import Image from 'next/image';
 import styles from './register.module.css';
-// import logo from '../../../public/logo.png';
 import { FcGoogle } from 'react-icons/fc';
 import { MdArrowBack, MdClose } from 'react-icons/md';
 import Link from 'next/link';
@@ -9,10 +8,14 @@ import { signInWithPopup } from 'firebase/auth';
 import { fireAuth, fireStoreDB, googleProvider } from '@/Firebase/base';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { useCart } from '../contexts/cartContext';
+import { useWishList } from '../contexts/wishListContext';
 
 const Register = () => {
   const place = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708559399/maqete/laptop-shopping-bags-online-shopping-concept_1423-190_ckhywh.avif';
   const router = useRouter();
+  const { cart } = useCart();
+  const { wishList } = useWishList();
 
   const googleRegister = () => {
     signInWithPopup(fireAuth, googleProvider)
@@ -22,13 +25,12 @@ const Register = () => {
         if (customer !== undefined && customer.data() !== undefined) {
           router.push('/')
         } else {
-          const cart = JSON.parse(sessionStorage.getItem('maqCart') || '[]');
-          const wishList = JSON.parse(sessionStorage.getItem('maqWishList') || '[]');
           const keywords = JSON.parse(sessionStorage.getItem('maqKeywords') || '[]');
           setDoc(doc(fireStoreDB, 'Customers/' + user.user.uid), {
             cart: cart,
+            email: user.user.email,
+            contact: '',
             wishList: wishList,
-            orders: [],
             keywords: keywords,
             username: username,
             points: 0,
