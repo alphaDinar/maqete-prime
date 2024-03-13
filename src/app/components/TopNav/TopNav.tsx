@@ -4,6 +4,7 @@ import styles from './topNav.module.css';
 import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import logo from '../../../../public/logo.png';
 import { userList } from '@/External/lists';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
@@ -130,7 +131,7 @@ const TopNav = () => {
   return (
     <section className={styles.topNav}>
       <Link href={'/'}>
-        <Image alt='' className='contain' width={100} height={40} src={logoTemp} />
+        <Image alt='' className='contain' width={100} height={50} src={logo} />
       </Link>
 
       <div className={searchBoxToggled ? `${styles.searchBox} ${styles.change}` : styles.searchBox}>
