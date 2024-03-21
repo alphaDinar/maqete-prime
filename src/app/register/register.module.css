@@ -63,7 +63,7 @@
 }
 
 .formBox form div {
-  width: 280px;
+  max-width: 280px;
   display: grid;
 }
 

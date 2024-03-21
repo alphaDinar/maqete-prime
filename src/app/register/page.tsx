@@ -233,6 +233,10 @@ const Register = () => {
               <span>Confirm Password</span>
               <input type="password" className='cash' value={conPassword} onChange={(e) => handlePassword(password, e.target.value)} />
             </div>
+            <p style={{ gap: '1rem' }}>
+              <span>I accept the <Link href={'/terms'}>terms and conditions</Link></span>
+              <input type="checkbox" required />
+            </p>
             <button onClick={createCustomer}>Register</button>
           </section>
           <footer>
