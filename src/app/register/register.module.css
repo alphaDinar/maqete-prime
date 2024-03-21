@@ -19,8 +19,6 @@
 }
 
 .statBox {
-  /* width: 200px; */
-  /* height: 100px; */
   background: white;
   padding: 20px;
   z-index: 100;
@@ -60,16 +58,13 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+  padding-bottom: 2vh;
 }
 
-.formBox form div {
-  max-width: 280px;
-  display: grid;
-}
 
 .contactRow {
   display: grid;
-  grid-template-columns: 1fr 9fr;
+  grid-template-columns: 3fr 7fr;
   gap: 0.2rem;
 }
 
@@ -81,9 +76,14 @@
 
 .formBox form select,
 .formBox form option {
+  padding: 10px;
   background: var(--input);
   font-family: 'Poppins', sans-serif;
 }
+
+/* .formBox form select {
+  display: none;
+} */
 
 .formBox form section,
 .formBox form section div {
@@ -94,6 +94,12 @@
 .formBox form section div span {
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+.formBox form div {
+  width: 280px;
+  max-width: 280px;
+  display: grid;
 }
 
 .formBox form section div {
@@ -221,5 +227,13 @@
 
   .formBox .left {
     height: 200px;
+  }
+}
+
+@media all and (max-width:300px) {
+  .formBox form div {
+    width: 240px;
+    max-width: 240px;
+    display: grid;
   }
 }
