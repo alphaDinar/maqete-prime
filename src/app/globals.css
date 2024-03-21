@@ -23,6 +23,7 @@
 
 :root {
   --theme: #FF6000;
+  --theme: #F39217;
   --secondary: #EFB51C;
   --secondary: #dba612;
   --input: #E9E9ED;
@@ -351,10 +352,11 @@ body::-webkit-scrollbar-thumb,
   gap: 0.5rem;
 }
 
-.pageHeader .back svg{
+.pageHeader .back svg {
   font-size: 1.4rem;
 }
-.pageHeader .back strong{
+
+.pageHeader .back strong {
   font-size: 1.2rem;
 }
 

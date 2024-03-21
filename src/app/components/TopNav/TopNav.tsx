@@ -1,14 +1,14 @@
 'use client'
 import Link from 'next/link';
 import styles from './topNav.module.css';
-import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
+import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlinePowerSettingsNew, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import logo from '../../../../public/logo.png';
 import { userList } from '@/External/lists';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import Loader from '../Loader/Loader';
 import { addKeyword, getCartTotal } from '@/External/services';
 import { useWishList } from '@/app/contexts/wishListContext';
@@ -16,9 +16,11 @@ import { useCart } from '@/app/contexts/cartContext';
 import ClearItem from '../Cart/ClearItem/ClearItem';
 import AddToCart from '../Cart/AddToCart/AddToCart';
 import RemFromCart from '../Cart/RemFromCart/RemFromCart';
+import { useRouter } from 'next/navigation';
 
 interface defType extends Record<string, any> { };
 const TopNav = () => {
+  const router = useRouter();
   const [displayName, setDisplayName] = useState('');
   const { cart } = useCart();
   const { wishList, setWishList } = useWishList();
@@ -126,6 +128,11 @@ const TopNav = () => {
     }
   }
 
+  const logout = () => {
+    signOut(fireAuth)
+      .then(() => window.location.reload());
+  }
+
   const logoTemp = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708957950/maqete/maqLogo_kded29.png';
 
   return (
@@ -168,11 +175,11 @@ const TopNav = () => {
           </nav>
           :
           <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
-            <Link href={''}>
+            <Link href={'/login'}>
               <MdArrowForward />
               <legend>Login</legend>
             </Link>
-            <Link href={'register'}>
+            <Link href={'/register'}>
               <MdArrowForward />
               <legend>Get Started</legend>
             </Link>
@@ -297,6 +304,7 @@ const TopNav = () => {
                 {userList.slice(6, 8).map((item, i) => (
                   <Link href={''} key={i}>{item.iconEl} <span>{item.tag}</span></Link>
                 ))}
+                <a onClick={logout} style={{ color: 'tomato', fontWeight: 600, cursor: 'pointer' }}> <MdOutlinePowerSettingsNew /> <span>Logout</span></a>
               </ul>
             </footer>
           </section>

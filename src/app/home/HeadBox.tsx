@@ -12,6 +12,8 @@ import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestor
 import { fireStoreDB } from "@/Firebase/base";
 import { TbBolt, TbTruckReturn } from 'react-icons/tb';
 import { GiTakeMyMoney } from 'react-icons/gi';
+import { itemLoader, sampleImg } from "@/External/lists";
+import Loading from '../components/Loading/Loading';
 
 interface defType extends Record<string, any> { };
 const HeadBox = () => {
@@ -78,16 +80,17 @@ const HeadBox = () => {
   const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708791507/maqete/samp_kqdepy.png';
 
   return (
-    <section className={styles.headBox} style={{ backgroundColor: colorList[currentIndex] }}>
-      {!isLoading ?
-        <>
+    <>
 
+      {!isLoading ?
+        <section className={styles.headBox} style={{ backgroundColor: colorList[currentIndex] }}>
           <section className={styles.left} onMouseEnter={stopSwiper} onMouseLeave={startSwiper}>
             <Swiper
               modules={[Autoplay]}
               speed={1000}
               // loop={true}
               ref={headSwiper}
+              allowTouchMove={false}
               autoplay={{ delay: 4000 }}
               className={styles.swiper}
               onSlideChange={changeSlide}
@@ -130,10 +133,10 @@ const HeadBox = () => {
           </section>
 
           <div className={styles.controlBox}>
-            <p>
+            {/* <p>
               <MdArrowBack onClick={slidePrev} />
               <MdArrowForward onClick={slideNext} />
-            </p>
+            </p> */}
             <nav>
               {topItems.map((item, i) => (
                 i === currentIndex
@@ -144,11 +147,13 @@ const HeadBox = () => {
               ))}
             </nav>
           </div>
-        </>
-        : <span>loading...</span>
+        </section>
+        :
+        <div className={styles.headLoader}>
+          <Loading />
+        </div>
       }
-
-    </section>
+    </>
   );
 }
 

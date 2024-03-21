@@ -184,6 +184,7 @@ const Checkout = () => {
   return (
     <main className='scroll'>
       <TopNav />
+      {cartLoaded &&
       <section className={styles.checkoutBoxHolder} id='box'>
         <section className={styles.cartBox}>
           <header>
@@ -198,8 +199,7 @@ const Checkout = () => {
               <span>Total</span>
             </li>
 
-            {cartLoaded &&
-              cart.map((item: defType, i: number) => (
+              {cart.map((item: defType, i: number) => (
                 <li key={i}>
                   <article>
                     <div className={styles.imgBox}>
@@ -244,98 +244,100 @@ const Checkout = () => {
           </section>
         </section>
 
+          <section className={styles.checkoutBox}>
+            <header>
+              <h2>
+                Order Summary
+              </h2>
+            </header>
 
-        <section className={styles.checkoutBox}>
-          <header>
-            <h2>
-              Order Summary
-            </h2>
-          </header>
+            <section className={styles.locationBox}>
+              <div className={styles.searchBox}>
+                <span><MdLocationPin /> Change Your Location</span>
+                <p>
+                  <input type="text" placeholder={location} value={locText} onChange={(e) => handleLocText(e.target.value)} />
+                  {predLoading && <MdBolt />}
+                </p>
+                <ul>
+                  {predictions.map((item, i) => (
+                    <li key={i} onClick={() => selectLocation(item.description)}>
+                      <span>{item.description}</span>
+                      <MdArrowForward />
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          <section className={styles.locationBox}>
-            <div className={styles.searchBox}>
-              <span><MdLocationPin /> Change Your Location</span>
-              <p>
-                <input type="text" value={locText} onChange={(e) => handleLocText(e.target.value)} />
-                {predLoading && <MdBolt />}
-              </p>
-              <ul>
-                {predictions.map((item, i) => (
-                  <li key={i} onClick={() => selectLocation(item.description)}>
-                    <span>{item.description}</span>
-                    <MdArrowForward />
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className={styles.contactBox}>
-              <span><MdCall /> Contact</span>
-              <p>
-                <span className='cash'>+233</span>
-                <input className='cash' type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
-              </p>
-            </div>
+              <div className={styles.contactBox}>
+                <span><MdCall /> Contact</span>
+                <p>
+                  <span className='cash'>+233</span>
+                  <input className='cash' type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
+                </p>
+              </div>
 
 
-            <small className={styles.promptBox}>
-              <p className='cash'>
-                Delivery would be delivered to your doorstep in 48hrs.
-                Payment on delivery.
-              </p>
-              <Link href={'tel:+233597838142'} className='cash'>
-                Call +233 59 783 8142 for any product or delivery enquiry.
-              </Link>
-            </small>
+              <small className={styles.promptBox}>
+                <p className='cash'>
+                  Delivery would be delivered to your doorstep in 48hrs.
+                  Payment on delivery.
+                </p>
+                <Link href={'tel:+233597838142'} className='cash'>
+                  Call +233 59 783 8142 for any product or delivery enquiry.
+                </Link>
+              </small>
 
-            <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-              <option value="cash">Cash on delivery</option>
-              <option value="online">Online Payment</option>
-            </select>
-            <hr />
-          </section>
-
-          <article className={styles.totalBox}>
-            <legend>
-              <MdCall />
-              <strong className='cash'>{fixContact(contact)}</strong>
-              <sub id={checkContact(joinContact(fixContact(contact))) ? 'right' : 'wrong'} ></sub>
-            </legend>
-            <legend>
-              <MdLocationPin />
-              <strong>{location}</strong>
-              <sub id={location ? 'right' : 'wrong'}></sub>
-            </legend>
-            <hr />
-            <legend>
-              {paymentMethod === 'cash' ? <GiTakeMyMoney /> : <MdOutlineSmartphone />}
-              <strong>{paymentMethod === 'cash' ? 'Cash on delivery' : 'Online Payment'}</strong>
-            </legend>
-            <legend>
-              <MdOutlineDeliveryDining />
-              <strong>Free Delivery</strong>
-              <sub></sub>
-            </legend>
-            <legend>
-              <LiaMoneyBillWaveAltSolid />
-              <strong className='cash'>GH₵ {getUpdatedCartTotal(cart).toLocaleString()}</strong>
-              <sub></sub>
-            </legend>
-          </article>
-
-          <article className={styles.totalBox}>
-            <div>
+              <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
+                <option value="cash">Cash on delivery</option>
+                <option value="online">Online Payment</option>
+              </select>
               <hr />
-              <strong>Total</strong>
+            </section>
+
+            <article className={styles.totalBox}>
               <legend>
-                <MdOutlineReceiptLong />
-                <strong className='cash' style={{ fontWeight: 600, fontSize: '1.3rem' }}>GH₵ {getUpdatedCartTotal(cart).toLocaleString()}</strong>
+                <MdCall />
+                <strong className='cash'>{fixContact(contact)}</strong>
+                <sub id={checkContact(joinContact(fixContact(contact))) ? 'right' : 'wrong'} ></sub>
               </legend>
-            </div>
-          </article>
-          <button className={styles.checkout} onClick={checkOrder}>Place order</button>
+              <legend>
+                <MdLocationPin />
+                <strong>{location}</strong>
+                <sub id={location ? 'right' : 'wrong'}></sub>
+              </legend>
+              <hr />
+              <legend>
+                {paymentMethod === 'cash' ? <GiTakeMyMoney /> : <MdOutlineSmartphone />}
+                <strong>{paymentMethod === 'cash' ? 'Cash on delivery' : 'Online Payment'}</strong>
+              </legend>
+              <legend>
+                <MdOutlineDeliveryDining />
+                <strong>Free Delivery</strong>
+                <sub></sub>
+              </legend>
+              <legend>
+                <LiaMoneyBillWaveAltSolid />
+                <strong className='cash'>GH₵ {getUpdatedCartTotal(cart).toLocaleString()}</strong>
+                <sub></sub>
+              </legend>
+            </article>
+
+            <article className={styles.totalBox}>
+              <div>
+                <hr />
+                <strong>Total</strong>
+                <legend>
+                  <MdOutlineReceiptLong />
+                  <strong className='cash' style={{ fontWeight: 600, fontSize: '1.3rem' }}>GH₵ {getUpdatedCartTotal(cart).toLocaleString()}</strong>
+                </legend>
+              </div>
+            </article>
+            <button className={styles.checkout} onClick={checkOrder}>Place order</button>
+          </section>
         </section>
-      </section>
+      }
+
+
 
       <PromptBox type='fail' info='Contact is required' isPlaying={isPlaying} />
 

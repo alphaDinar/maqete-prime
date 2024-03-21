@@ -12,7 +12,39 @@
   position: relative;
   height: 100%;
   width: 100%;
-  background: salmon;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statBox {
+  /* width: 200px; */
+  /* height: 100px; */
+  background: white;
+  padding: 20px;
+  z-index: 100;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.statBox p {
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statBox p sub {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: tomato;
+  border-radius: 50%;
+}
+
+.statBox span {
+  font-size: 0.9rem;
 }
 
 .left img {
@@ -27,56 +59,76 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-.formBox form input{
-  width: 230px;
+.formBox form div {
+  width: 280px;
+  display: grid;
+}
+
+.contactRow {
+  display: grid;
+  grid-template-columns: 1fr 9fr;
+  gap: 0.2rem;
+}
+
+.formBox form input {
   padding: 10px 10px;
   background: var(--input);
+  font-family: 'Poppins', sans-serif;
 }
 
-.formBox form section, .formBox form section div{
+.formBox form select,
+.formBox form option {
+  background: var(--input);
+  font-family: 'Poppins', sans-serif;
+}
+
+.formBox form section,
+.formBox form section div {
   display: flex;
   flex-direction: column;
 }
-.formBox form section div span{
+
+.formBox form section div span {
   font-size: 0.9rem;
   font-weight: 600;
 }
 
-.formBox form section div{
+.formBox form section div {
   gap: 0.5rem;
 }
-.formBox form section{
+
+.formBox form section {
   gap: 1rem;
 }
 
-.formBox form input{
-  border-radius: 5px;
-}
-
-.formBox form button{
+.formBox form button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 8px;
   color: white;
-  font-size: 1.2rem;
-  border-radius: 5px;
+  font-size: 1rem;
   background: var(--theme);
+  cursor: pointer;
 }
 
-.formBox form header{
+.formBox form header {
   display: flex;
   width: 100%;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
 }
-.formBox form header svg{
+
+.formBox form header svg {
   font-size: 2rem;
   color: black;
 }
 
-.formBox form footer{
+.formBox form footer {
   width: 100%;
   border-top: 2px solid var(--pass);
   padding: 3px 0;
@@ -84,14 +136,17 @@
   display: flex;
   justify-content: center;
 }
-.formBox form footer svg{
+
+.formBox form footer svg {
   cursor: pointer;
   font-size: 3rem;
 }
+
 .formBox form p {
   display: flex;
 }
-.formBox form p legend{
+
+.formBox form p legend {
   background: rgb(54, 126, 199);
   display: flex;
   align-items: center;
@@ -100,29 +155,71 @@
   color: white;
   justify-content: center;
 }
-.formBox form p sub{
+
+.formBox form p sub {
   display: block;
   width: 50px;
-  background: tomato;
+  color: white;
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.formBox form p sub svg{
+
+.formBox form p sub svg {
   cursor: pointer;
   font-size: 1.5rem;
   color: white;
 }
 
-@media all and (max-width:850px){
-  .formBox{
+
+.miniLoader {
+  display: flex;
+  gap: 0.5rem;
+  min-height: 20px;
+}
+
+.miniLoader sub {
+  display: block;
+  width: 10px;
+  height: 20px;
+  border-radius: 40px;
+  background: white;
+  animation: toggleHeight 1.5s infinite alternate ease-in-out;
+}
+
+.miniLoader sub:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.miniLoader sub:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes toggleHeight {
+  0% {
+    height: 10px;
+  }
+
+  50% {
+    height: 15px;
+  }
+
+  100% {
+    height: 20px;
+  }
+}
+
+@media all and (max-width:850px) {
+  .formBox {
     height: auto;
     min-height: auto;
     display: flex;
     gap: 2rem;
     flex-direction: column;
   }
-  .formBox .left{
+
+  .formBox .left {
     height: 200px;
   }
 }

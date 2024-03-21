@@ -196,7 +196,8 @@
   gap: 0.5rem;
   display: grid;
 }
-.contactBox p span{
+
+.contactBox p span {
   height: calc(100% - 10px);
   display: flex;
   justify-content: center;
@@ -418,5 +419,38 @@
 
   .checkoutBoxHolder {
     padding-top: 0vh !important;
+  }
+}
+
+@media all and (max-width:400px) {
+  .cartBox {
+    gap: 1rem;
+    padding: 10px 0 0 0;
+  }
+
+  .items li {
+    padding: 10px 0;
+  }
+
+  .items li,
+  .items li article {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .items li>*,
+  .items li article>* {
+    margin: auto;
+  }
+
+  .imgBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .items li img {
+    max-width: revert;
+    min-width: revert;
   }
 }
