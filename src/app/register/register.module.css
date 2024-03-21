@@ -230,6 +230,14 @@
   }
 }
 
+@media all and (max-width:500px) {
+  .contactRow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+}
+
 @media all and (max-width:300px) {
   .formBox form div {
     width: 240px;
