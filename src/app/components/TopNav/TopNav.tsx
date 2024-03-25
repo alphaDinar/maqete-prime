@@ -337,7 +337,7 @@ const TopNav = () => {
                   <Link href={{ pathname: '/viewProduct', query: { pid: prod.id } }} key={i}>
                     <Image alt='' className='contain' src={prod.image.url} height={70} width={70} />
                     <article>
-                      <span>{prod.name}</span>
+                      <span>{prod.displayName}</span>
                       <small style={{ color: 'gray' }}>{prod.category}</small>
                       <strong className='cash'>GH₵ {prod.price.toLocaleString()}</strong>
                     </article>

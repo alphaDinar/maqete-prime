@@ -25,6 +25,10 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
   const [displayMedia, setDisplayMedia] = useState<defType>({});
   const [quantity, setQuantity] = useState(1);
   const [products, setProducts] = useState<defType[]>([]);
+
+  const [score, setScore] = useState(-1);
+  const [rateMode, setRateMode] = useState(false);
+
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -57,6 +61,10 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
   const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708791507/maqete/samp_kqdepy.png';
   const sample2 = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567337/maqete/modern-stationary-collection-arrangement_23-2149309652_hkfbcn.jpg';
   const air = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567577/maqete/MPNY3-removebg-preview_o1rd8i.png'
+
+  const handleScore = () => {
+
+  }
 
   return (
     <main className="scroll">
@@ -110,7 +118,7 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
 
             <section className={styles.right}>
               <section className={styles.part}>
-                <h3>{product.name}</h3>
+                <h3>{product.displayName}</h3>
                 <small>{product.description}</small>
                 <article className={styles.priceBox}>
                   {product.storePrice && <span className="big">GHS {product.storePrice.toLocaleString()}</span>}
@@ -162,7 +170,7 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
 
                 <Link href={'tel:+233597838142'} className={`cash ${styles.callBox}`}>
                   Call +233 59 783 8142 for more info.
-                  <MdArrowForward/>
+                  <MdArrowForward />
                 </Link>
 
                 <p className={styles.shareBox}>
@@ -205,27 +213,29 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
                     <Image className="cover" style={{ borderRadius: 10 }} src={sample2} alt="" width={40} height={40} />
                   </article>
                 </div>
-                <div className={styles.review}>
-                  <article>
-                    <Image className="cover" style={{ borderRadius: 10 }} src={sample} alt="" width={70} height={70} />
-                    <p>
-                      <span>James Arthur</span>
-                      <legend>
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
-                        <FaStar />
-                      </legend>
-                      <small>Great item, really loved it 5 stars from me</small>
-                    </p>
-                  </article>
-                  <article>
-                    <Image className="cover" style={{ borderRadius: 10 }} src={sample2} alt="" width={40} height={40} />
-                    <Image className="cover" style={{ borderRadius: 10 }} src={sample2} alt="" width={40} height={40} />
-                    <Image className="cover" style={{ borderRadius: 10 }} src={sample2} alt="" width={40} height={40} />
-                  </article>
-                </div>
+
+                <button onClick={() => setRateMode(true)}>Rate Product</button>
               </section>
+
+              {rateMode &&
+                <form className={styles.rateForm}>
+                  <p>
+                    <span>Feedback</span>
+                    <textarea></textarea>
+                  </p>
+                  <legend>
+                    {Array(5).fill(<FaStar />).map((star, i) => (
+                      <sub key={i}>
+                        {score >= i ?
+                          <FaStar style={{ color: 'var(--theme)' }} onClick={() => setScore(i)} />
+                          :
+                          <FaStar onClick={() => setScore(i)} />
+                        }
+                      </sub>
+                    ))}
+                  </legend>
+                </form>
+              }
             </div>
             <div className={styles.specBox}>
               <h2>Specifications</h2>

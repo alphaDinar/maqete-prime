@@ -230,6 +230,10 @@
   gap: 1rem;
 }
 
+.rateForm {
+  border: 2px solid gold;
+}
+
 .specBox {
   width: 100%;
   display: grid;

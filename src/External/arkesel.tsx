@@ -13,7 +13,7 @@ export const sendOTP = async (contact: string) => {
     "length": 6,
     "medium": "sms",
     "message": "%otp_code%, Your Maq OTP Expires in 10 mins",
-    "number": '233558420368',
+    "number": contact,
     "sender_id": "Super Mc",
     "type": "numeric"
   }
