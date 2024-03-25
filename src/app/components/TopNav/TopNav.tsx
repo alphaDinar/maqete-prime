@@ -208,6 +208,9 @@ const TopNav = () => {
               <MdOutlineShoppingCart />
               <legend>{cart.length}</legend>
             </a>
+            <a onClick={logout} className={styles.logoutTab}>
+              <MdOutlinePowerSettingsNew />
+            </a>
             <MdMenu className={styles.tag} onClick={toggleMenu} />
           </nav>
           :
