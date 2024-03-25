@@ -201,6 +201,9 @@
     grid-template-columns: 80px 1fr;
     gap: 0.2rem;
   }
+  .contactRow input{
+    max-width: 200px;
+  }
 }
 
 @media all and (max-width:300px) {
