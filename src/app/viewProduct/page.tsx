@@ -2,7 +2,7 @@
 import Image from "next/image";
 import TopNav from "../components/TopNav/TopNav";
 import styles from './viewProduct.module.css';
-import { MdOutlineAddShoppingCart } from "react-icons/md";
+import { MdArrowForward, MdOutlineAddShoppingCart } from "react-icons/md";
 import { VscDebugBreakpointDataUnverified } from "react-icons/vsc";
 import { FaFacebookF, FaInstagram, FaStar, FaXTwitter } from "react-icons/fa6";
 import { useEffect, useState } from "react";
@@ -161,7 +161,8 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
               <section className={styles.part}>
 
                 <Link href={'tel:+233597838142'} className={`cash ${styles.callBox}`}>
-                  Call +233 59 783 8142 for any product or delivery enquiry.
+                  Call +233 59 783 8142 for more info.
+                  <MdArrowForward/>
                 </Link>
 
                 <p className={styles.shareBox}>

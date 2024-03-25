@@ -80,7 +80,7 @@ const Orders = () => {
                 <div className={styles.imgBox}>
                   {order.cart.slice(0, 2).map((item: defType, ii: number) => (
                     <div className={styles.item} key={ii}>
-                      <Image alt='' className='contain' width={60} height={60} src={item.el.image.url} />
+                      <Image alt='' className='contain' width={60} height={60} src={item.img} />
                       <sub className='cash'>{item.quantity}</sub>
                     </div>
                   ))}

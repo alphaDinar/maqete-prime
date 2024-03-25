@@ -1,22 +1,23 @@
 'use client'
-import Link from 'next/link';
-import styles from './topNav.module.css';
-import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlinePowerSettingsNew, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdSearch, MdSelfImprovement, MdShoppingBag } from 'react-icons/md';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import logo from '../../../../public/logo.png';
 import { userList } from '@/External/lists';
-import { collection, doc, onSnapshot } from 'firebase/firestore';
-import { fireAuth, fireStoreDB } from '@/Firebase/base';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import Loader from '../Loader/Loader';
 import { addKeyword, getCartTotal } from '@/External/services';
-import { useWishList } from '@/app/contexts/wishListContext';
+import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { useCart } from '@/app/contexts/cartContext';
-import ClearItem from '../Cart/ClearItem/ClearItem';
-import AddToCart from '../Cart/AddToCart/AddToCart';
-import RemFromCart from '../Cart/RemFromCart/RemFromCart';
+import { useWishList } from '@/app/contexts/wishListContext';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { MdAdd, MdArrowForward, MdClose, MdDeleteOutline, MdMenu, MdOutlineFavoriteBorder, MdOutlinePowerSettingsNew, MdOutlineSelfImprovement, MdOutlineShoppingCart, MdOutlineShoppingCartCheckout, MdRemove, MdSearch, MdSelfImprovement } from 'react-icons/md';
+import { TbCategory } from 'react-icons/tb';
+import logo from '../../../../public/logo.png';
+import AddToCart from '../Cart/AddToCart/AddToCart';
+import ClearItem from '../Cart/ClearItem/ClearItem';
+import RemFromCart from '../Cart/RemFromCart/RemFromCart';
+import Loader from '../Loader/Loader';
+import styles from './topNav.module.css';
 
 interface defType extends Record<string, any> { };
 const TopNav = () => {
@@ -31,10 +32,15 @@ const TopNav = () => {
   const [searchBoxToggled, setSearchBoxToggled] = useState(false);
   const [menuToggled, setMenuToggled] = useState(false);
   const [searchResults, setSearchResults] = useState<defType[]>([]);
+  const [categories, setCategories] = useState<defType[]>([]);
+  const [category, setCategory] = useState<defType>({});
 
   const [userBoxToggled, setUserBoxToggled] = useState(false);
   const [cartBoxToggled, setCartBoxToggled] = useState(false);
   const [wishListToggled, setWishListToggled] = useState(false);
+  const [popCartToggled, setPopCartToggled] = useState(false);
+  const [categoryBoxToggled, setCategoryBoxToggled] = useState(false);
+
   const [customer, setCustomer] = useState<defType>({});
   const [winSize, setWinSize] = useState(1200);
 
@@ -51,6 +57,10 @@ const TopNav = () => {
     wishListToggled ? setWishListToggled(false) : setWishListToggled(true);
   }
 
+  const toggleCategoryBox = () => {
+    categoryBoxToggled ? setCategoryBoxToggled(false) : setCategoryBoxToggled(true);
+  }
+
   const toggleMenu = () => {
     menuToggled ? setMenuToggled(false) : setMenuToggled(true);
   }
@@ -62,6 +72,26 @@ const TopNav = () => {
         setWinSize(window.innerWidth);
       }
     }
+
+    const handleScroll = () => {
+      if (window.scrollY >= 250) {
+        setPopCartToggled(true)
+      } else {
+        setPopCartToggled(false)
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    const categoryStream = onSnapshot(collection(fireStoreDB, 'Categories/'), (snapshot) => {
+      const categoriesTemp = snapshot.docs.map((cat) => ({ id: cat.id, ...cat.data() }));
+      setCategories(categoriesTemp);
+      // const categoryTemp = categoriesTemp);
+      // if (categoryTemp) {
+      //   setCategory(categoryTemp);
+      //   setIsLoading(false)
+      // }
+    });
 
     const authStream = onAuthStateChanged(fireAuth, (user) => {
       if (user) {
@@ -104,7 +134,11 @@ const TopNav = () => {
       }
     });
 
-    return () => authStream();
+    return () => {
+      authStream();
+      categoryStream();
+      window.addEventListener('scroll', handleScroll);
+    }
   }, [])
 
   const prodTest = [
@@ -149,7 +183,7 @@ const TopNav = () => {
           {searchResults.map((product, i) => (
             <Link key={i} onClick={toggleSearchBox} href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
               <Image alt='' className='contain' height={30} width={30} src={product.image.url} />
-              <small>{product.name}</small>
+              <small>{product.displayName}</small>
               <MdArrowForward />
             </Link>
           ))}
@@ -159,6 +193,9 @@ const TopNav = () => {
       {!isLoading ?
         isLoggedIn ?
           <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
+            <a onClick={toggleCategoryBox}>
+              <TbCategory />
+            </a>
             <a onClick={toggleUserBox} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
               <MdSelfImprovement />
               <legend>{customer.username}</legend>
@@ -175,6 +212,9 @@ const TopNav = () => {
           </nav>
           :
           <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
+            <a onClick={toggleCategoryBox}>
+              <TbCategory />
+            </a>
             <Link href={'/login'}>
               <MdArrowForward />
               <legend>Login</legend>
@@ -191,6 +231,28 @@ const TopNav = () => {
           </nav>
         :
         <Loader />
+      }
+
+      {!isLoading &&
+        <section className={categoryBoxToggled ? `${styles.categoryBoxHolder} ${styles.change}` : styles.categoryBoxHolder}>
+          <section className={styles.sheet} onClick={toggleCategoryBox}></section>
+          <section className={styles.categoryBox}>
+            <header>
+              <TbCategory />
+              <strong>Categories</strong>
+
+              <legend>
+                <MdClose onClick={toggleCategoryBox} />
+              </legend>
+            </header>
+
+            <ul>
+              {categories.map((cat, i) => (
+                <Link href={{ pathname: '/category', query: { cid: cat.id } }} key={i}> <strong>{cat.name}</strong>  <MdArrowForward /> </Link>
+              ))}
+            </ul>
+          </section>
+        </section>
       }
 
       {!isLoading &&
@@ -211,23 +273,23 @@ const TopNav = () => {
                 cart.map((item: defType, i: number) => (
                   <li key={i}>
                     {
-                      <Image alt='' className='contain' src={JSON.parse(item.product).image.url} height={70} width={70} />
+                      <Image alt='' className='contain' src={item.img} height={70} width={70} />
                     }
                     <article>
-                      <small>{JSON.parse(item.product).name}</small>
+                      <small>{item.name}</small>
                       <strong className='cash'>GH₵ {(item.quantity * item.price).toLocaleString()}</strong>
                       <nav>
-                        <RemFromCart product={JSON.parse(item.product)}>
+                        <RemFromCart pid={item.id}>
                           <MdRemove />
                         </RemFromCart>
                         <span className='cash'>{item.quantity}</span>
-                        <AddToCart product={JSON.parse(item.product)} quantity={1} type='normal'>
+                        <AddToCart product={item} quantity={1} type='normal'>
                           <MdAdd />
                         </AddToCart>
                       </nav>
                     </article>
                     <legend className={styles.remove}>
-                      <ClearItem product={JSON.parse(item.product)}>
+                      <ClearItem pid={item.id}>
                         <MdDeleteOutline />
                       </ClearItem>
                     </legend>
@@ -235,15 +297,24 @@ const TopNav = () => {
                 ))}
             </ul>
 
-            <footer>
-              <h3 className='big'>GHS {getCartTotal(cart).toLocaleString()}</h3>
-              <Link href={'/checkout'}>
-                <sub></sub>
-                <span>Go to Checkout</span>
-                <MdOutlineShoppingCartCheckout />
-              </Link>
-            </footer>
+
+            {cart.length > 0 &&
+              <footer>
+                <h3 className='big'>GHS {getCartTotal(cart).toLocaleString()}</h3>
+                <Link href={'/checkout'}>
+                  <sub></sub>
+                  <span>Go to Checkout</span>
+                  <MdOutlineShoppingCartCheckout />
+                </Link>
+              </footer>
+            }
           </section>
+
+          <a onClick={() => { toggleCartBox(); setPopCartToggled(false) }} style={cart.length > 0 && popCartToggled ? { right: 10 } : { right: -100 }} className={styles.popCart}>
+            <span className='cash'>{cart.length}</span>
+            <MdOutlineShoppingCart />
+          </a>
+
         </section>
       }
 
@@ -294,7 +365,7 @@ const TopNav = () => {
             </header>
 
             <ul>
-              {userList.slice(0, 6).map((item, i) => (
+              {userList.slice(0, 3).map((item, i) => (
                 <Link href={item.target} key={i}>{item.iconEl} <span>{item.tag}</span></Link>
               ))}
             </ul>

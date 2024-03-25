@@ -3,12 +3,12 @@ import Link from 'next/link';
 import TopNav from '../components/TopNav/TopNav';
 import styles from './checkout.module.css';
 import { checkContact, clearCart, fixContact, genToken, getUpdatedCartTotal, joinContact, setToCart } from '@/External/services';
-import { MdAdd, MdArrowForward, MdBolt, MdCall, MdDelete, MdDeleteOutline, MdLocalShipping, MdLocationPin, MdOutlineDeliveryDining, MdOutlineReceiptLong, MdOutlineSmartphone, MdPayments, MdReceiptLong, MdRemove, MdSchedule } from 'react-icons/md';
+import { MdAdd, MdArrowForward, MdBolt, MdCall, MdDeleteOutline, MdLocationPin, MdOutlineDeliveryDining, MdOutlineReceiptLong, MdOutlineSmartphone, MdRemove } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { onAuthStateChanged } from 'firebase/auth';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { getUserAddress, predictPlaces } from '@/External/map';
 import { LiaMoneyBillWaveAltSolid } from 'react-icons/lia';
 import { GiTakeMyMoney } from 'react-icons/gi';
@@ -18,30 +18,32 @@ import ClearItem from '../components/Cart/ClearItem/ClearItem';
 import AddToCart from '../components/Cart/AddToCart/AddToCart';
 import RemFromCart from '../components/Cart/RemFromCart/RemFromCart';
 import { createPayLink } from '@/External/paystack';
+import { useCart } from '../contexts/cartContext';
+import { useAuthTarget } from '../contexts/authTargetContext';
 
 
 interface defType extends Record<string, any> { };
 const Checkout = () => {
   const router = useRouter();
   const [customer, setCustomer] = useState<defType>({});
-  const [cart, setCart] = useState<defType[]>([]);
+  const { authTarget, setAuthTarget } = useAuthTarget();
+  const { cart } = useCart();
   const [quantityList, setQuantityList] = useState<number[]>([0]);
   const [locText, setLocText] = useState('');
   const [location, setLocation] = useState('');
   const [contact, setContact] = useState('0');
   const [predictions, setPredictions] = useState<defType[]>([]);
-  const [predLoading, setPredLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [orderLoading, setOrderLoading] = useState(false);
   const [cartLoaded, setCartLoaded] = useState(false);
+
+  const [predLoading, setPredLoading] = useState(false);
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
 
   useEffect(() => {
-    if (typeof window != 'undefined') {
-      setCartLoaded(true);
-    }
-
+    console.log(cart)
 
     const getUserLocation = () => {
       if (!navigator.geolocation) {
@@ -71,44 +73,52 @@ const Checkout = () => {
             localStorage.setItem('maqCustomer', '1');
             localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
             setCustomer(customerTemp);
-            sortCart(customerTemp.cart);
             setContact(customerTemp.contact);
             setQuantityList(customerTemp.cart.map((el: defType) => el.quantity))
+            sessionStorage.setItem('authTarget', '/checkout');
+            setIsLoggedIn(true);
           }
         });
         return () => customerStream();
       } else {
-        localStorage.removeItem('maqCustomer');
-        console.log('logged Out');
+        setIsLoggedIn(false);
+        sessionStorage.setItem('authTarget', '/checkout');
+        setQuantityList(cart.map((el: defType) => el.quantity))
       }
     });
-    return () => authStream();
-  }, [router])
 
-  const sortCart = (cartTemp: defType[]) => {
-    const updatedCart: defType[] = [];
-    const checkProd = async (item: defType) => {
-      const prod = await getDoc(doc(fireStoreDB, 'Products/' + item.pid));
-      if (prod.exists()) {
-        const finalProd = { pid: item.pid, quantity: item.quantity, price: prod.data().price, el: { id: prod.id, ...prod.data() } };
-        return finalProd;
-      } else {
-        return null;
-      }
+    if (typeof window != 'undefined') {
+      setCartLoaded(true);
+      return () => authStream();
     }
+  }, [router, cart])
 
-    Promise.all(cartTemp.map(async (el) => await checkProd(el)))
-      .then((results) => {
-        results.forEach((res) => {
-          if (res) updatedCart.push(res);
-        });
-        setQuantityList(updatedCart.map((el) => el.quantity));
-        setCart(updatedCart);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }
+  // const sortCart = (cartTemp: defType[]) => {
+  //   const updatedCart: defType[] = [];
+  //   const checkProd = async (item: defType) => {
+  //     const prod = await getDoc(doc(fireStoreDB, 'Products/' + item.pid));
+  //     if (prod.exists()) {
+  //       const finalProd = { pid: item.pid, quantity: item.quantity, price: prod.data().price, product: { id: prod.id, ...prod.data() } };
+  //       return finalProd;
+  //     } else {
+  //       return null;
+  //     }
+  //   }
+
+  //   Promise.all(cartTemp.map(async (el) => await checkProd(el)))
+  //     .then((results) => {
+  //       results.forEach((res) => {
+  //         if (res) updatedCart.push(res);
+  //       });
+  //       // setQuantityList(updatedCart.map((el) => el.quantity));
+  //       // setCart(updatedCart);
+  //       // console.log(updatedCart)
+  //       // setCartLoaded(true);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error:', error);
+  //     });
+  // }
 
   const handleLocText = async (val: string) => {
     setLocText(val);
@@ -150,7 +160,7 @@ const Checkout = () => {
       status: 0,
       timestamp: stamp
     })
-      .then(() => { clearCart(); router.push('/'); });
+      .then(() => { router.push('/orders') });
   }
 
 
@@ -166,17 +176,21 @@ const Checkout = () => {
   }
 
   const checkOrder = async () => {
-    if (checkContact(joinContact(fixContact(contact))) && location) {
-      setOrderLoading(true);
-      if (paymentMethod === 'cash') {
-        createOrder(0);
+    if (isLoggedIn) {
+      if (checkContact(joinContact(fixContact(contact))) && location) {
+        setOrderLoading(true);
+        if (paymentMethod === 'cash') {
+          createOrder(0);
+        } else {
+          const payObj = await createPayLink();
+          router.push(payObj.link);
+          //run paystack and on 200 fixUpdatedCart(1); add paystack trans ID to make sure.
+        }
       } else {
-        const payObj = await createPayLink();
-        router.push(payObj.link);
-        //run paystack and on 200 fixUpdatedCart(1); add paystack trans ID to make sure.
+        fixPrompt();
       }
     } else {
-      fixPrompt();
+      router.push('/register');
     }
   }
 
@@ -185,36 +199,37 @@ const Checkout = () => {
     <main className='scroll'>
       <TopNav />
       {cartLoaded &&
-      <section className={styles.checkoutBoxHolder} id='box'>
-        <section className={styles.cartBox}>
-          <header>
-            <h2>Shopping Cart</h2>
-            <strong>{cart.length} Products</strong>
-          </header>
-          <section className={styles.items}>
-            <li className={styles.topLi}>
-              <span>Product Details</span>
-              <span>Quantity</span>
-              <span>Price</span>
-              <span>Total</span>
-            </li>
+        <section className={styles.checkoutBoxHolder} id='box'>
+          <section className={styles.cartBox}>
+            <header>
+              <h2>Shopping Cart</h2>
+              <strong>{cart.length} Products</strong>
+            </header>
+            <section className={styles.items}>
+              <li className={styles.topLi}>
+                <span>Product Details</span>
+                <span>Quantity</span>
+                <span>Price</span>
+                <span>Total</span>
+              </li>
+
 
               {cart.map((item: defType, i: number) => (
                 <li key={i}>
                   <article>
                     <div className={styles.imgBox}>
-                      <Image alt='' fill sizes='auto' src={item.el.image.url} />
+                      <Image alt='' fill sizes='auto' src={item.img} />
                     </div>
                     <p>
-                      <Link style={{ color: 'black' }} href={{ pathname: '/viewProduct', query: { pid: item.el.id } }}>
+                      <Link style={{ color: 'black' }} href={{ pathname: '/viewProduct', query: { pid: item.id } }}>
                         <small className="cut">
-                          {item.el.name}
+                          {item.name}
                         </small>
                       </Link>
                       <small style={{ color: 'darkgray' }} className="cut">
-                        {item.el.category}
+                        {item.category}
                       </small>
-                      <ClearItem product={item.el}>
+                      <ClearItem pid={item.id}>
                         <legend>
                           <MdDeleteOutline />
                         </legend>
@@ -222,11 +237,11 @@ const Checkout = () => {
                     </p>
                   </article>
                   <nav>
-                    <RemFromCart product={item.el}>
+                    <RemFromCart pid={item.id}>
                       <button><MdRemove /></button>
                     </RemFromCart>
-                    <input className='cash' type="number" value={quantityList[i]} onChange={(e) => setToCart(item.el, parseInt(e.target.value))} />
-                    <AddToCart product={item.el} quantity={1} type='normal'>
+                    <input className='cash' type="number" value={quantityList[i] || 0} onChange={(e) => setToCart(item, parseInt(e.target.value))} />
+                    <AddToCart product={item} quantity={1} type='normal'>
                       <button><MdAdd /></button>
                     </AddToCart>
                   </nav>
@@ -241,8 +256,9 @@ const Checkout = () => {
                   </article>
                 </li>
               ))}
+
+            </section>
           </section>
-        </section>
 
           <section className={styles.checkoutBox}>
             <header>
@@ -271,8 +287,8 @@ const Checkout = () => {
               <div className={styles.contactBox}>
                 <span><MdCall /> Contact</span>
                 <p>
-                  <span className='cash'>+233</span>
-                  <input className='cash' type="text" value={contact} onChange={(e) => setContact(e.target.value)} />
+                  <span className='cash'>+ {contact.slice(0, 3)}</span>
+                  <input className='cash' type="text" value={contact.slice(3)} onChange={(e) => setContact(e.target.value)} />
                 </p>
               </div>
 
@@ -332,7 +348,17 @@ const Checkout = () => {
                 </legend>
               </div>
             </article>
-            <button className={styles.checkout} onClick={checkOrder}>Place order</button>
+            <button className={styles.checkout} onClick={checkOrder}>
+              {!orderLoading ?
+                <span>Place order</span>
+                :
+                <legend className='miniLoader'>
+                  <sub></sub>
+                  <sub></sub>
+                  <sub></sub>
+                </legend>
+              }
+            </button>
           </section>
         </section>
       }

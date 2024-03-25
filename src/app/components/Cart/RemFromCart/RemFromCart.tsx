@@ -9,10 +9,10 @@ interface defType extends Record<string, any> { };
 
 type RemFromCartProps = {
   children: ReactNode,
-  product: defType;
+  pid: string;
 }
 
-const RemFromCart: FC<RemFromCartProps> = ({ children, product }) => {
+const RemFromCart: FC<RemFromCartProps> = ({ children, pid }) => {
   const { cart, setCart } = useCart();
   let cartTemp = [...cart];
 
@@ -20,9 +20,8 @@ const RemFromCart: FC<RemFromCartProps> = ({ children, product }) => {
     onAuthStateChanged(fireAuth, (user) => {
       const customer = localStorage.getItem('maqCustomer');
       const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
-      const pid = product.id;
 
-      const itemExists = cartTemp.find((el) => el.pid === pid);
+      const itemExists = cartTemp.find((prod) => prod.id === pid);
       if (itemExists) {
         if (itemExists.quantity > 1) {
           itemExists['quantity'] += -1;
@@ -36,7 +35,7 @@ const RemFromCart: FC<RemFromCartProps> = ({ children, product }) => {
             setCart(cartTemp);
           }
         } else {
-          const updatedCart = [...cart].filter((el) => el.pid !== pid);
+          const updatedCart = [...cart].filter((prod) => prod.id !== pid);
           setCart(updatedCart)
           if (user && customer) {
             updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {

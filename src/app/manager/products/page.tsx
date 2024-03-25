@@ -56,7 +56,7 @@ const Products = () => {
               <div className={styles.category} key={i}>
                 <Image className="contain" alt="" src={prod.image.url} width={150} height={150} />
                 <p>
-                  <strong>{prod.name}</strong>
+                  <strong>{prod.displayName}</strong>
                   <small>{prod.category}</small>
                   <strong className="cash">GHC {prod.price.toLocaleString()}</strong>
                   {/* <small className="cash">{Prod.brandList.length} brands</small> */}

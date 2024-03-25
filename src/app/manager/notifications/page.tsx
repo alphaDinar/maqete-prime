@@ -11,7 +11,7 @@ import Link from "next/link";
 
 
 interface defType extends Record<string, any> { };
-const Orders = () => {
+const Notifications = () => {
   const [allOrders, setAllOrders] = useState<defType[]>([]);
   const [orders, setOrders] = useState<defType[]>([]);
   const [status, setStatus] = useState<number>(5);
@@ -65,24 +65,17 @@ const Orders = () => {
       {!isLoading ?
         <section className={styles.orderBox} id="frame">
           <header>
-            <h3>Orders</h3>
+            <h3>Notifications</h3>
             <div>
               <select value={payment} onChange={(e) => { filterPayment(parseInt(e.target.value)) }}>
                 <option hidden>Payment</option>
                 <option value="0">Unpaid</option>
                 <option value="1">Paid</option>
               </select>
-              <input type="text" placeholder="search Contact" value={contact} onChange={(e) => { setContact(e.target.value); searchOrders(e.target.value, token, location) }} />
-              <input type="text" placeholder="search Token" value={token} onChange={(e) => { setToken(e.target.value); searchOrders(contact, e.target.value, location) }} />
               <input type="text" placeholder="search Location" value={location} onChange={(e) => { setLocation(e.target.value); searchOrders(contact, token, e.target.value) }} />
+              <Link href={'/manager/addNotification'}>Create Notification</Link>
             </div>
           </header>
-
-          <article className={styles.statusBox}>
-            <legend onClick={() => filterStatus(5)}> <span><MdDensitySmall /> All</span>  <sub style={status === 5 ? { width: '100%' } : { width: '10px' }}></sub></legend>
-            <legend onClick={() => filterStatus(0)}> <span><MdOutlinePending /> Pending</span>  <sub style={status === 0 ? { width: '100%' } : { width: '10px' }}></sub></legend>
-            <legend onClick={() => filterStatus(1)}><span><MdOutlineVerified /> Completed</span><sub style={status === 1 ? { width: '100%' } : { width: '10px' }}></sub></legend>
-          </article>
 
           <section className={styles.orders}>
             {orders.map((order, i) => (
@@ -110,4 +103,4 @@ const Orders = () => {
   );
 }
 
-export default Orders;
+export default Notifications;

@@ -12,13 +12,13 @@ export const sampleImg = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v170
 
 export const place = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708045670/maqete/place_qlf6zd.jpg';
 
-export const itemLoader = <Lottie animationData={itemLoaderRef}/>;
+export const itemLoader = <Lottie animationData={itemLoaderRef} />;
 
 export const userList = [
   // { tag: 'My Dashboard', iconEl: <RxDashboard />, target : '' },
   { tag: 'My Orders', iconEl: <MdOutlineAssignment />, target: '/orders' },
   { tag: 'My Profile', iconEl: <CgProfile />, target: '/profile' },
-  { tag: 'Notifications', iconEl: <MdOutlineNotifications />, target: '' },
+  { tag: 'Notifications', iconEl: <MdOutlineNotifications />, target: '/notifications' },
   { tag: 'My Wallet', iconEl: <CiWallet />, target: '' },
   { tag: 'Payment', iconEl: <MdOutlinePayment />, target: '' },
   { tag: 'My Coupons', iconEl: <RiCoupon3Line />, target: '' },

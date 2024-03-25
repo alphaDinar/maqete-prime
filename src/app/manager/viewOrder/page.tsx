@@ -61,13 +61,8 @@ const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {
               <ul>
                 {order.cart.map((item: defType, i: number) => (
                   <li key={i}>
-                    {item.el.image.format === 'png' ?
-                      <Image alt="" className="contain" height={50} width={50} src={item.el.image.url} />
-                      :
-                      <Image alt="" className="cover" height={50} width={50} src={item.el.image.url} />
-                    }
-
-                    <strong>{item.el.name}</strong>
+                    <Image alt="" className="contain" height={50} width={50} src={item.img} />
+                    <strong>{item.name}</strong>
                     <span className="cash">GHC {item.price.toLocaleString()}</span>
                     <span className="cash">*</span>
                     <span className="cash">{item.quantity}</span>

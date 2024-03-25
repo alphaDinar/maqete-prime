@@ -60,7 +60,7 @@ const Products: FC<ProductsProps> = ({ productList, isLoading }) => {
                   <legend>
                     <MdStar />
                   </legend>
-                  <small>(45)</small>
+                  <small className='cash'>(45)</small>
                 </p>
               </article>
             </div>

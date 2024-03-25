@@ -41,7 +41,7 @@ export const setToCart = (product: defType, quantity: number) => {
     const cart: defType[] = JSON.parse(localStorage.getItem('maqCart') || '[]');
     const pid = product.id;
 
-    const itemExists = cart.find((el) => el.pid === pid);
+    const itemExists = cart.find((prod) => prod.id === pid);
     if (itemExists) {
       itemExists['quantity'] = quantity || 1;
     }
@@ -100,7 +100,7 @@ export const clearCart = () => {
   })
 }
 
-export const getCartTotal = (cart : defType[]) => {
+export const getCartTotal = (cart: defType[]) => {
   const total = cart.reduce((acc, item) => {
     const itemTotal = item.price * item.quantity;
     return acc + itemTotal;
@@ -292,7 +292,7 @@ export const getOrderDeadline = (timestamp: number): string => {
 
 //phone
 export const fixContact = (contact: string) => {
-  const formattedNumber = `+233 ${contact.slice(0, 2)} ${contact.slice(2, 5)} ${contact.slice(5)}`;
+  const formattedNumber = `+${contact.slice(0, 3)} ${contact.slice(3, 5)} ${contact.slice(5, 8)} ${contact.slice(8)}`;
   return formattedNumber;
 }
 

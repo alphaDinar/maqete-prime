@@ -9,19 +9,18 @@ interface defType extends Record<string, any> { };
 
 type ClearItemProps = {
   children: ReactNode,
-  product: defType
+  pid: string
 }
 
-const ClearItem: FC<ClearItemProps> = ({ children, product }) => {
+const ClearItem: FC<ClearItemProps> = ({ children, pid }) => {
   const { cart, setCart } = useCart();
   const clear = () => {
     onAuthStateChanged(fireAuth, (user) => {
       const customer = localStorage.getItem('maqCustomer');
-      const pid = product.id;
 
-      const itemExists = cart.find((el) => el.pid === pid);
+      const itemExists = cart.find((prod) => prod.id === pid);
       if (itemExists) {
-        const updatedCart = [...cart].filter((el) => el.pid !== pid);
+        const updatedCart = [...cart].filter((prod) => prod.id !== pid);
         setCart(updatedCart);
         if (user && customer) {
           updateDoc(doc(fireStoreDB, 'Customers/' + user?.uid), {

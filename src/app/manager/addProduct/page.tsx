@@ -15,6 +15,7 @@ interface defType extends Record<string, any> { };
 const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [description, setDescription] = useState('');
   const [storePrice, setStorePrice] = useState(0);
   const [price, setPrice] = useState(1);
@@ -153,6 +154,7 @@ const AddProduct = () => {
           const pid = `pid${stamp}`;
           await setDoc(doc(fireStoreDB, 'Products/' + pid), {
             name: name,
+            displayName: displayName,
             description: description,
             storePrice: storePrice,
             price: price,
@@ -181,7 +183,8 @@ const AddProduct = () => {
   }
 
   const resetForm = () => {
-    setName('')
+    setName('');
+    setDisplayName('');
     setDescription('');
     setPrice(1);
     setReturnPolicy(0);
@@ -210,6 +213,11 @@ const AddProduct = () => {
             <div>
               <span>Name *</span>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
+
+            <div>
+              <span>Display Name *</span>
+              <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
             </div>
 
             <div>

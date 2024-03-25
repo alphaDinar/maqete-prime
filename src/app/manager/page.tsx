@@ -106,9 +106,9 @@ const Manager = () => {
 
             <section className={styles.recentBox}>
               <h3>Recent</h3>
-              {orders.slice(0, 2).map((order,i) => (
+              {orders.slice(0, 2).map((order, i) => (
                 <Link key={i} href={{ pathname: 'manager/viewOrder', query: { oid: order.id } }}>
-                  <Image alt=""  fill sizes="auto" src={order.cart[0].el.image.url} />
+                  <Image alt="" fill sizes="auto" src={order.cart[0].img} />
                   <article>
                     <small>{order.cart.length} products ({getOrderQuantity(order.cart)} pcs)</small>
                     <small>GH₵ {order.total.toLocaleString()}</small>

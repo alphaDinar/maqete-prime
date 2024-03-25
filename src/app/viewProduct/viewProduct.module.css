@@ -79,6 +79,9 @@
 
 .right h3 {
   font-size: 1.5rem;
+  text-align: left;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .right strong {

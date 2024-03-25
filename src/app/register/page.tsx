@@ -17,12 +17,14 @@ import { useCart } from '../contexts/cartContext';
 import { useWishList } from '../contexts/wishListContext';
 import styles from './register.module.css';
 import { countryList } from '@/External/lists';
+import { useAuthTarget } from '../contexts/authTargetContext';
 
 const Register = () => {
   const place = "https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567337/maqete/modern-stationary-collection-arrangement_23-2149309652_hkfbcn.jpg";
   const router = useRouter();
   const { cart } = useCart();
   const { wishList } = useWishList();
+  const { authTarget } = useAuthTarget();
 
   const [formLoading, setFormLoading] = useState(false);
 
@@ -55,7 +57,7 @@ const Register = () => {
         const username = user.user.displayName || 'Dashboard';
         const customer = await getDoc(doc(fireStoreDB, 'Customers/' + user.user.uid))
         if (customer !== undefined && customer.data() !== undefined) {
-          router.push('/')
+          router.push(authTarget);
         } else {
           const keywords = JSON.parse(sessionStorage.getItem('maqKeywords') || '[]');
           setDoc(doc(fireStoreDB, 'Customers/' + user.user.uid), {
@@ -68,7 +70,7 @@ const Register = () => {
             points: 0,
             balance: 0
           })
-            .then(() => router.push('/'))
+            .then(() => router.push(authTarget))
             .catch((error) => console.log(error));
         }
       })
@@ -79,6 +81,7 @@ const Register = () => {
     if (blacklist.includes(phoneCode + val)) {
       setContactExists(true);
     } else {
+      setContactExists(false);
       setContactVerified(false);
     }
   }
@@ -98,9 +101,9 @@ const Register = () => {
 
   const runOTP = async () => {
     if (checkContact('+' + phoneCode + contact)) {
-      const res = await sendOTP('233558420368');
+      const res = await sendOTP(phoneCode + contact);
       if (res.status === 200) {
-        alert(`OTP sent to ${contact}`);
+        alert(`OTP sent to ${phoneCode + ' ' + contact}`);
       } else {
         alert('Please try again');
       }
@@ -124,6 +127,7 @@ const Register = () => {
 
   const createCustomer = async () => {
     if (contactVerified && passLength && passMatch && !contactExists) {
+      setFormLoading(true);
       const passKey = await makePassword(password);
       const email = phoneCode + contact + '@gmail.com';
       createUserWithEmailAndPassword(fireAuth, email, passKey)
@@ -148,7 +152,8 @@ const Register = () => {
             .catch((error) => console.log(error));
         })
     } else {
-      alert('fail');
+      setFormLoading(false);
+      // alert('fail');
     }
   }
 
@@ -159,7 +164,7 @@ const Register = () => {
       contact: contact,
       password: passKey
     })
-      .then(() => router.push('/'))
+      .then(() => router.push(authTarget))
       .catch((error) => console.log(error));
   }
 
@@ -205,7 +210,7 @@ const Register = () => {
                     </option>
                   ))}
                 </select>
-                <input type="text" value={contact} onChange={(e) => handleContact(e.target.value)} />
+                <input type="text" value={contact} readOnly={contactVerified} onChange={(e) => handleContact(e.target.value)} />
               </article>
             </div>
             {!contactVerified &&
@@ -237,14 +242,32 @@ const Register = () => {
               <span>I accept the <Link href={'/terms'}>terms and conditions</Link></span>
               <input type="checkbox" required />
             </p>
-            <button onClick={createCustomer}>Register</button>
+
+            <button onClick={createCustomer}>
+              {!formLoading ?
+                <span>Register</span>
+                :
+                <legend className='miniLoader'>
+                  <sub></sub>
+                  <sub></sub>
+                  <sub></sub>
+                </legend>
+              }
+            </button>
           </section>
           <footer>
             <FcGoogle onClick={googleRegister} />
           </footer>
-          <Link href={'/login'}>
-            <small>Do you already have an account? login here</small>
-          </Link>
+
+          <article style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem' }}>
+            <Link href={'/login'}>
+              <small>Do you already have an account? login here</small>
+            </Link>
+
+            <Link href={'/forgotPassword'}>
+              <small style={{ color: 'tomato', fontWeight: 600 }}>Forgot Password? Reset here</small>
+            </Link>
+          </article>
         </form>
       </section>
     </section>

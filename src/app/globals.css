@@ -157,6 +157,7 @@ li {
 
 #box h3,
 #boxFull h3 {
+  text-align: center;
   font-size: 1.7rem;
 }
 
@@ -225,6 +226,12 @@ li {
     padding-left: 0;
     padding-top: 0;
     padding-bottom: 2.5vh;
+  }
+
+  #box h3,
+  #boxFull h3 {
+    text-align: center;
+    font-size: 1.2rem;
   }
 }
 
@@ -368,4 +375,48 @@ body::-webkit-scrollbar-thumb,
   .myTab {
     margin: 5px 10px 5px 0;
   }
+
+  .pageHeader {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+
+@keyframes toggleHeight {
+  0% {
+    height: 10px;
+  }
+
+  50% {
+    height: 15px;
+  }
+
+  100% {
+    height: 20px;
+  }
+}
+
+.miniLoader {
+  display: flex;
+  gap: 0.5rem;
+  min-height: 20px;
+}
+
+.miniLoader sub {
+  display: block;
+  width: 10px;
+  height: 20px;
+  border-radius: 40px;
+  background: white;
+  animation: toggleHeight 1.5s infinite alternate ease-in-out;
+}
+
+.miniLoader sub:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.miniLoader sub:nth-child(3) {
+  animation-delay: 1s;
 }

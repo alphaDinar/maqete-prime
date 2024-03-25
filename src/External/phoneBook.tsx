@@ -14,7 +14,7 @@ export const checkPassword = async (password: string, passVal: string) => {
 }
 
 export const checkUser = async (contact: string, password: string) => {
-  const userDoc = await getDoc(doc(fireStoreDB, 'PhoneBook/', contact));
+  const userDoc = await getDoc(doc(fireStoreDB, 'PhoneBook/' + contact));
 
   if (userDoc.exists()) {
     const isCorrect = await bcrypt.compare(password, userDoc.data().password);

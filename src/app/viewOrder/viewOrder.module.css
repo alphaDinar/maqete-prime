@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
+  padding-bottom: 2vh;
 }
 
 
@@ -25,17 +26,18 @@
   gap: 0.8rem;
 }
 
-.cart ul li {
+.cart ul a {
   display: grid;
   grid-template-columns: 100px 1fr 1fr 1fr 1fr;
   align-items: center;
+  color: black;
 }
 
-.cart ul li span:nth-child(4) {
+.cart ul a span:nth-child(4) {
   margin: auto;
 }
 
-.cart ul li strong {
+.cart ul a strong {
   margin-left: auto;
 }
 
@@ -69,7 +71,7 @@
 }
 
 @media all and (max-width:500px){
-  .cart ul li {
+  .cart ul a {
     display: grid;
     border: 1px solid darkgray;
     grid-template-columns: 1fr 1fr;
@@ -78,11 +80,11 @@
     gap: 0.5rem 0;
   }
   
-  .cart ul li span:nth-child(4) {
+  .cart ul a span:nth-child(4) {
     margin: revert;
   }
   
-  .cart ul li strong {
+  .cart ul a strong {
     margin-left: revert;
   }
 }

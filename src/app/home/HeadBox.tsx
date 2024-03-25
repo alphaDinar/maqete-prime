@@ -99,7 +99,7 @@ const HeadBox = () => {
                 <SwiperSlide className={styles.slide} key={i}>
                   <div className={styles.con}>
                     <article>
-                      <strong>{product.name}</strong>
+                      <strong className='cash'>{product.displayName}</strong>
                       <small className='cut2'>{product.description}</small>
                     </article>
                     <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>Buy Now <MdArrowForward /></Link>

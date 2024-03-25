@@ -19,6 +19,7 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
 
   const router = useRouter();
   const [name, setName] = useState(product.name);
+  const [displayName, setDisplayName] = useState(product.displayName);
   const [description, setDescription] = useState(product.description);
   const [storePrice, setStorePrice] = useState(product.storePrice || 0);
   const [price, setPrice] = useState(product.price);
@@ -169,6 +170,7 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
     const edit = async () => {
       await updateDoc(doc(fireStoreDB, 'Products/' + product.id), {
         name: name,
+        displayName: displayName,
         description: description,
         storePrice: storePrice,
         price: price,
@@ -233,6 +235,11 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
             </div>
 
             <div>
+              <span>Display Name *</span>
+              <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
+            </div>
+
+            <div>
               <span>Description</span>
               <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
             </div>
@@ -257,8 +264,8 @@ const EditProduct = ({ searchParams }: { searchParams: { product: string } }) =>
             </div>
 
             <div>
-              <span>Deadline *</span>
-              <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setDeadline(getUnixStamp(e.target.value)); }} required />
+              <span>Deadline</span>
+              <input type="date" value={date} onChange={(e) => { setDate(e.target.value); setDeadline(getUnixStamp(e.target.value)); }} />
             </div>
 
             <div>

@@ -8,7 +8,7 @@ import { FC, ReactNode } from "react";
 interface defType extends Record<string, any> { };
 
 type AddToCartProps = {
-  children : ReactNode,
+  children: ReactNode,
   product: defType;
   quantity: number;
   type: string;
@@ -23,16 +23,21 @@ const AddToCart: FC<AddToCartProps> = ({ children, product, quantity, type }) =>
     onAuthStateChanged(fireAuth, (user) => {
       const customer = localStorage.getItem('maqCustomer');
       const pid = product.id;
-      const itemExists = cartTemp.find((el) => el.pid === pid);
+      const itemExists = cartTemp.find((prod) => prod.id === pid);
       if (itemExists) {
         itemExists['quantity'] += quantity;
         setCart(cartTemp);
       } else {
         const cartItem = {
-          pid: pid,
-          product: JSON.stringify(product),
+          id: pid,
+          name: product.displayName,
           price: product.price,
-          quantity: quantity
+          quantity: quantity,
+          img: product.image.url,
+          category: product.category,
+          brand: product.brand,
+          returnPolicy: product.returnPolicy,
+          specList: product.specList,
         }
         cartTemp = [...cart, cartItem];
         setCart(cartTemp);
@@ -61,7 +66,7 @@ const AddToCart: FC<AddToCartProps> = ({ children, product, quantity, type }) =>
   }
 
   return (
-    <sup onClick={add} style={{cursor:'pointer'}}>
+    <sup onClick={add} style={{ cursor: 'pointer' }}>
       {children}
     </sup>
   );

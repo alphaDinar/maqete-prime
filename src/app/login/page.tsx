@@ -16,12 +16,15 @@ import { checkContact } from '@/External/services';
 import { checkUser } from '@/External/phoneBook';
 import { countryList, itemLoader } from '@/External/lists';
 import Loading from '../components/Loading/Loading';
+import { useAuthTarget } from '../contexts/authTargetContext';
 
 const Login = () => {
   const place = "https://res.cloudinary.com/dvnemzw0z/image/upload/v1711035557/maqete/modern-stationary-collection-arrangement-scaled_qua79b.jpg";
   const router = useRouter();
+
   const { cart } = useCart();
   const { wishList } = useWishList();
+  const { authTarget } = useAuthTarget();
 
   const [formLoading, setFormLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
@@ -37,7 +40,7 @@ const Login = () => {
         const username = user.user.displayName || 'Dashboard';
         const customer = await getDoc(doc(fireStoreDB, 'Customers/' + user.user.uid))
         if (customer !== undefined && customer.data() !== undefined) {
-          router.push('/')
+          router.push(authTarget)
         } else {
           const keywords = JSON.parse(sessionStorage.getItem('maqKeywords') || '[]');
           setDoc(doc(fireStoreDB, 'Customers/' + user.user.uid), {
@@ -50,7 +53,7 @@ const Login = () => {
             points: 0,
             balance: 0
           })
-            .then(() => router.push('/'))
+            .then(() => router.push(authTarget))
             .catch((error) => console.log(error));
         }
       })
@@ -63,7 +66,7 @@ const Login = () => {
       const isCorrect = await checkUser(phoneCode + contact, password);
       console.log(isCorrect);
       if (isCorrect) {
-        router.push('/');
+        router.push(authTarget);
       } else {
         setFormLoading(false);
         setErrorMessage(true);
@@ -117,13 +120,12 @@ const Login = () => {
               {!formLoading ?
                 <span>Login</span>
                 :
-                <legend className={styles.miniLoader}>
+                <legend className='miniLoader'>
                   <sub></sub>
                   <sub></sub>
                   <sub></sub>
                 </legend>
               }
-
             </button>
           </section>
           <footer>

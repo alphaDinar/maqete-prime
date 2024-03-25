@@ -11,6 +11,7 @@ import { MdCall, MdOutlineDeliveryDining } from "react-icons/md";
 import { IoIosDoneAll } from "react-icons/io";
 import Link from "next/link";
 import TrackBox from "../components/TrackBox/TrackBox";
+import Loading from "../components/Loading/Loading";
 
 interface defType extends Record<string, any> { };
 const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {
@@ -56,13 +57,13 @@ const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {
               <h3>Cart</h3>
               <ul>
                 {order.cart.map((item: defType, i: number) => (
-                  <li key={i}>
-                    <Image alt="" className="contain" src={item.el.image.url} width={50} height={50} />
-                    <span>{item.el.name}</span>
+                  <Link href={{ pathname: '/viewProduct', query: { pid: item.id } }} key={i}>
+                    <Image alt="" className="contain" src={item.img} width={50} height={50} />
+                    <span>{item.name}</span>
                     <span className="cash">GH₵ {item.price.toLocaleString()}</span>
                     <span className="cash">x {item.quantity.toLocaleString()}</span>
                     <strong className="cash">GH₵ {(item.quantity * item.price).toLocaleString()}</strong>
-                  </li>
+                  </Link>
                 ))}
               </ul>
               <div className={styles.total}>
@@ -88,7 +89,7 @@ const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {
             </Link>
           </section>
 
-          : <span>loading...</span>
+          : <Loading />
         }
       </section>
     </main>

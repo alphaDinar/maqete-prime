@@ -1,7 +1,7 @@
 'use client'
 import { ReactNode, useState } from "react";
 import styles from './panel.module.css';
-import { MdLinearScale, MdOutlineAnalytics, MdOutlineCategory, MdOutlineHome, MdOutlineMenu, MdOutlineShoppingCartCheckout, MdOutlineSmartphone, MdPowerSettingsNew } from "react-icons/md";
+import { MdLinearScale, MdOutlineAnalytics, MdOutlineCategory, MdOutlineHome, MdOutlineMenu, MdOutlineNotifications, MdOutlineShoppingCartCheckout, MdOutlineSmartphone, MdPowerSettingsNew } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -16,6 +16,7 @@ const Panel = ({ children }: panelProps) => {
     { tag: 'Orders', iconEl: <MdOutlineShoppingCartCheckout />, target: '/manager/orders' },
     { tag: 'Categories', iconEl: <MdOutlineCategory />, target: '/manager/categories' },
     { tag: 'Products', iconEl: <MdOutlineSmartphone />, target: '/manager/products' },
+    { tag: 'Notifications', iconEl: <MdOutlineNotifications />, target: '/manager/notifications' },
   ]
 
   const lowTagList = [
