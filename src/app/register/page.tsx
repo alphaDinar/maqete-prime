@@ -134,10 +134,11 @@ const Register = () => {
         .then((user) => {
           const username = user.user.displayName || 'Dashboard';
           const keywords = JSON.parse(sessionStorage.getItem('maqKeywords') || '[]');
+          const updatedContact = phoneCode + contact;
           setDoc(doc(fireStoreDB, 'Customers/' + user.user.uid), {
             cart: cart,
             email: '',
-            contact: contact,
+            contact: updatedContact,
             wishList: wishList,
             keywords: keywords,
             username: username,

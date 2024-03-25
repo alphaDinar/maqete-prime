@@ -209,7 +209,7 @@
 
 @media all and (max-width:400px) {
   .contactRow input {
-    max-width: 150px;
+    max-width: 100%;
   }
 }
 
