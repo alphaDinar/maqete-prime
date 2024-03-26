@@ -311,6 +311,7 @@ body::-webkit-scrollbar-thumb,
   justify-content: center;
   cursor: pointer;
   transition: 0.5s ease;
+  min-width: max-content;
 }
 
 .choice {
@@ -332,7 +333,7 @@ body::-webkit-scrollbar-thumb,
   cursor: pointer;
   transition: 0.3s ease;
   border-radius: 40px;
-  width: max-content;
+  min-width: max-content;
 }
 
 .tab {

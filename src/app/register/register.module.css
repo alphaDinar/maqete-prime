@@ -81,10 +81,6 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* .formBox form select {
-  display: none;
-} */
-
 .formBox form section,
 .formBox form section div {
   display: flex;
@@ -100,6 +96,7 @@
   width: 280px;
   max-width: 280px;
   display: grid;
+  overflow: hidden;
 }
 
 .formBox form section div {

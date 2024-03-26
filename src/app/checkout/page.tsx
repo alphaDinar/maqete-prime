@@ -20,6 +20,7 @@ import RemFromCart from '../components/Cart/RemFromCart/RemFromCart';
 import { createPayLink } from '@/External/paystack';
 import { useCart } from '../contexts/cartContext';
 import { useAuthTarget } from '../contexts/authTargetContext';
+import { countryList } from '@/External/lists';
 
 
 interface defType extends Record<string, any> { };
@@ -31,6 +32,7 @@ const Checkout = () => {
   const [quantityList, setQuantityList] = useState<number[]>([0]);
   const [locText, setLocText] = useState('');
   const [location, setLocation] = useState('');
+  const [phoneCode, setPhoneCode] = useState('233');
   const [contact, setContact] = useState('0');
   const [predictions, setPredictions] = useState<defType[]>([]);
   const [paymentMethod, setPaymentMethod] = useState('cash');
@@ -287,7 +289,13 @@ const Checkout = () => {
               <div className={styles.contactBox}>
                 <span><MdCall /> Contact</span>
                 <p>
-                  <span className='cash'>+ {contact.slice(0, 3)}</span>
+                  <select value={contact.slice(0, 3) || '233'} className={'cash'} onChange={(e) => setPhoneCode(e.target.value)}>
+                    {countryList.map((item, i) => (
+                      <option key={i} value={item.phoneCode} className={'cash'}>
+                        + {item.phoneCode}
+                      </option>
+                    ))}
+                  </select>
                   <input className='cash' type="text" value={contact.slice(3)} onChange={(e) => setContact(e.target.value)} />
                 </p>
               </div>

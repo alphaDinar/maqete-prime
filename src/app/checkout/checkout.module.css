@@ -192,16 +192,18 @@
 
 .contactBox p {
   align-items: center;
-  grid-template-columns: 50px 1fr;
+  grid-template-columns: 60px 1fr;
   gap: 0.5rem;
   display: grid;
 }
 
-.contactBox p span {
-  height: calc(100% - 10px);
+
+.contactBox p select {
+  /* height: calc(100% - 10px); */
   display: flex;
   justify-content: center;
   padding: 5px;
+  width: 100px;
   font-size: 0.8rem;
   align-items: center;
   background: white;

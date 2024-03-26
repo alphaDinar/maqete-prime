@@ -64,16 +64,16 @@ const Category = ({ searchParams }: { searchParams: { cid: string } }) => {
         ?
         <section className={styles.categoryBox} id='boxMin'>
           <section className={styles.top}>
-            <Link href={'/'}>
-              <MdArrowBack className={styles.back} />
-            </Link>
-            <header>
-              <h3>All Products</h3>
-            </header>
-            <article className={styles.brands}>
-              <span style={selectedChoice === 'All' ? { background: 'skyblue', color: 'white' } : { background: '#ffefe3', color: 'black' }} onClick={() => handleChoice('All')}>All</span>
+            <section className='pageHeader'>
+              <Link href={'/'} className='back'>
+                <MdArrowBack />
+                <strong>All Products</strong>
+              </Link>
+            </section>
+            <article className={styles.brands} id='scrollable'>
+              <span className={selectedChoice === 'All' ? 'myChoice' : 'choice'} onClick={() => handleChoice('All')}>All</span>
               {choiceList.map((choice, i) => (
-                <span onClick={() => handleChoice(choice.tag)} style={selectedChoice === choice.tag ? { background: 'skyblue', color: 'white' } : { background: '#ffefe3', color: 'black' }} key={i}>{choice.name}</span>
+                <span onClick={() => handleChoice(choice.tag)} className={selectedChoice === choice.tag ? 'myChoice' : 'choice'} key={i}>{choice.name}</span>
               ))}
             </article>
           </section>

@@ -57,7 +57,7 @@ const PromoBox = () => {
             <article>
               <ul>
                 <Link href={{ pathname: '/viewProduct', query: { pid: product.id } }}>
-                  <strong>{product.name}</strong>
+                  <strong className="cash">{product.displayName}</strong>
                 </Link>
               </ul>
               <ul>

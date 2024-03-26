@@ -328,6 +328,11 @@
   border-top: 2px solid black;
 }
 
+.promo h3{
+  display: flex;
+  justify-content: flex-start;
+}
+
 .promo .timeBoxHolder {
   width: max-content;
   display: flex;
