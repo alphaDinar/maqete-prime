@@ -1,7 +1,6 @@
 'use client'
 import { sendOTP, verifyOTP } from '@/External/arkesel';
 import { makePassword } from '@/External/phoneBook';
-import { checkContact } from '@/External/services';
 import { fireAuth, fireStoreDB, googleProvider } from '@/Firebase/base';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
@@ -18,6 +17,7 @@ import { useWishList } from '../contexts/wishListContext';
 import styles from './register.module.css';
 import { countryList } from '@/External/lists';
 import { useAuthTarget } from '../contexts/authTargetContext';
+import { checkContact, checkPassLength, checkPassLower, checkPassSpecial, checkPassUpper } from '@/External/auth';
 
 const Register = () => {
   const place = "https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567337/maqete/modern-stationary-collection-arrangement_23-2149309652_hkfbcn.jpg";
@@ -30,6 +30,8 @@ const Register = () => {
 
   const [contact, setContact] = useState('');
   const [phoneCode, setPhoneCode] = useState('233');
+  const [contactTemp, setContactTemp] = useState('');
+
   const [otp, setOTP] = useState('');
   const [password, setPassword] = useState('');
   const [conPassword, setConPassword] = useState('');
@@ -37,10 +39,13 @@ const Register = () => {
 
   const [blacklist, setBlacklist] = useState<string[]>([]);
   const [contactExists, setContactExists] = useState(false);
+  const [contactCorrect, setContactCorrect] = useState(false);
   const [contactVerified, setContactVerified] = useState(false);
-  const [passLength, setPassLength] = useState(0);
+  const [passLength, setPassLength] = useState(false);
   const [passMatch, setPassMatch] = useState(false);
-
+  const [passSpecial, setPassSpecial] = useState(false);
+  const [passLower, setPassLower] = useState(false);
+  const [passUpper, setPassUpper] = useState(false);
 
 
   useEffect(() => {
@@ -78,6 +83,8 @@ const Register = () => {
 
   const handleContact = (val: string) => {
     setContact(val);
+    setContactTemp(phoneCode + val);
+    setContactCorrect(checkContact(phoneCode, val));
     if (blacklist.includes(phoneCode + val)) {
       setContactExists(true);
     } else {
@@ -88,8 +95,12 @@ const Register = () => {
 
   const handlePassword = (pass1: string, pass2: string) => {
     setPassword(pass1);
-    setPassLength(pass1.length);
     setConPassword(pass2);
+
+    setPassLength(checkPassLength(pass1));
+    setPassSpecial(checkPassSpecial(pass1));
+    setPassUpper(checkPassUpper(pass1));
+    setPassLower(checkPassLower(pass1));
 
     if (pass1 === pass2) {
       setPassMatch(true);
@@ -100,10 +111,10 @@ const Register = () => {
 
 
   const runOTP = async () => {
-    if (checkContact('+' + phoneCode + contact)) {
-      const res = await sendOTP(phoneCode + contact);
+    if (checkContact(phoneCode, contact)) {
+      const res = await sendOTP(contactTemp);
       if (res.status === 200) {
-        alert(`OTP sent to ${phoneCode + ' ' + contact}`);
+        alert(`OTP sent to  +${contactTemp}`);
       } else {
         alert('Please try again');
       }
@@ -114,7 +125,7 @@ const Register = () => {
 
   const checkOTP = async () => {
     if (otp.length === 6) {
-      const res = await verifyOTP(phoneCode + contact, otp);
+      const res = await verifyOTP(contactTemp, otp);
       if (res.status === 200) {
         setContactVerified(true);
       } else {
@@ -126,15 +137,15 @@ const Register = () => {
   }
 
   const createCustomer = async () => {
-    if (contactVerified && passLength && passMatch && !contactExists) {
+    if (contactVerified && passLength && passMatch && passUpper && passLower && passSpecial && !contactExists) {
       setFormLoading(true);
       const passKey = await makePassword(password);
-      const email = phoneCode + contact + '@gmail.com';
+      const email = contactTemp + '@gmail.com';
       createUserWithEmailAndPassword(fireAuth, email, passKey)
         .then((user) => {
           const username = user.user.displayName || 'Dashboard';
           const keywords = JSON.parse(sessionStorage.getItem('maqKeywords') || '[]');
-          const updatedContact = phoneCode + contact;
+          const updatedContact = contactTemp;
           setDoc(doc(fireStoreDB, 'Customers/' + user.user.uid), {
             cart: cart,
             email: '',
@@ -146,7 +157,7 @@ const Register = () => {
             balance: 0
           })
             .then(() => {
-              setDoc(doc(fireStoreDB, 'Blacklist/' + contact), {})
+              setDoc(doc(fireStoreDB, 'Blacklist/' + contactTemp), {})
                 .then(() => addToPhoneAuth(passKey))
                 .catch((error) => console.log(error));
             })
@@ -154,15 +165,14 @@ const Register = () => {
         })
     } else {
       setFormLoading(false);
-      // alert('fail');
     }
   }
 
   const addToPhoneAuth = async (passKey: string) => {
-    setDoc(doc(fireStoreDB, 'PhoneBook/' + phoneCode + contact), {
-      contactKey: contact,
+    setDoc(doc(fireStoreDB, 'PhoneBook/' + contactTemp), {
+      contactKey: contactTemp,
       passKey: passKey,
-      contact: contact,
+      contact: contactTemp,
       password: passKey
     })
       .then(() => router.push(authTarget))
@@ -180,20 +190,33 @@ const Register = () => {
               :
               <span>Contact Check</span>
             }
-            <sub style={contactExists ? { background: 'tomato' } : { background: 'var(--pass)' }}></sub>
+            <sub style={contactExists || !contactCorrect || !contactVerified ? { background: 'tomato' } : { background: 'springgreen' }}></sub>
           </p>
           <p>
-            <span>Password Strength | 6 char</span>
-            <sub style={passLength > 5 ? { background: 'var(--pass)' } : { background: 'tomato' }}></sub>
+            <span>At Least 8 Characters</span>
+            <sub style={passLength ? { background: 'springgreen' } : { background: 'tomato' }}></sub>
+          </p>
+
+          <p>
+            <span>At Least 1 Special symbol</span>
+            <sub style={passSpecial ? { background: 'springgreen' } : { background: 'tomato' }}></sub>
+          </p>
+          <p>
+            <span>At Least 1 Upper Case</span>
+            <sub style={passUpper ? { background: 'springgreen' } : { background: 'tomato' }}></sub>
+          </p>
+          <p>
+            <span>At Least 1 Lower Case</span>
+            <sub style={passLower ? { background: 'springgreen' } : { background: 'tomato' }}></sub>
           </p>
           <p>
             <span>Password Match</span>
-            <sub style={passMatch ? { background: 'var(--pass)' } : { background: 'tomato' }}></sub>
+            <sub style={passMatch ? { background: 'springgreen' } : { background: 'tomato' }}></sub>
           </p>
         </div>
       </section>
       <section className={styles.right}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={(e) => { e.preventDefault(); createCustomer() }}>
           <header>
             <Link href={'/'}>
               <MdArrowBack />
@@ -211,7 +234,7 @@ const Register = () => {
                     </option>
                   ))}
                 </select>
-                <input type="text" value={contact} readOnly={contactVerified} onChange={(e) => handleContact(e.target.value)} />
+                <input type="text" value={contact} readOnly={contactVerified} onChange={(e) => handleContact(e.target.value)} required />
               </article>
             </div>
             {!contactVerified &&
@@ -233,18 +256,18 @@ const Register = () => {
             </p>
             <div>
               <span>Password</span>
-              <input type="password" className='cash' value={password} onChange={(e) => handlePassword(e.target.value, conPassword)} />
+              <input type="password" className='cash' value={password} onChange={(e) => handlePassword(e.target.value, conPassword)} required />
             </div>
             <div>
               <span>Confirm Password</span>
-              <input type="password" className='cash' value={conPassword} onChange={(e) => handlePassword(password, e.target.value)} />
+              <input type="password" className='cash' value={conPassword} onChange={(e) => handlePassword(password, e.target.value)} required />
             </div>
             <p style={{ gap: '1rem' }}>
               <span>I accept the <Link href={'/terms'}>terms and conditions</Link></span>
               <input type="checkbox" required />
             </p>
 
-            <button onClick={createCustomer}>
+            <button style={!contactExists && contactVerified && contactCorrect && passLength && passSpecial && passUpper && passLower && passMatch ? { opacity: 1 } : { opacity: 0.3, pointerEvents: 'none' }}>
               {!formLoading ?
                 <span>Register</span>
                 :

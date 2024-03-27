@@ -66,7 +66,7 @@ const TopNav = () => {
   }
 
   useEffect(() => {
-    if (typeof window != 'undefined') {
+    if (typeof window !== undefined) {
       setWinSize(window.innerWidth);
       window.onresize = () => {
         setWinSize(window.innerWidth);
@@ -175,7 +175,7 @@ const TopNav = () => {
         <Image alt='' className='contain' width={100} height={50} src={logo} />
       </Link>
 
-      <div className={searchBoxToggled ? `${styles.searchBox} ${styles.change}` : styles.searchBox}>
+      <div className={`${styles.searchBox} ${styles.change}`} >
         <input type="text" onChange={(e) => { runSearch(e.target.value.toLowerCase()) }} />
         <MdSearch className={styles.search} onClick={toggleSearchBox} />
 
@@ -190,53 +190,55 @@ const TopNav = () => {
         </ul>
       </div>
 
-      {!isLoading ?
-        isLoggedIn ?
-          <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
-            <a onClick={toggleCategoryBox}>
-              <TbCategory />
-            </a>
-            <a onClick={toggleUserBox} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
-              <MdSelfImprovement />
-              <legend>{customer.username}</legend>
-            </a>
-            <a onClick={toggleWishList}>
-              <MdOutlineFavoriteBorder />
-              <legend>{wishList.length}</legend>
-            </a>
-            <a onClick={toggleCartBox}>
-              <MdOutlineShoppingCart />
-              <legend>{cart.length}</legend>
-            </a>
-            <a onClick={logout} className={styles.logoutTab}>
-              <MdOutlinePowerSettingsNew />
-            </a>
-            <MdMenu className={styles.tag} onClick={toggleMenu} />
-          </nav>
+      {
+        !isLoading ?
+          isLoggedIn ?
+            <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
+              <a onClick={toggleCategoryBox}>
+                <TbCategory />
+              </a>
+              <a onClick={toggleUserBox} style={{ color: 'var(--pass)', border: '1px solid var(--pass)' }}>
+                <MdSelfImprovement />
+                <legend>{customer.username}</legend>
+              </a>
+              <a onClick={toggleWishList}>
+                <MdOutlineFavoriteBorder />
+                <legend>{wishList.length}</legend>
+              </a>
+              <a onClick={toggleCartBox}>
+                <MdOutlineShoppingCart />
+                <legend>{cart.length}</legend>
+              </a>
+              <a onClick={logout} className={styles.logoutTab}>
+                <MdOutlinePowerSettingsNew />
+              </a>
+              <MdMenu className={styles.tag} onClick={toggleMenu} />
+            </nav>
+            :
+            <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
+              <a onClick={toggleCategoryBox}>
+                <TbCategory />
+              </a>
+              <Link href={'/login'}>
+                <MdArrowForward />
+                <legend>Login</legend>
+              </Link>
+              <Link href={'/register'}>
+                <MdArrowForward />
+                <legend>Get Started</legend>
+              </Link>
+              <a onClick={toggleCartBox}>
+                <MdOutlineShoppingCart />
+                <legend>{cart.length}</legend>
+              </a>
+              <MdMenu className={styles.tag} onClick={toggleMenu} />
+            </nav>
           :
-          <nav className={winSize > 500 ? styles.controlBox : menuToggled ? `${styles.controlBox} ${styles.change}` : styles.controlBox}>
-            <a onClick={toggleCategoryBox}>
-              <TbCategory />
-            </a>
-            <Link href={'/login'}>
-              <MdArrowForward />
-              <legend>Login</legend>
-            </Link>
-            <Link href={'/register'}>
-              <MdArrowForward />
-              <legend>Get Started</legend>
-            </Link>
-            <a onClick={toggleCartBox}>
-              <MdOutlineShoppingCart />
-              <legend>{cart.length}</legend>
-            </a>
-            <MdMenu className={styles.tag} onClick={toggleMenu} />
-          </nav>
-        :
-        <Loader />
+          <Loader />
       }
 
-      {!isLoading &&
+      {
+        !isLoading &&
         <section className={categoryBoxToggled ? `${styles.categoryBoxHolder} ${styles.change}` : styles.categoryBoxHolder}>
           <section className={styles.sheet} onClick={toggleCategoryBox}></section>
           <section className={styles.categoryBox}>
@@ -258,7 +260,8 @@ const TopNav = () => {
         </section>
       }
 
-      {!isLoading &&
+      {
+        !isLoading &&
         <section className={cartBoxToggled ? `${styles.cartBoxHolder} ${styles.change}` : styles.cartBoxHolder}>
           <section className={styles.sheet} onClick={toggleCartBox}></section>
           <section className={styles.cartBox}>
@@ -321,7 +324,8 @@ const TopNav = () => {
         </section>
       }
 
-      {!isLoading &&
+      {
+        !isLoading &&
         <section className={wishListToggled ? `${styles.wishListHolder} ${styles.change}` : styles.wishListHolder}>
           <section className={styles.sheet} onClick={toggleWishList}></section>
           <section className={styles.wishList}>
@@ -354,7 +358,8 @@ const TopNav = () => {
         </section>
       }
 
-      {isLoggedIn &&
+      {
+        isLoggedIn &&
         <section className={userBoxToggled ? `${styles.userBoxHolder} ${styles.change}` : styles.userBoxHolder}>
           <section className={styles.sheet} onClick={toggleUserBox}></section>
           <section className={styles.userBox}>
@@ -384,7 +389,7 @@ const TopNav = () => {
           </section>
         </section>
       }
-    </section>
+    </section >
   );
 }
 

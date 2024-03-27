@@ -2,7 +2,6 @@
 import { itemLoader, sampleImg } from "@/External/lists";
 import Image from "next/image";
 import styles from '../home.module.css';
-import { getTimeLeft } from "@/External/services";
 import { useEffect, useState } from "react";
 import { MdAddShoppingCart } from "react-icons/md";
 import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore";
@@ -10,6 +9,7 @@ import { fireStoreDB } from "@/Firebase/base";
 import Link from "next/link";
 import AOS from 'aos';
 import AddToCart from "../components/Cart/AddToCart/AddToCart";
+import { getTimeLeft } from "@/External/time";
 
 interface defType extends Record<string, any> { };
 const PromoBox = () => {

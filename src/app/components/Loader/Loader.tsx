@@ -1,11 +1,13 @@
+import Image from 'next/image';
 import styles from './loader.module.css';
+import icon from '../../../../public/icon.png';
 
 const Loader = () => {
-  return ( 
+  return (
     <section className={styles.loaderBox}>
-      <strong> Maqete Logo</strong>
+      <Image alt='' src={icon} width={200} height={200} className='contain' />
     </section>
-   );
+  );
 }
- 
+
 export default Loader;

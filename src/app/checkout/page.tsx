@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import TopNav from '../components/TopNav/TopNav';
 import styles from './checkout.module.css';
-import { checkContact, clearCart, fixContact, genToken, getUpdatedCartTotal, joinContact, setToCart } from '@/External/services';
+import { clearCart, genToken, getUpdatedCartTotal, setToCart } from '@/External/services';
 import { MdAdd, MdArrowForward, MdBolt, MdCall, MdDeleteOutline, MdLocationPin, MdOutlineDeliveryDining, MdOutlineReceiptLong, MdOutlineSmartphone, MdRemove } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -21,7 +21,7 @@ import { createPayLink } from '@/External/paystack';
 import { useCart } from '../contexts/cartContext';
 import { useAuthTarget } from '../contexts/authTargetContext';
 import { countryList } from '@/External/lists';
-
+import { checkContact, fixContact, joinContact } from '@/External/auth';
 
 interface defType extends Record<string, any> { };
 const Checkout = () => {
@@ -33,7 +33,9 @@ const Checkout = () => {
   const [locText, setLocText] = useState('');
   const [location, setLocation] = useState('');
   const [phoneCode, setPhoneCode] = useState('233');
-  const [contact, setContact] = useState('0');
+  const [contact, setContact] = useState('');
+  const [contactTemp, setContactTemp] = useState('');
+
   const [predictions, setPredictions] = useState<defType[]>([]);
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [cartLoaded, setCartLoaded] = useState(false);
@@ -75,7 +77,9 @@ const Checkout = () => {
             localStorage.setItem('maqCustomer', '1');
             localStorage.setItem('maqKeywords', JSON.stringify(customerTemp.keywords));
             setCustomer(customerTemp);
-            setContact(customerTemp.contact);
+            setPhoneCode(customerTemp.contact.slice(0, 3))
+            setContact(customerTemp.contact.slice(3));
+            setContactTemp(customerTemp.contact)
             setQuantityList(customerTemp.cart.map((el: defType) => el.quantity))
             sessionStorage.setItem('authTarget', '/checkout');
             setIsLoggedIn(true);
@@ -179,7 +183,7 @@ const Checkout = () => {
 
   const checkOrder = async () => {
     if (isLoggedIn) {
-      if (checkContact(joinContact(fixContact(contact))) && location) {
+      if (checkContact(phoneCode, contact) && location) {
         setOrderLoading(true);
         if (paymentMethod === 'cash') {
           createOrder(0);
@@ -289,14 +293,14 @@ const Checkout = () => {
               <div className={styles.contactBox}>
                 <span><MdCall /> Contact</span>
                 <p>
-                  <select value={contact.slice(0, 3) || '233'} className={'cash'} onChange={(e) => setPhoneCode(e.target.value)}>
+                  <select value={phoneCode} className={'cash'} onChange={(e) => { setPhoneCode(e.target.value); setContactTemp(e.target.value + contact) }}>
                     {countryList.map((item, i) => (
                       <option key={i} value={item.phoneCode} className={'cash'}>
                         + {item.phoneCode}
                       </option>
                     ))}
                   </select>
-                  <input className='cash' type="text" value={contact.slice(3)} onChange={(e) => setContact(e.target.value)} />
+                  <input className='cash' type="text" value={contact} onChange={(e) => { setContact(e.target.value); setContactTemp(phoneCode + e.target.value) }} />
                 </p>
               </div>
 
@@ -321,8 +325,8 @@ const Checkout = () => {
             <article className={styles.totalBox}>
               <legend>
                 <MdCall />
-                <strong className='cash'>{fixContact(contact)}</strong>
-                <sub id={checkContact(joinContact(fixContact(contact))) ? 'right' : 'wrong'} ></sub>
+                <strong className='cash'>{fixContact(contactTemp)}</strong>
+                <sub id={checkContact(phoneCode, contact) ? 'right' : 'wrong'} ></sub>
               </legend>
               <legend>
                 <MdLocationPin />
@@ -376,7 +380,7 @@ const Checkout = () => {
       <PromptBox type='fail' info='Contact is required' isPlaying={isPlaying} />
 
       {orderLoading && <span>order Loading</span>}
-    </main>
+    </main >
   );
 }
 

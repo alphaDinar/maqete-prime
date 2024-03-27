@@ -191,8 +191,8 @@
 }
 
 .contactBox p {
-  align-items: center;
-  grid-template-columns: 60px 1fr;
+  /* align-items: center; */
+  grid-template-columns: 70px 1fr;
   gap: 0.5rem;
   display: grid;
 }
@@ -203,7 +203,7 @@
   display: flex;
   justify-content: center;
   padding: 5px;
-  width: 100px;
+  width: 70px;
   font-size: 0.8rem;
   align-items: center;
   background: white;

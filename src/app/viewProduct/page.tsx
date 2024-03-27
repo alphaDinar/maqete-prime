@@ -2,7 +2,7 @@
 import Image from "next/image";
 import TopNav from "../components/TopNav/TopNav";
 import styles from './viewProduct.module.css';
-import { MdArrowForward, MdOutlineAddShoppingCart } from "react-icons/md";
+import { MdAdd, MdArrowForward, MdOutlineAddShoppingCart, MdRemove } from "react-icons/md";
 import { VscDebugBreakpointDataUnverified } from "react-icons/vsc";
 import { FaFacebookF, FaInstagram, FaStar, FaXTwitter } from "react-icons/fa6";
 import { useEffect, useState } from "react";
@@ -17,6 +17,9 @@ import Products from "../components/Products/Products";
 import { itemLoader } from "@/External/lists";
 import Footer from "../components/Footer/Footer";
 import AddToCart from "../components/Cart/AddToCart/AddToCart";
+import { useCart } from "../contexts/cartContext";
+import { useWishList } from "../contexts/wishListContext";
+import RemFromCart from "../components/Cart/RemFromCart/RemFromCart";
 
 interface defType extends Record<string, any> { };
 const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
@@ -25,6 +28,8 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
   const [displayMedia, setDisplayMedia] = useState<defType>({});
   const [quantity, setQuantity] = useState(1);
   const [products, setProducts] = useState<defType[]>([]);
+  const { cart } = useCart();
+  const { wishList } = useWishList();
 
   const [score, setScore] = useState(-1);
   const [rateMode, setRateMode] = useState(false);
@@ -32,6 +37,14 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window !== undefined) {
+      // setIsLoading(false);
+      console.log(cart)
+      console.log(wishList)
+    }
+
+
+
     const productsRef = collection(fireStoreDB, 'Products/');
     const productStream = (category: string) => {
       return onSnapshot(query(productsRef, where("category", "==", `${category}`), orderBy("priority", "desc")), (snapshot) => {
@@ -62,8 +75,23 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
   const sample2 = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567337/maqete/modern-stationary-collection-arrangement_23-2149309652_hkfbcn.jpg';
   const air = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567577/maqete/MPNY3-removebg-preview_o1rd8i.png'
 
+  const handleQuantity = () => {
+
+  }
+
   const handleScore = () => {
 
+  }
+
+  const prodQuantity = (cart: defType[]) => {
+    const prodInCart = cart.filter((prod) => prod.id === pid);
+    if (prodInCart) {
+      setQuantity(cart.find((prod) => prod.id === pid)!.quantity);
+      return cart.find((prod) => prod.id === pid)!.quantity;
+    } else {
+      setQuantity(1);
+      return 0;
+    }
   }
 
   return (
@@ -127,10 +155,13 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
 
                 <div className={styles.productControl}>
                   <p>
+                    <RemFromCart pid={pid}>
+                      <button> <MdRemove /> </button>
+                    </RemFromCart>
+                    <span className={`${styles.quantity} cash`}>{cart.filter((prod) => prod.id === pid).length > 0 ? cart.find((prod) => prod.id === pid)!.quantity : 0}</span>
                     <AddToCart product={product} quantity={quantity} type="normal">
-                      <button>Add To Cart <MdOutlineAddShoppingCart /> </button>
+                      <button> <MdAdd /> </button>
                     </AddToCart>
-                    <input className="big" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
                   </p>
 
                   <sup className={styles.wishList}>

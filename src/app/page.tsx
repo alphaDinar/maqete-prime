@@ -17,10 +17,10 @@ import { TbBolt, TbTruckReturn } from 'react-icons/tb';
 import { GiTakeMyMoney } from 'react-icons/gi';
 import CategoryProducts from './home/CategoryProducts';
 import Footer from './components/Footer/Footer';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { fireStoreDB } from '@/Firebase/base';
-import { sortByCounter } from '@/External/services';
 import PayBox from './components/PayBox/PayBox';
+import { sortByCounter } from '@/External/sort';
 
 interface defType extends Record<string, any> { };
 const Home = async () => {

@@ -4,8 +4,8 @@ import styles from '../home.module.css';
 import Products from '../components/Products/Products';
 import { collection, onSnapshot } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
-import { sortByCounter, sortByPriority } from '@/External/services';
 import AOS from 'aos';
+import { sortByCounter, sortByPriority } from '@/External/sort';
 
 interface defType extends Record<string, any> { };
 const CategoryProducts = () => {

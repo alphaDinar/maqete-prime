@@ -3,10 +3,10 @@ import Link from "next/link";
 import styles from '../home.module.css';
 import Products from "../components/Products/Products";
 import { useEffect, useState } from "react";
-import { sortArrival, sortPopular, sortViews } from "@/External/services";
 import { collection, onSnapshot } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import AOS from "aos";
+import { sortArrival, sortPopular, sortViews } from "@/External/sort";
 
 interface defType extends Record<string, any> { };
 const ProductBox = () => {

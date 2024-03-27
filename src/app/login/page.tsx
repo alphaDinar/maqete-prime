@@ -12,11 +12,11 @@ import { useCart } from '../contexts/cartContext';
 import { useWishList } from '../contexts/wishListContext';
 import logo from '../../../public/logo.png';
 import { useState } from 'react';
-import { checkContact } from '@/External/services';
 import { checkUser } from '@/External/phoneBook';
 import { countryList, itemLoader } from '@/External/lists';
 import Loading from '../components/Loading/Loading';
 import { useAuthTarget } from '../contexts/authTargetContext';
+import { checkContact } from '@/External/auth';
 
 const Login = () => {
   const place = "https://res.cloudinary.com/dvnemzw0z/image/upload/v1711035557/maqete/modern-stationary-collection-arrangement-scaled_qua79b.jpg";
@@ -60,7 +60,7 @@ const Login = () => {
   }
 
   const loginUser = async () => {
-    if (checkContact('+' + phoneCode + contact) && contact && password) {
+    if (checkContact(phoneCode, contact) && contact && password) {
       setErrorMessage(false);
       setFormLoading(true);
       const isCorrect = await checkUser(phoneCode + contact, password);
@@ -73,6 +73,7 @@ const Login = () => {
       }
     } else {
       setFormLoading(false);
+      alert('Invalid contact')
       // setErrorMessage(true);
     }
   }
@@ -91,7 +92,7 @@ const Login = () => {
         }
       </section>
       <section className={styles.right}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={(e) => { e.preventDefault(); loginUser() }}>
           <header>
             <Link href={'/'}>
               <MdArrowBack />
@@ -116,7 +117,7 @@ const Login = () => {
               <span>Password</span>
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <button onClick={loginUser}>
+            <button>
               {!formLoading ?
                 <span>Login</span>
                 :
@@ -131,9 +132,15 @@ const Login = () => {
           <footer>
             <FcGoogle onClick={googleRegister} />
           </footer>
-          <Link href={'/register'}>
-            <small>Don&apos;t have an account yet? Register here</small>
-          </Link>
+          <article style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem' }}>
+            <Link href={'/register'}>
+              <small>Don&apos;t have an account yet? Register here</small>
+            </Link>
+
+            <Link href={'/forgotPassword'}>
+              <small style={{ color: 'tomato', fontWeight: 600 }}>Forgot Password? Reset here</small>
+            </Link>
+          </article>
         </form>
       </section>
     </section>
