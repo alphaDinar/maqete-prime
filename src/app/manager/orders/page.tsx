@@ -4,10 +4,11 @@ import Panel from "../Panel/Panel";
 import styles from './orders.module.css';
 import { collection, onSnapshot } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
-import { getTimeSince, sortByTime } from "@/External/services";
 import Image from "next/image";
 import { MdDensitySmall, MdLocationPin, MdOutlinePending, MdOutlineVerified } from "react-icons/md";
 import Link from "next/link";
+import { getTimeSince } from "@/External/time";
+import { sortByTime } from "@/External/sort";
 
 
 interface defType extends Record<string, any> { };

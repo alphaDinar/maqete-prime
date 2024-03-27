@@ -4,14 +4,13 @@ import Panel from "../Panel/Panel";
 import styles from '../forms.module.css';
 import { MdAdd, MdAddAPhoto, MdDelete } from "react-icons/md";
 import Image from "next/image";
-import { place, sampleImg } from "@/External/lists";
+import { place } from "@/External/lists";
 import { GrMultimedia } from "react-icons/gr";
 import { fireStoreDB, storageDB } from "@/Firebase/base";
 import { getDownloadURL, uploadBytes, ref as sRef } from "firebase/storage";
-import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { emitKeypressEvents } from "readline";
-import { getDateStamp, getUnixStamp } from "@/External/services";
+import { getDateStamp, getUnixStamp } from "@/External/time";
 
 interface defType extends Record<string, any> { };
 const EditProduct = ({ searchParams }: { searchParams: { product: string } }) => {

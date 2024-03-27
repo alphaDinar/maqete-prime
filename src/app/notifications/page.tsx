@@ -4,13 +4,13 @@ import TopNav from '../components/TopNav/TopNav';
 import styles from './notifications.module.css';
 import { pageHeader } from '@/External/lists';
 import { useEffect, useState } from 'react';
-import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { fireAuth, fireStoreDB } from '@/Firebase/base';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loading from '../components/Loading/Loading';
 import Image from 'next/image';
 import { MdSchedule } from 'react-icons/md';
-import { getTimeSince } from '@/External/services';
+import { getTimeSince } from '@/External/time';
 
 interface defType extends Record<string, any> { };
 const Notifications = () => {

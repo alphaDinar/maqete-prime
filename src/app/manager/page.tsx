@@ -9,7 +9,10 @@ import { sampleImg } from "@/External/lists";
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
-import { getOrderQuantity, getOrderSetTotal, getTimeSince, sortByTime } from "@/External/services";
+import { getTimeSince } from "@/External/time";
+import { sortByTime } from "@/External/sort";
+import { getOrderQuantity, getOrderSetTotal} from "@/External/services";
+
 
 interface defType extends Record<string, any> { };
 const Manager = () => {

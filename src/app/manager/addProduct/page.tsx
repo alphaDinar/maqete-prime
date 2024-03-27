@@ -9,7 +9,7 @@ import { GrMultimedia } from "react-icons/gr";
 import { fireStoreDB, storageDB } from "@/Firebase/base";
 import { getDownloadURL, uploadBytes, ref as sRef } from "firebase/storage";
 import { collection, doc, getDocs, setDoc } from "firebase/firestore";
-import { getUnixStamp } from "@/External/services";
+import { getUnixStamp } from "@/External/time";
 
 interface defType extends Record<string, any> { };
 const AddProduct = () => {

@@ -69,7 +69,7 @@ const ViewProduct = ({ searchParams }: { searchParams: { pid: string } }) => {
     return () => {
       getProductStream();
     }
-  }, [pid]);
+  }, [pid, cart, wishList]);
 
   const sample = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708791507/maqete/samp_kqdepy.png';
   const sample2 = 'https://res.cloudinary.com/dvnemzw0z/image/upload/v1708567337/maqete/modern-stationary-collection-arrangement_23-2149309652_hkfbcn.jpg';

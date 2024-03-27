@@ -6,12 +6,13 @@ import { onSnapshot, doc } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import { pageHeader } from "@/External/lists";
 import Image from "next/image";
-import { getHourGap, getRealDate, getTimeSince, getUpdatedCartTotal } from "@/External/services";
 import { MdCall, MdOutlineDeliveryDining } from "react-icons/md";
 import { IoIosDoneAll } from "react-icons/io";
 import Link from "next/link";
 import TrackBox from "../components/TrackBox/TrackBox";
 import Loading from "../components/Loading/Loading";
+import { getHourGap, getRealDate, getTimeSince } from "@/External/time";
+import { getUpdatedCartTotal } from "@/External/services";
 
 interface defType extends Record<string, any> { };
 const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {

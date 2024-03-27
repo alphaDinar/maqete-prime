@@ -2,8 +2,7 @@
 import { useEffect, useState } from 'react';
 import styles from './trackBox.module.css';
 import { MdOutlineDeliveryDining, MdOutlineSelfImprovement, MdOutlineWarehouse } from "react-icons/md";
-import { getHourGap } from '@/External/services';
-
+import { getHourGap } from '@/External/time';
 
 type TrackProps = {
   status: string;

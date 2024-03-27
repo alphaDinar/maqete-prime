@@ -10,9 +10,9 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Image from 'next/image';
 import { IoIosDoneAll } from 'react-icons/io';
 import { MdArrowForward, MdOutlineDeliveryDining } from 'react-icons/md';
-import { getTimeSince } from '@/External/services';
 import TrackBox from '../components/TrackBox/TrackBox';
 import Loading from '../components/Loading/Loading';
+import { getTimeSince } from '@/External/time';
 
 interface defType extends Record<string, any> { };
 const Orders = () => {

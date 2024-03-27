@@ -4,10 +4,10 @@ import Panel from "../Panel/Panel";
 import styles from './viewOrder.module.css';
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getOrderDeadline, getRealDate } from "@/External/services";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
+import { getOrderDeadline, getRealDate } from "@/External/time";
 
 interface defType extends Record<string, any> { };
 const ViewOrder = ({ searchParams }: { searchParams: { oid: string } }) => {

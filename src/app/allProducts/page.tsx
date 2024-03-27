@@ -2,12 +2,12 @@
 import { useEffect, useState } from 'react';
 import styles from '../category/category.module.css';
 import Products from '../components/Products/Products';
-import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { sortArrival, sortPopular, sortViews } from "@/External/services";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { fireStoreDB } from "@/Firebase/base";
 import TopNav from '../components/TopNav/TopNav';
 import Link from 'next/link';
 import { MdArrowBack } from 'react-icons/md';
+import { sortArrival, sortPopular, sortViews } from '@/External/sort';
 
 interface defType extends Record<string, any> { };
 const Category = ({ searchParams }: { searchParams: { cid: string } }) => {
